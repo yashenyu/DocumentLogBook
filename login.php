@@ -1,5 +1,7 @@
 <?php
 session_start();
+<<<<<<< Updated upstream
+=======
 require_once 'config/database.php';
 
 // Handle Login Submission
@@ -18,7 +20,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $_SESSION['user_id'] = $user['UserId'];
             $_SESSION['username'] = $user['username'];
             $_SESSION['role'] = $user['role'];
-            header('Location: index.php');
+            header('Location: documents.php');
             exit;
         }
         else {
@@ -30,9 +32,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
 }
 
+>>>>>>> Stashed changes
 // If already logged in, redirect to index
 if (isset($_SESSION['user_id'])) {
-    header('Location: index.php');
+    header('Location: documents.php');
     exit;
 }
 ?>
@@ -57,37 +60,77 @@ if (isset($_SESSION['user_id'])) {
     <div class="blob blob-2"></div>
     <div class="blob blob-3"></div>
 
-    <div class="container" style="display: flex; justify-content: center; align-items: center; width: 100%; position: relative; z-index: 10;">
+<div class="container" style="display: flex; justify-content: center; align-items: center; width: 100%; height: 100vh; position: relative; z-index: 10;">
         <div class="auth-card">
-            <h2>Document Logbook</h2>
-            <p class="subtitle">Welcome! Please login!</p>
             
-            <?php if (isset($error)): ?>
-                <div style="color: red; margin-bottom: 1rem; text-align: center;"><?php echo htmlspecialchars($error); ?></div>
-            <?php
-endif; ?>
-
-            <form action="" method="POST">
+<<<<<<< Updated upstream
+            <form action="auth_login.php" method="POST">
                 <!-- Email/Username -->
                 <div>
-                    <label for="username">Username</label>
+                    <label for="username">Email Address</label>
                     <input type="text" id="username" name="username" required 
-                           placeholder="Enter Username">
+                           placeholder="Your Email Address Here">
                 </div>
                 
                 <!-- Password -->
                 <div>
                     <label for="password">Password</label>
                     <input type="password" id="password" name="password" required 
-                           placeholder="Enter Password">
+                           placeholder="Your Password Here">
                 </div>
                 
-                <!-- Footer area with Button -->
-                <div style="margin-top: 1rem; display: flex; justify-content: center; align-items: center;">
-                    <button type="submit" class="btn btn-auth" style="width: 100%;">Login</button>
-                    <!-- <a href="signup.php" class="auth-footer-link" style="float: none; margin: 0;">Sign Up?</a> Public Signup Disabled -->
+                <!-- Footer area with Button and Link -->
+                <div style="margin-top: 1rem; display: flex; justify-content: space-between; align-items: center;">
+                    <button type="submit" class="btn btn-auth">Login</button>
+                    <a href="signup.php" class="auth-footer-link" style="float: none; margin: 0;">Sign Up?</a>
                 </div>
             </form>
+=======
+            <div class="auth-content">
+                <h2>Document Logbook</h2>
+                <p class="subtitle">Welcome! Please login!</p>
+                
+                <?php if (isset($error)): ?>
+                    <div style="color: #ff6b6b; margin-bottom: 1rem; text-align: left; font-size: 0.9rem;"><?php echo htmlspecialchars($error); ?></div>
+                <?php
+endif; ?>
+
+                <form action="" method="POST">
+                    <!-- Email/Username -->
+                    <div style="margin-bottom: 1.5rem;">
+                        <label for="username">Email Address</label>
+                        <input type="text" id="username" name="username" required 
+                               placeholder="Your Email Address Here">
+                    </div>
+                    
+                    <!-- Password -->
+                    <div style="margin-bottom: 0.5rem;">
+                        <label for="password">Password</label>
+                        <input type="password" id="password" name="password" required 
+                               placeholder="Your Password Here">
+                    </div>
+                    
+                    <!-- Buttons and Links Area -->
+                    <div style="display: flex; align-items: center; justify-content: flex-start; gap: 2rem; margin-top: 1.5rem;">
+                        <button type="submit" class="btn btn-auth">Login</button>
+                        
+                        <a href="signup.php" class="auth-link">Sign Up?</a>
+                    </div>
+                </form>
+            </div>
+
+            <!-- Decorative Logo Element (Bottom Right) -->
+            <div class="auth-decoration">
+                <!-- Using CSS to create a similar isometric shape pattern -->
+                <div class="iso-box iso-box-1"></div>
+                <div class="iso-box iso-box-2"></div>
+            </div>
+
+            <!-- Footer Links (absolute bottom right inside card) -->
+            <div class="auth-footer">
+                <a href="#">Privacy Policy</a> | <a href="#">System Status</a>
+            </div>
+>>>>>>> Stashed changes
         </div>
     </div>
 

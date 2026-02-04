@@ -12,67 +12,116 @@ if (!isset($_SESSION['user_id'])) {
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Documents - Document LogBook</title>
     
+    <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="assets/css/style.css">
     
-    <style>
-        /* Table styles specific to this page for now */
-        table { width: 100%; border-collapse: collapse; margin-bottom: 1rem; }
-        th, td { text-align: left; padding: 1rem; border-bottom: 1px solid var(--border-color); }
-        th { font-weight: 600; background-color: #f1f5f9; }
-        .search-bar { margin-bottom: 1.5rem; }
-        .pagination { display: flex; gap: 0.5rem; justify-content: flex-end; }
-    </style>
+    <!-- Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <!-- Styles -->
+    <link rel="stylesheet" href="assets/css/style.css">
 </head>
 <body>
-    <div class="container">
-        <!-- Header Section -->
-        <header style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem;">
-            <h1>Documents</h1>
-            <div>
-                <a href="add_document.php" class="btn btn-primary">Add New Document</a>
-                <a href="index.php" class="btn btn-secondary">Dashboard</a>
+    <!-- Navbar -->
+    <nav class="navbar" style="justify-content: space-between;">
+        <div style="display: flex; align-items: center;">
+            <div class="logo-area">
+                <span class="logo-text">LogBook</span>
+                <div class="nav-iso-box-container">
+                    <div class="nav-iso-box nav-iso-1"></div>
+                    <div class="nav-iso-box nav-iso-2"></div>
+                </div>
             </div>
-        </header>
-
-        <!-- Search Bar -->
-        <div class="search-bar">
-            <input type="text" placeholder="Search documents..." 
-                   style="width: 100%; padding: 0.75rem; border: 1px solid var(--border-color); border-radius: 0.5rem;">
+            <div class="nav-divider"></div>
+            <div class="nav-subtitle">Simple Document Logbook | <?php echo htmlspecialchars($_SESSION['role'] ?? 'Staff'); ?></div>
         </div>
 
-        <!-- Documents Table -->
-        <div class="card" style="padding: 0; overflow: hidden;">
-            <div style="overflow-x: auto;">
-                <table>
-                    <thead>
-                        <tr>
-                            <th>ID</th>
-                            <th>Email</th>
-                            <th>Doc Name</th>
-                            <th>Description</th>
-                            <th>Received By</th>
-                            <th>Date</th>
-                            <th>Actions</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <!-- Empty body as requested, will be filled with data later -->
-                        <tr>
-                            <td colspan="7" style="text-align: center; color: #64748b;">No documents found (Placeholder)</td>
-                        </tr>
-                    </tbody>
-                </table>
+        <div style="display: flex; gap: 1rem; align-items: center;">
+            <?php if (isset($_SESSION['role']) && $_SESSION['role'] === 'Admin'): ?>
+                <a href="register_staff.php" class="btn-dark" style="text-decoration: none; font-size: 0.9rem; padding: 0.4rem 1rem; background-color: rgba(231, 76, 60, 0.2); border: 1px solid #e74c3c; color: #ff8a80;">
+                    <i class="fa-solid fa-user-plus"></i> Add Staff
+                </a>
+            <?php
+endif; ?>
+            <a href="logout.php" class="btn-dark" style="text-decoration: none; font-size: 0.9rem; padding: 0.4rem 1rem;">
+                <i class="fa-solid fa-right-from-bracket"></i> Logout
+            </a>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <div class="main-content">
+        
+        <!-- Toolbar -->
+        <div class="doc-toolbar">
+            <div class="search-container">
+                <i class="fa-solid fa-magnifying-glass search-icon"></i>
+                <input type="text" class="search-input" placeholder="Search">
+            </div>
+            
+            <div class="toolbar-buttons">
+                <button class="btn-dark">
+                    <i class="fa-solid fa-filter"></i> Filter
+                </button>
+                <a href="add_document.php" class="btn-dark" style="text-decoration: none;">
+                    <i class="fa-solid fa-plus"></i> Add
+                </a>
             </div>
         </div>
 
-        <!-- Pagination Placeholder -->
-        <div class="pagination" style="margin-top: 1.5rem;">
-            <button class="btn btn-secondary" disabled>Previous</button>
-            <button class="btn btn-secondary" disabled>1</button>
-            <button class="btn btn-secondary">Next</button>
+        <!-- Table -->
+        <div class="table-container">
+            <table class="doc-table">
+                <thead>
+                    <tr>
+                        <th>Document id</th>
+                        <th>Image</th>
+                        <th>Date</th>
+                        <th>Office</th>
+                        <th>Description</th>
+                        <th>Received By</th>
+                        <th>Status</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <!-- Placeholder Rows matching the image -->
+                    <?php for ($i = 0; $i < 8; $i++): ?>
+                    <tr>
+                        <td>Document id</td>
+                        <td></td>
+                        <td>12/05/2025</td>
+                        <td>SOC</td>
+                        <td>SOC</td>
+                        <td>SOC</td>
+                        <td>SOC</td>
+                        <td>
+                            <div class="actions">
+                                <button class="action-btn" title="Download"><i class="fa-solid fa-download"></i></button>
+                                <button class="action-btn" title="Delete"><i class="fa-regular fa-trash-can"></i></button>
+                                <button class="action-btn" title="Edit"><i class="fa-solid fa-pen"></i></button>
+                            </div>
+                        </td>
+                    </tr>
+                    <?php
+endfor; ?>
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Pagination -->
+        <div class="pagination-area">
+            <div class="page-nav"><i class="fa-solid fa-chevron-left"></i></div>
+            <div class="pagination-links">
+                <a href="#" class="page-link active">1</a>
+                <a href="#" class="page-link">2</a>
+                <span class="page-link">...</span>
+                <a href="#" class="page-link">3</a>
+                <a href="#" class="page-link">4</a>
+            </div>
+            <div class="page-nav"><i class="fa-solid fa-chevron-right"></i></div>
         </div>
     </div>
 
