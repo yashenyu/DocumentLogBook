@@ -13,16 +13,19 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $stmt->execute([$username]);
         $user = $stmt->fetch(PDO::FETCH_ASSOC);
 
-        if ($user && password_verify($password, $user['password'])) {
+        // Check password: hash verification first, then fallback to plain text (legacy support)
+        if ($user && (password_verify($password, $user['password']) || $password === $user['password'])) {
             $_SESSION['user_id'] = $user['UserId'];
             $_SESSION['username'] = $user['username'];
             $_SESSION['role'] = $user['role'];
             header('Location: index.php');
             exit;
-        } else {
+        }
+        else {
             $error = "Invalid username or password.";
         }
-    } else {
+    }
+    else {
         $error = "Please fill in all fields.";
     }
 }
@@ -61,7 +64,8 @@ if (isset($_SESSION['user_id'])) {
             
             <?php if (isset($error)): ?>
                 <div style="color: red; margin-bottom: 1rem; text-align: center;"><?php echo htmlspecialchars($error); ?></div>
-            <?php endif; ?>
+            <?php
+endif; ?>
 
             <form action="" method="POST">
                 <!-- Email/Username -->
