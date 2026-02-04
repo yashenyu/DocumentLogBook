@@ -146,9 +146,15 @@ endif; ?>
                         <tr>
                             <td>#<?php echo $row['DocID']; ?></td>
                             <td>
-                                <?php if (!empty($row['DocImage']) && file_exists($row['DocImage'])): ?>
-                                    <i class="fa-regular fa-file-image" title="Has Attachment"></i>
-                                <?php
+                                <?php if (!empty($row['DocImage']) && file_exists($row['DocImage'])):
+            $ext = pathinfo($row['DocImage'], PATHINFO_EXTENSION);
+            if (in_array(strtolower($ext), ['jpg', 'jpeg', 'png', 'gif'])): ?>
+                                        <img src="<?php echo htmlspecialchars($row['DocImage']); ?>" alt="Doc" style="width: 50px; height: 50px; object-fit: cover; border-radius: 4px; border: 1px solid #e2e8f0;">
+                                    <?php
+            else: ?>
+                                        <i class="fa-solid fa-file-pdf" style="font-size: 1.5rem; color: #e74c3c;"></i>
+                                    <?php
+            endif;
         else: ?>
                                     <span style="opacity: 0.3;">-</span>
                                 <?php
