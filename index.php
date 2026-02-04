@@ -29,6 +29,10 @@ if (!isset($_SESSION['user_id'])) {
             <nav>
                 <a href="documents.php" class="btn btn-primary">View Documents</a>
                 <a href="add_document.php" class="btn btn-secondary">Add Document</a>
+                <?php if (isset($_SESSION['role']) && $_SESSION['role'] === 'Admin'): ?>
+                    <!-- Admin Only Link -->
+                    <a href="register_staff.php" class="btn btn-secondary" style="background-color: #e74c3c;">Add Staff</a>
+                <?php endif; ?>
                 <a href="logout.php" class="btn btn-secondary">Logout</a>
             </nav>
         </header>

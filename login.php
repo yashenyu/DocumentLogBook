@@ -1,5 +1,32 @@
 <?php
 session_start();
+require_once 'config/database.php';
+
+// Handle Login Submission
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    $username = $_POST['username'] ?? '';
+    // Form field might be 'password' or 'password'
+    $password = $_POST['password'] ?? '';
+
+    if (!empty($username) && !empty($password)) {
+        $stmt = $pdo->prepare("SELECT * FROM users WHERE username = ?");
+        $stmt->execute([$username]);
+        $user = $stmt->fetch(PDO::FETCH_ASSOC);
+
+        if ($user && password_verify($password, $user['password'])) {
+            $_SESSION['user_id'] = $user['UserId'];
+            $_SESSION['username'] = $user['username'];
+            $_SESSION['role'] = $user['role'];
+            header('Location: index.php');
+            exit;
+        } else {
+            $error = "Invalid username or password.";
+        }
+    } else {
+        $error = "Please fill in all fields.";
+    }
+}
+
 // If already logged in, redirect to index
 if (isset($_SESSION['user_id'])) {
     header('Location: index.php');
@@ -32,25 +59,29 @@ if (isset($_SESSION['user_id'])) {
             <h2>Document Logbook</h2>
             <p class="subtitle">Welcome! Please login!</p>
             
-            <form action="auth_login.php" method="POST">
+            <?php if (isset($error)): ?>
+                <div style="color: red; margin-bottom: 1rem; text-align: center;"><?php echo htmlspecialchars($error); ?></div>
+            <?php endif; ?>
+
+            <form action="" method="POST">
                 <!-- Email/Username -->
                 <div>
-                    <label for="username">Email Address</label>
+                    <label for="username">Username</label>
                     <input type="text" id="username" name="username" required 
-                           placeholder="Your Email Address Here">
+                           placeholder="Enter Username">
                 </div>
                 
                 <!-- Password -->
                 <div>
                     <label for="password">Password</label>
                     <input type="password" id="password" name="password" required 
-                           placeholder="Your Password Here">
+                           placeholder="Enter Password">
                 </div>
                 
-                <!-- Footer area with Button and Link -->
-                <div style="margin-top: 1rem; display: flex; justify-content: space-between; align-items: center;">
-                    <button type="submit" class="btn btn-auth">Login</button>
-                    <a href="signup.php" class="auth-footer-link" style="float: none; margin: 0;">Sign Up?</a>
+                <!-- Footer area with Button -->
+                <div style="margin-top: 1rem; display: flex; justify-content: center; align-items: center;">
+                    <button type="submit" class="btn btn-auth" style="width: 100%;">Login</button>
+                    <!-- <a href="signup.php" class="auth-footer-link" style="float: none; margin: 0;">Sign Up?</a> Public Signup Disabled -->
                 </div>
             </form>
         </div>
