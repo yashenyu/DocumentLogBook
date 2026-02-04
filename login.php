@@ -1,7 +1,5 @@
 <?php
 session_start();
-<<<<<<< Updated upstream
-=======
 require_once 'config/database.php';
 
 // Handle Login Submission
@@ -32,7 +30,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
 }
 
->>>>>>> Stashed changes
 // If already logged in, redirect to index
 if (isset($_SESSION['user_id'])) {
     header('Location: documents.php');
@@ -63,29 +60,6 @@ if (isset($_SESSION['user_id'])) {
 <div class="container" style="display: flex; justify-content: center; align-items: center; width: 100%; height: 100vh; position: relative; z-index: 10;">
         <div class="auth-card">
             
-<<<<<<< Updated upstream
-            <form action="auth_login.php" method="POST">
-                <!-- Email/Username -->
-                <div>
-                    <label for="username">Email Address</label>
-                    <input type="text" id="username" name="username" required 
-                           placeholder="Your Email Address Here">
-                </div>
-                
-                <!-- Password -->
-                <div>
-                    <label for="password">Password</label>
-                    <input type="password" id="password" name="password" required 
-                           placeholder="Your Password Here">
-                </div>
-                
-                <!-- Footer area with Button and Link -->
-                <div style="margin-top: 1rem; display: flex; justify-content: space-between; align-items: center;">
-                    <button type="submit" class="btn btn-auth">Login</button>
-                    <a href="signup.php" class="auth-footer-link" style="float: none; margin: 0;">Sign Up?</a>
-                </div>
-            </form>
-=======
             <div class="auth-content">
                 <h2>Document Logbook</h2>
                 <p class="subtitle">Welcome! Please login!</p>
@@ -130,7 +104,6 @@ endif; ?>
             <div class="auth-footer">
                 <a href="#">Privacy Policy</a> | <a href="#">System Status</a>
             </div>
->>>>>>> Stashed changes
         </div>
     </div>
 
