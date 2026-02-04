@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard - Document Logbook</title>
+    <link rel="stylesheet" href="assets/css/style.css">
+</head>
+
+<body>
+    <div class="dashboard-container">
+        <div class="dashboard-header">
+            <h1>Document Logbook</h1>
+            <div>
+                <span id="welcomeUser"></span>
+                <button id="logoutBtn" class="btn btn-danger btn-sm">Logout</button>
+            </div>
+        </div>
+
+        <div class="controls">
+            <input type="text" id="searchInput" class="search-bar"
+                placeholder="Search by Subject, Office or Description...">
+            <button id="addBtn" class="btn">Add Document</button>
+        </div>
+
+        <table>
+            <thead>
+                <tr>
+                    <th>Date</th>
+                    <th>Office</th>
+                    <th>Subject</th>
+                    <th>Status</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody id="documentTableBody">
+                <!-- Rows will be injected here -->
+            </tbody>
+        </table>
+    </div>
+
+    <!-- Add/Edit Modal -->
+    <div id="documentModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 id="modalTitle">Add Document</h2>
+                <span class="close-btn">&times;</span>
+            </div>
+            <form id="documentForm">
+                <input type="hidden" id="DocID" name="DocID">
+                <div class="form-group">
+                    <label for="DocDate">Date</label>
+                    <input type="date" id="DocDate" name="DocDate" required>
+                </div>
+                <div class="form-group">
+                    <label for="Office">Office</label>
+                    <input type="text" id="Office" name="Office" required>
+                </div>
+                <div class="form-group">
+                    <label for="Subject">Subject</label>
+                    <input type="text" id="Subject" name="Subject" required>
+                </div>
+                <div class="form-group">
+                    <label for="Description">Description</label>
+                    <input type="text" id="Description" name="Description">
+                </div>
+                <div class="form-group">
+                    <label for="ReceivedBy">Received By</label>
+                    <input type="text" id="ReceivedBy" name="ReceivedBy">
+                </div>
+                <div class="form-group">
+                    <label for="Status">Status</label>
+                    <input type="text" id="Status" name="Status">
+                </div>
+                <!-- Note: DocImage is in schema but omitting file upload complexity for this simplified JS example unless requested, keeping it text or hidden for now or just ignoring -->
+                <button type="submit" class="btn">Save</button>
+            </form>
+        </div>
+    </div>
+
+    <script src="assets/js/dashboard.js"></script>
+</body>
+
+</html>
