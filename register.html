@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Register - Document Logbook</title>
+    <link rel="stylesheet" href="assets/css/style.css">
+</head>
+
+<body>
+    <div class="login-container">
+        <div class="login-card">
+            <h2>Register New User</h2>
+            <form id="registerForm">
+                <div class="form-group">
+                    <label for="username">Username</label>
+                    <input type="text" id="username" name="username" required>
+                </div>
+                <div class="form-group">
+                    <label for="role">Role</label>
+                    <select id="role" name="role" required
+                        style="width: 100%; padding: 0.75rem; border: 1px solid #ddd; border-radius: 4px; background: white;">
+                        <option value="Staff">Staff</option>
+                        <option value="Admin">Admin</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="password">Password</label>
+                    <input type="password" id="password" name="password" required>
+                </div>
+                <div class="form-group">
+                    <label for="confirm_password">Confirm Password</label>
+                    <input type="password" id="confirm_password" name="confirm_password" required>
+                </div>
+                <button type="submit" class="btn">Register</button>
+            </form>
+            <p id="message" style="color: red; margin-top: 1rem;"></p>
+            <p style="margin-top: 1rem;">
+                Already have an account? <a href="login.html">Login here</a>
+            </p>
+        </div>
+    </div>
+    <script src="assets/js/register.js"></script>
+</body>
+
+</html>
