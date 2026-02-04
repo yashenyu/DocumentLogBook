@@ -1,5 +1,3 @@
-# Sensitive config
-config/database.php
 
 # IDE
 .vscode/
