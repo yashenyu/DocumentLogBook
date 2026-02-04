@@ -1,0 +1,199 @@
+/* Basic Clean Reset and Variables */
+:root {
+    --primary-color: #2563eb;
+    --primary-hover: #1d4ed8;
+    --bg-color: #f8fafc;
+    --text-color: #1e293b;
+    --card-bg: #ffffff;
+    --border-color: #e2e8f0;
+
+    /* Auth Page Specific Colors */
+    --auth-bg-primary: #3be8b0; /* Bright Teal/Green */
+    --auth-bg-secondary: #134e4a; /* Darker Green/Teal context */
+    --auth-card-bg: #0f1c2e; /* Dark Navy Blue */
+    --auth-text-color: #ffffff;
+    --auth-input-bg: #ffffff;
+}
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    font-family: 'Inter', system-ui, -apple-system, sans-serif;
+    background-color: var(--bg-color);
+    color: var(--text-color);
+    line-height: 1.5;
+}
+
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 2rem;
+}
+
+/* Utilities for "premium" feel placeholders */
+.btn {
+    display: inline-block;
+    padding: 0.75rem 1.5rem;
+    border-radius: 0.5rem;
+    font-weight: 500;
+    text-decoration: none;
+    cursor: pointer;
+    transition: all 0.2s;
+    border: none;
+    font-family: inherit;
+}
+
+.btn-primary {
+    background-color: var(--primary-color);
+    color: white;
+}
+
+.btn-primary:hover {
+    background-color: var(--primary-hover);
+}
+
+.btn-secondary {
+    background-color: transparent;
+    border: 1px solid var(--border-color);
+    color: var(--text-color);
+}
+
+.card {
+    background: var(--card-bg);
+    border-radius: 1rem;
+    box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1);
+    padding: 2rem;
+}
+
+/* --- Auth Page Specific Styles (Login/Signup) --- */
+body.auth-page {
+    background-color: var(--auth-bg-primary);
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    overflow: hidden;
+}
+
+/* Static Blobs (Background) */
+.blob {
+    position: absolute;
+    /* Organic blob shapes */
+    border-radius: 40% 60% 70% 30% / 40% 50% 60% 50%;
+    filter: blur(5px);
+    z-index: 1;
+    opacity: 1;
+    box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+}
+
+.blob-1 {
+    width: 600px;
+    height: 600px;
+    background: #0f1c2e; /* Dark Navy */
+    top: -100px;
+    right: -100px;
+    transform: rotate(45deg); /* Static rotation for visual interest */
+}
+
+.blob-2 {
+    width: 500px;
+    height: 500px;
+    background: #2dd4bf; /* Lighter Teal */
+    bottom: -100px;
+    left: -100px;
+    opacity: 0.8;
+    transform: rotate(-20deg);
+}
+
+.blob-3 {
+    width: 300px;
+    height: 300px;
+    background: #134e4a; /* Medium Dark Teal */
+    top: 40%;
+    right: 20%;
+    opacity: 0.6;
+    z-index: 0;
+}
+
+.auth-card {
+    background-color: var(--auth-card-bg);
+    color: var(--auth-text-color);
+    border-radius: 1.5rem;
+    padding: 3rem;
+    width: 100%;
+    max-width: 500px;
+    box-shadow: 0 20px 25px -5px rgb(0 0 0 / 0.2), 0 8px 10px -6px rgb(0 0 0 / 0.2);
+    position: relative;
+    z-index: 10; /* Ensure card stays above blobs */
+}
+
+.auth-card h2 {
+    font-size: 2rem;
+    font-weight: 700;
+    margin-bottom: 0.5rem;
+    text-align: left; /* Changed to left as per design */
+}
+
+.auth-card .subtitle {
+    font-size: 1rem;
+    color: #cbd5e1;
+    margin-bottom: 2rem;
+    text-align: left;
+}
+
+.auth-card label {
+    display: block;
+    margin-bottom: 0.5rem;
+    font-weight: 500;
+    font-size: 0.9rem;
+    color: #e2e8f0;
+}
+
+.auth-card input[type="text"],
+.auth-card input[type="email"],
+.auth-card input[type="password"] {
+    width: 100%;
+    padding: 0.875rem 1rem;
+    border: none;
+    border-radius: 0.5rem;
+    background-color: var(--auth-input-bg);
+    color: #1e293b;
+    font-size: 1rem;
+    margin-bottom: 1.5rem;
+}
+
+.auth-card input:focus {
+    outline: 2px solid var(--auth-bg-primary);
+    outline-offset: 2px;
+}
+
+.btn-auth {
+    background-color: var(--auth-bg-primary);
+    color: #0f1c2e; /* Dark text for contrast on bright button */
+    font-weight: 600;
+    padding: 0.75rem 2rem;
+    border-radius: 2rem; /* Pill shape */
+    margin-top: 1rem;
+    display: inline-block;
+    width: auto; /* Allow auto width */
+    min-width: 120px;
+    text-align: center;
+}
+
+.btn-auth:hover {
+    filter: brightness(1.1);
+    transform: translateY(-1px);
+}
+
+.auth-footer-link {
+    color: #ffffff;
+    text-decoration: underline;
+    font-size: 0.9rem;
+    float: right;
+    margin-top: -3.5rem; /* Visual hack to place it nicely near button or specific placement */
+}
