@@ -12,5 +12,6 @@ CREATE TABLE DocumentLog (
 CREATE TABLE users (
     UserId INT AUTO_INCREMENT PRIMARY KEY,
     username VARCHAR(100) NOT NULL,
-    password VARCHAR(255) NOT NULL
+    password VARCHAR(255) NOT NULL,
+    role ENUM('Admin', 'Staff') NOT NULL DEFAULT 'Staff'
 );

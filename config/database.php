@@ -34,6 +34,13 @@ try {
             }
         }
     }
+    else {
+        // Auto-migration: Check if 'role' column exists in users table, if not add it
+        $stmt = $pdo->query("SHOW COLUMNS FROM users LIKE 'role'");
+        if ($stmt->rowCount() == 0) {
+            $pdo->exec("ALTER TABLE users ADD COLUMN role ENUM('Admin', 'Staff') NOT NULL DEFAULT 'Staff'");
+        }
+    }
 
 }
 catch (PDOException $e) {

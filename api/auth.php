@@ -44,8 +44,14 @@ function register($pdo, $data)
     }
 
     // Insert user
-    $stmt = $pdo->prepare("INSERT INTO users (username, password) VALUES (?, ?)");
-    if ($stmt->execute([$username, $password])) {
+    $role = $data['role'] ?? 'Staff';
+    // Validate role
+    if (!in_array($role, ['Admin', 'Staff'])) {
+        $role = 'Staff';
+    }
+
+    $stmt = $pdo->prepare("INSERT INTO users (username, password, role) VALUES (?, ?, ?)");
+    if ($stmt->execute([$username, $password, $role])) {
         echo json_encode(['status' => 'success', 'message' => 'Registration successful']);
     }
     else {
@@ -75,7 +81,8 @@ function login($pdo, $data)
 
         $_SESSION['user_id'] = $user['UserId'];
         $_SESSION['username'] = $user['username'];
-        echo json_encode(['status' => 'success', 'message' => 'Login successful']);
+        $_SESSION['role'] = $user['role'];
+        echo json_encode(['status' => 'success', 'message' => 'Login successful', 'role' => $user['role']]);
     }
     else {
         echo json_encode(['status' => 'error', 'message' => 'Invalid credentials']);
@@ -91,7 +98,7 @@ function logout()
 function check_session()
 {
     if (isset($_SESSION['user_id'])) {
-        echo json_encode(['status' => 'logged_in', 'user' => $_SESSION['username']]);
+        echo json_encode(['status' => 'logged_in', 'user' => $_SESSION['username'], 'role' => $_SESSION['role'] ?? 'Staff']);
     }
     else {
         echo json_encode(['status' => 'logged_out']);
