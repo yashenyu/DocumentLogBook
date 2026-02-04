@@ -1,4 +1,5 @@
 <?php
+<<<<<<< Updated upstream
 session_start();
 
 // Simple check for login, redirect if not logged in
@@ -42,3 +43,9 @@ if (!isset($_SESSION['user_id'])) {
     <script src="assets/js/main.js"></script>
 </body>
 </html>
+=======
+// index.php is no longer the dashboard. Redirect to documents.php.
+header('Location: documents.php');
+exit;
+?>
+>>>>>>> Stashed changes

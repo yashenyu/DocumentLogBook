@@ -21,51 +21,67 @@ if (isset($_SESSION['user_id'])) {
     <!-- Styles -->
     <link rel="stylesheet" href="assets/css/style.css">
 </head>
-<body>
-    <div class="container" style="max-width: 450px; margin-top: 3rem;">
-        <div class="card">
-            <h2 style="margin-bottom: 0.5rem; text-align: center;">Create Account</h2>
-            <p style="text-align: center; color: #64748b; margin-bottom: 2rem;">Document LogBook</p>
+<body class="auth-page">
+    <!-- Static Blobs -->
+    <div class="blob blob-1"></div>
+    <div class="blob blob-2"></div>
+    <div class="blob blob-3"></div>
+
+    <div class="container" style="display: flex; justify-content: center; align-items: center; width: 100%; height: 100vh; position: relative; z-index: 10;">
+        <div class="auth-card">
             
-            <form action="auth_register.php" method="POST">
-                <!-- Username -->
-                <div style="margin-bottom: 1rem;">
-                    <label for="username" style="display: block; margin-bottom: 0.5rem; font-weight: 500;">Username</label>
-                    <input type="text" id="username" name="username" required 
-                           style="width: 100%; padding: 0.75rem; border: 1px solid var(--border-color); border-radius: 0.5rem;"
-                           placeholder="Choose a username">
-                </div>
-
-                <!-- Email -->
-                <div style="margin-bottom: 1rem;">
-                    <label for="email" style="display: block; margin-bottom: 0.5rem; font-weight: 500;">HAU Email Address</label>
-                    <input type="email" id="email" name="email" required 
-                           style="width: 100%; padding: 0.75rem; border: 1px solid var(--border-color); border-radius: 0.5rem;"
-                           placeholder="name@example.com">
-                </div>
+            <div class="auth-content">
+                <h2>Document Logbook</h2>
+                <p class="subtitle">Welcome! Please Signup!</p>
                 
-                <!-- Password -->
-                <div style="margin-bottom: 1rem;">
-                    <label for="password" style="display: block; margin-bottom: 0.5rem; font-weight: 500;">Password</label>
-                    <input type="password" id="password" name="password" required 
-                           style="width: 100%; padding: 0.75rem; border: 1px solid var(--border-color); border-radius: 0.5rem;"
-                           placeholder="Create a strong password">
-                </div>
+                <form action="auth_register.php" method="POST">
+                    <!-- Username -->
+                    <div style="margin-bottom: 1.5rem;">
+                        <label for="username">Username</label>
+                        <input type="text" id="username" name="username" required 
+                               placeholder="Choose a Username">
+                    </div>
 
-                <!-- Confirm Password -->
-                <div style="margin-bottom: 1.5rem;">
-                    <label for="confirm_password" style="display: block; margin-bottom: 0.5rem; font-weight: 500;">Confirm Password</label>
-                    <input type="password" id="confirm_password" name="confirm_password" required 
-                           style="width: 100%; padding: 0.75rem; border: 1px solid var(--border-color); border-radius: 0.5rem;"
-                           placeholder="Repeat your password">
-                </div>
-                
-                <!-- Submit -->
-                <button type="submit" class="btn btn-primary" style="width: 100%;">Create Account</button>
-            </form>
+                    <!-- Email -->
+                    <div style="margin-bottom: 1.5rem;">
+                        <label for="email">Email Address</label>
+                        <input type="email" id="email" name="email" required 
+                               placeholder="Your Email Address Here">
+                    </div>
+                    
+                    <!-- Password -->
+                    <div style="margin-bottom: 1.5rem;">
+                        <label for="password">Password</label>
+                        <input type="password" id="password" name="password" required 
+                               placeholder="Your Password Here">
+                    </div>
 
-            <div style="margin-top: 1.5rem; text-align: center; font-size: 0.9rem;">
-                <p>Already have an account? <a href="login.php" style="color: var(--primary-color); text-decoration: none; font-weight: 600;">Sign In</a></p>
+                    <!-- Confirm Password -->
+                    <div style="margin-bottom: 0.5rem;">
+                        <label for="confirm_password">Confirm Password</label>
+                        <input type="password" id="confirm_password" name="confirm_password" required 
+                               placeholder="Re-enter Your Password Here">
+                    </div>
+                    
+                    <!-- Buttons and Links Area -->
+                    <div style="display: flex; align-items: center; justify-content: flex-start; gap: 2rem; margin-top: 1.5rem;">
+                        <button type="submit" class="btn btn-auth">Signup</button>
+                        
+                        <a href="login.php" class="auth-link">Login?</a>
+                    </div>
+                </form>
+            </div>
+
+            <!-- Decorative Logo Element (Bottom Right) -->
+            <div class="auth-decoration">
+                <!-- Using CSS to create a similar isometric shape pattern -->
+                <div class="iso-box iso-box-1"></div>
+                <div class="iso-box iso-box-2"></div>
+            </div>
+
+            <!-- Footer Links (absolute bottom right inside card) -->
+            <div class="auth-footer">
+                <a href="#">Privacy Policy</a> | <a href="#">System Status</a>
             </div>
         </div>
     </div>
