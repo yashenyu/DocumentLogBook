@@ -1,0 +1,12 @@
+
+.badge-incoming {
+    background-color: #eff6ff;
+    color: #1d4ed8;
+    border: 1px solid #dbeafe;
+}
+
+.badge-outgoing {
+    background-color: #fff1f2;
+    color: #be123c;
+    border: 1px solid #ffe4e6;
+}

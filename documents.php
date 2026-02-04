@@ -1,9 +1,44 @@
 <?php
 session_start();
+require_once 'config/database.php';
+
 if (!isset($_SESSION['user_id'])) {
     header('Location: login.php');
     exit;
 }
+
+// Params
+$search = $_GET['search'] ?? '';
+$page = isset($_GET['page']) ? (int)$_GET['page'] : 1;
+$limit = 10;
+$offset = ($page - 1) * $limit;
+$sort = $_GET['sort'] ?? 'DESC';
+
+$nextSort = ($sort === 'DESC') ? 'ASC' : 'DESC';
+
+// Build Query
+$whereSQL = "1=1";
+$params = [];
+
+if (!empty($search)) {
+    $whereSQL .= " AND (Subject LIKE ? OR Description LIKE ? OR Office LIKE ? OR Status LIKE ?)";
+    $term = "%$search%";
+    $params = [$term, $term, $term, $term];
+}
+
+// Count Total
+$countSql = "SELECT COUNT(*) FROM DocumentLog WHERE $whereSQL";
+$stmt = $pdo->prepare($countSql);
+$stmt->execute($params);
+$totalDocs = $stmt->fetchColumn();
+$totalPages = ceil($totalDocs / $limit);
+
+// Fetch Data
+$sql = "SELECT * FROM DocumentLog WHERE $whereSQL ORDER BY DocDate $sort, DocID $sort LIMIT $limit OFFSET $offset";
+$stmt = $pdo->prepare($sql);
+$stmt->execute($params);
+$documents = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -54,17 +89,36 @@ endif; ?>
     <!-- Main Content -->
     <div class="main-content">
         
+        <?php if (isset($_SESSION['success'])): ?>
+            <div style="background: rgba(46, 204, 113, 0.2); border: 1px solid #2ecc71; color: #a2f2c2; padding: 10px; border-radius: 5px; margin-bottom: 20px;">
+                <?php echo $_SESSION['success'];
+    unset($_SESSION['success']); ?>
+            </div>
+        <?php
+endif; ?>
+        <?php if (isset($_SESSION['error'])): ?>
+            <div style="background: rgba(231, 76, 60, 0.2); border: 1px solid #e74c3c; color: #ff8a80; padding: 10px; border-radius: 5px; margin-bottom: 20px;">
+                <?php echo $_SESSION['error'];
+    unset($_SESSION['error']); ?>
+            </div>
+        <?php
+endif; ?>
+
         <!-- Toolbar -->
         <div class="doc-toolbar">
-            <div class="search-container">
-                <i class="fa-solid fa-magnifying-glass search-icon"></i>
-                <input type="text" class="search-input" placeholder="Search">
-            </div>
+            <form action="" method="GET" style="flex: 1; max-width: 400px;">
+                <div class="search-container">
+                    <i class="fa-solid fa-magnifying-glass search-icon"></i>
+                    <input type="text" name="search" class="search-input" placeholder="Search by name, office, etc..." value="<?php echo htmlspecialchars($search); ?>">
+                </div>
+            </form>
             
             <div class="toolbar-buttons">
-                <button class="btn-dark">
-                    <i class="fa-solid fa-filter"></i> Filter
-                </button>
+                <!-- Filter Button toggles Date Sort -->
+                <a href="?search=<?php echo urlencode($search); ?>&sort=<?php echo $nextSort; ?>" class="btn-dark" style="text-decoration: none;">
+                    <i class="fa-solid fa-filter"></i> Sort <?php echo($sort == 'DESC') ? 'Newest' : 'Oldest'; ?>
+                </a>
+                
                 <a href="add_document.php" class="btn-dark" style="text-decoration: none;">
                     <i class="fa-solid fa-plus"></i> Add
                 </a>
@@ -76,52 +130,92 @@ endif; ?>
             <table class="doc-table">
                 <thead>
                     <tr>
-                        <th>Document id</th>
-                        <th>Image</th>
+                        <th>ID</th>
+                        <th>Preview</th>
                         <th>Date</th>
                         <th>Office</th>
-                        <th>Description</th>
+                        <th>Subject</th>
                         <th>Received By</th>
                         <th>Status</th>
                         <th>Actions</th>
                     </tr>
                 </thead>
                 <tbody>
-                    <!-- Placeholder Rows matching the image -->
-                    <?php for ($i = 0; $i < 8; $i++): ?>
-                    <tr>
-                        <td>Document id</td>
-                        <td></td>
-                        <td>12/05/2025</td>
-                        <td>SOC</td>
-                        <td>SOC</td>
-                        <td>SOC</td>
-                        <td>SOC</td>
-                        <td>
-                            <div class="actions">
-                                <button class="action-btn" title="Download"><i class="fa-solid fa-download"></i></button>
-                                <button class="action-btn" title="Delete"><i class="fa-regular fa-trash-can"></i></button>
-                                <button class="action-btn" title="Edit"><i class="fa-solid fa-pen"></i></button>
-                            </div>
-                        </td>
-                    </tr>
+                    <?php if (count($documents) > 0): ?>
+                        <?php foreach ($documents as $row): ?>
+                        <tr>
+                            <td>#<?php echo $row['DocID']; ?></td>
+                            <td>
+                                <?php if (!empty($row['DocImage']) && file_exists($row['DocImage'])): ?>
+                                    <i class="fa-regular fa-file-image" title="Has Attachment"></i>
+                                <?php
+        else: ?>
+                                    <span style="opacity: 0.3;">-</span>
+                                <?php
+        endif; ?>
+                            </td>
+                            <td><?php echo date('m/d/Y', strtotime($row['DocDate'])); ?></td>
+                            <td><?php echo htmlspecialchars($row['Office']); ?></td>
+                            <td><?php echo htmlspecialchars($row['Subject']); ?></td>
+                            <td><?php echo htmlspecialchars($row['ReceivedBy']); ?></td>
+                            <td>
+                                <span class="badge badge-<?php echo strtolower($row['Status']); ?>">
+                                    <?php echo htmlspecialchars($row['Status']); ?>
+                                </span>
+                            </td>
+                            <td>
+                                <div class="actions">
+                                    <?php if (!empty($row['DocImage'])): ?>
+                                        <a href="download_document.php?id=<?php echo $row['DocID']; ?>" class="action-btn" title="Download"><i class="fa-solid fa-download"></i></a>
+                                    <?php
+        else: ?>
+                                        <button class="action-btn disabled" style="opacity: 0.5; cursor: not-allowed;"><i class="fa-solid fa-download"></i></button>
+                                    <?php
+        endif; ?>
+                                    
+                                    <a href="delete_document.php?id=<?php echo $row['DocID']; ?>" class="action-btn" title="Delete" onclick="return confirm('Are you sure you want to delete this document?');"><i class="fa-regular fa-trash-can"></i></a>
+                                    
+                                    <a href="edit_document.php?id=<?php echo $row['DocID']; ?>" class="action-btn" title="Edit"><i class="fa-solid fa-pen"></i></a>
+                                </div>
+                            </td>
+                        </tr>
+                        <?php
+    endforeach; ?>
                     <?php
-endfor; ?>
+else: ?>
+                        <tr>
+                            <td colspan="8" style="text-align: center; padding: 2rem;">No documents found.</td>
+                        </tr>
+                    <?php
+endif; ?>
                 </tbody>
             </table>
         </div>
 
         <!-- Pagination -->
         <div class="pagination-area">
-            <div class="page-nav"><i class="fa-solid fa-chevron-left"></i></div>
+            <?php if ($page > 1): ?>
+                <a href="?page=<?php echo $page - 1; ?>&search=<?php echo urlencode($search); ?>&sort=<?php echo $sort; ?>" class="page-nav"><i class="fa-solid fa-chevron-left"></i></a>
+            <?php
+else: ?>
+                <div class="page-nav disabled"><i class="fa-solid fa-chevron-left"></i></div>
+            <?php
+endif; ?>
+
             <div class="pagination-links">
-                <a href="#" class="page-link active">1</a>
-                <a href="#" class="page-link">2</a>
-                <span class="page-link">...</span>
-                <a href="#" class="page-link">3</a>
-                <a href="#" class="page-link">4</a>
+                <?php for ($i = 1; $i <= $totalPages; $i++): ?>
+                    <a href="?page=<?php echo $i; ?>&search=<?php echo urlencode($search); ?>&sort=<?php echo $sort; ?>" class="page-link <?php echo($i == $page) ? 'active' : ''; ?>"><?php echo $i; ?></a>
+                <?php
+endfor; ?>
             </div>
-            <div class="page-nav"><i class="fa-solid fa-chevron-right"></i></div>
+
+            <?php if ($page < $totalPages): ?>
+                <a href="?page=<?php echo $page + 1; ?>&search=<?php echo urlencode($search); ?>&sort=<?php echo $sort; ?>" class="page-nav"><i class="fa-solid fa-chevron-right"></i></a>
+            <?php
+else: ?>
+                <div class="page-nav disabled"><i class="fa-solid fa-chevron-right"></i></div>
+            <?php
+endif; ?>
         </div>
     </div>
 

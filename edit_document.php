@@ -1,7 +1,21 @@
 <?php
 session_start();
+require_once 'config/database.php';
+
 if (!isset($_SESSION['user_id'])) {
     header('Location: login.php');
+    exit;
+}
+
+$doc = null;
+if (isset($_GET['id'])) {
+    $stmt = $pdo->prepare("SELECT * FROM DocumentLog WHERE DocID = ?");
+    $stmt->execute([$_GET['id']]);
+    $doc = $stmt->fetch(PDO::FETCH_ASSOC);
+}
+
+if (!$doc) {
+    header('Location: documents.php');
     exit;
 }
 ?>
@@ -10,8 +24,7 @@ if (!isset($_SESSION['user_id'])) {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Add Document - Document LogBook</title>
-    
+    <title>Edit Document - Document LogBook</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -20,17 +33,19 @@ if (!isset($_SESSION['user_id'])) {
 <body>
     <div class="container" style="max-width: 600px;">
         <header style="margin-bottom: 2rem;">
-            <h1>Add New Document</h1>
+            <h1>Edit Document</h1>
         </header>
 
         <div class="card">
-            <form action="process_add_document.php" method="POST" enctype="multipart/form-data">
+            <form action="process_edit_document.php" method="POST" enctype="multipart/form-data">
+                <input type="hidden" name="id" value="<?php echo $doc['DocID']; ?>">
+                
                 <!-- Office -->
                 <div style="margin-bottom: 1rem;">
                     <label for="office" style="display: block; margin-bottom: 0.5rem; font-weight: 500;">Office / Department</label>
                     <input type="text" id="office" name="office" required 
                            style="width: 100%; padding: 0.75rem; border: 1px solid var(--border-color); border-radius: 0.5rem;"
-                           placeholder="e.g. Finance, HR, SOC">
+                           value="<?php echo htmlspecialchars($doc['Office']); ?>">
                 </div>
 
                 <!-- Document Name -->
@@ -38,34 +53,33 @@ if (!isset($_SESSION['user_id'])) {
                     <label for="doc_name" style="display: block; margin-bottom: 0.5rem; font-weight: 500;">Document Name</label>
                     <input type="text" id="doc_name" name="doc_name" required 
                            style="width: 100%; padding: 0.75rem; border: 1px solid var(--border-color); border-radius: 0.5rem;"
-                           placeholder="e.g. Invoice #12345">
+                           value="<?php echo htmlspecialchars($doc['Subject']); ?>">
                 </div>
 
                 <!-- Description -->
                 <div style="margin-bottom: 1rem;">
                     <label for="description" style="display: block; margin-bottom: 0.5rem; font-weight: 500;">Description</label>
                     <textarea id="description" name="description" rows="4" 
-                              style="width: 100%; padding: 0.75rem; border: 1px solid var(--border-color); border-radius: 0.5rem;"
-                              placeholder="Brief details about the document..."></textarea>
-                </div>
-
-                <!-- Status -->
-                <div style="margin-bottom: 1rem;">
-                    <label for="status" style="display: block; margin-bottom: 0.5rem; font-weight: 500;">Status</label>
-                    <select id="status" name="status" style="width: 100%; padding: 0.75rem; border: 1px solid var(--border-color); border-radius: 0.5rem;" onchange="toggleReceivedBy()">
-                        <option value="Incoming" selected>Incoming</option>
-                        <option value="Outgoing">Outgoing</option>
-                    </select>
+                              style="width: 100%; padding: 0.75rem; border: 1px solid var(--border-color); border-radius: 0.5rem;"><?php echo htmlspecialchars($doc['Description']); ?></textarea>
                 </div>
 
                 <!-- Received By -->
-                <div style="margin-bottom: 1.5rem;">
-                    <label for="received_by" style="display: block; margin-bottom: 0.5rem; font-weight: 500;">Received By <span id="received_req" style="color: red; display: none;">*</span></label>
+                <div style="margin-bottom: 1rem;">
+                    <label for="received_by" style="display: block; margin-bottom: 0.5rem; font-weight: 500;">Received By <span id="received_req" style="color: red; display: <?php echo $doc['Status'] == 'Outgoing' ? 'inline' : 'none'; ?>;">*</span></label>
                     <input type="text" id="received_by" name="received_by" 
                            style="width: 100%; padding: 0.75rem; border: 1px solid var(--border-color); border-radius: 0.5rem;"
-                           placeholder="Name of receiver">
+                           value="<?php echo htmlspecialchars($doc['ReceivedBy']); ?>">
                 </div>
-
+                
+                <!-- Status -->
+                 <div style="margin-bottom: 1.5rem;">
+                    <label for="status" style="display: block; margin-bottom: 0.5rem; font-weight: 500;">Status</label>
+                    <select id="status" name="status" style="width: 100%; padding: 0.75rem; border: 1px solid var(--border-color); border-radius: 0.5rem;" onchange="toggleReceivedBy()">
+                        <option value="Incoming" <?php echo $doc['Status'] == 'Incoming' ? 'selected' : ''; ?>>Incoming</option>
+                        <option value="Outgoing" <?php echo $doc['Status'] == 'Outgoing' ? 'selected' : ''; ?>>Outgoing</option>
+                    </select>
+                </div>
+                
                 <script>
                     function toggleReceivedBy() {
                         const status = document.getElementById('status').value;
@@ -80,26 +94,17 @@ if (!isset($_SESSION['user_id'])) {
                             receivedReq.style.display = 'none';
                         }
                     }
-                    // Run on load
-                    window.onload = toggleReceivedBy;
+                    // We rely on the inline style for initial load, but this ensures dynamics working
                 </script>
-
-                <!-- File Upload -->
-                <div style="margin-bottom: 1.5rem;">
-                    <label for="doc_image" style="display: block; margin-bottom: 0.5rem; font-weight: 500;">Document File (Image/PDF)</label>
-                    <input type="file" id="doc_image" name="doc_image" 
-                           style="width: 100%; padding: 0.75rem; border: 1px solid var(--border-color); border-radius: 0.5rem;">
-                </div>
 
                 <!-- Actions -->
                 <div style="display: flex; gap: 1rem; justify-content: flex-end;">
                     <a href="documents.php" class="btn btn-secondary">Cancel</a>
-                    <button type="submit" class="btn btn-primary">Submit Document</button>
+                    <button type="submit" class="btn btn-primary">Update Document</button>
                 </div>
             </form>
         </div>
     </div>
-
     <script src="assets/js/main.js"></script>
 </body>
 </html>
