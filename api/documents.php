@@ -54,7 +54,7 @@ function handlePost($pdo)
 
     try {
         $stmt->execute([
-            $data['DocDate'],
+            date('Y-m-d'), // Auto-set current date
             $data['Office'],
             $data['Subject'],
             $data['Description'],
@@ -78,12 +78,11 @@ function handlePut($pdo)
         return;
     }
 
-    $sql = "UPDATE DocumentLog SET DocDate=?, Office=?, Subject=?, Description=?, ReceivedBy=?, Status=?, DocImage=? WHERE DocID=?";
+    $sql = "UPDATE DocumentLog SET Office=?, Subject=?, Description=?, ReceivedBy=?, Status=?, DocImage=? WHERE DocID=?";
     $stmt = $pdo->prepare($sql);
 
     try {
         $stmt->execute([
-            $data['DocDate'],
             $data['Office'],
             $data['Subject'],
             $data['Description'],

@@ -142,7 +142,7 @@ window.openEditModal = async (id) => {
         const doc = result.data.find(d => d.DocID == id);
         if (doc) {
             document.getElementById('DocID').value = doc.DocID;
-            document.getElementById('DocDate').value = doc.DocDate;
+            // Date is not editable
             document.getElementById('Office').value = doc.Office;
             document.getElementById('Subject').value = doc.Subject;
             document.getElementById('Description').value = doc.Description;
