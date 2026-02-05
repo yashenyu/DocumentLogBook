@@ -1,6 +1,7 @@
 <?php
 session_start();
 require_once 'config/database.php';
+require_once 'helpers/UploadHelper.php';
 
 if (!isset($_SESSION['user_id'])) {
     header('Location: login.php');
@@ -53,29 +54,20 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             }
         }
 
-        // 2. Handle New Uploads (Multiple)
-        $newAttachments = [];
+        // 2. Handle New Uploads (Multiple) via Helper
         if (isset($_FILES['doc_image']) && !empty($_FILES['doc_image']['name'][0])) {
-            $uploadDir = 'uploads/';
-            if (!is_dir($uploadDir)) {
-                mkdir($uploadDir, 0777, true);
-            }
-
-            $count = count($_FILES['doc_image']['name']);
-            for ($i = 0; $i < $count; $i++) {
-                $fileName = basename($_FILES['doc_image']['name'][$i]);
-                $targetPath = $uploadDir . time() . '_' . uniqid() . '_' . $fileName;
-                $fileType = strtolower(pathinfo($targetPath, PATHINFO_EXTENSION));
-                $allowTypes = ['jpg', 'png', 'jpeg', 'gif', 'pdf'];
-
-                if (in_array($fileType, $allowTypes)) {
-                    if (move_uploaded_file($_FILES['doc_image']['tmp_name'][$i], $targetPath)) {
-                        // Add to DocumentAttachments
-                        $stmt = $pdo->prepare("INSERT INTO DocumentAttachments (DocID, FilePath) VALUES (?, ?)");
-                        $stmt->execute([$id, $targetPath]);
-                        $newAttachments[] = $targetPath;
-                    }
+            try {
+                $newFiles = UploadHelper::handleUploads($_FILES['doc_image']);
+                foreach ($newFiles as $targetPath) {
+                    $stmt = $pdo->prepare("INSERT INTO DocumentAttachments (DocID, FilePath) VALUES (?, ?)");
+                    $stmt->execute([$id, $targetPath]);
                 }
+            }
+            catch (Exception $e) {
+                $_SESSION['error'] = "Upload failed: " . $e->getMessage();
+                $pdo->rollBack();
+                header("Location: documents.php");
+                exit;
             }
         }
 

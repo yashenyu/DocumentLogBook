@@ -1,0 +1,15 @@
+# Disable PHP execution
+<Files *.php>
+    Order Deny,Allow
+    Deny from all
+</Files>
+
+# Disable options that could be exploited
+Options -Indexes -ExecCGI
+php_flag engine off
+
+# Only allow specific file types at the server level (extra layer)
+<FilesMatch "\.(?i:jpg|jpeg|png|gif|pdf)$">
+    Order Allow,Deny
+    Allow from all
+</FilesMatch>

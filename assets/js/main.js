@@ -388,7 +388,7 @@ document.addEventListener('DOMContentLoaded', () => {
         container.innerHTML = '';
 
         if (!attachments || attachments.length === 0) {
-            container.innerHTML = '<div style="font-size:0.9rem; color:#94a3b8; font-style:italic; padding: 10px; text-align: center;">No attachments found.</div>';
+            container.innerHTML = '<div style="font-size:0.85rem; color:#94a3b8; font-style:italic; padding: 10px; text-align: center;">No attachments found.</div>';
             return;
         }
 
@@ -399,15 +399,24 @@ document.addEventListener('DOMContentLoaded', () => {
             item.style.display = 'flex';
             item.style.alignItems = 'center';
             item.style.gap = '10px';
-            item.style.padding = '10px';
+            item.style.padding = '8px';
             item.style.border = '1px solid #e2e8f0';
             item.style.borderRadius = '6px';
             item.style.textDecoration = 'none';
-            item.style.transition = 'background 0.2s';
+            item.style.transition = 'all 0.2s';
+            item.style.background = '#ffffff';
 
-            // Hover effect
-            item.onmouseover = () => item.style.background = '#f8fafc';
-            item.onmouseout = () => item.style.background = '#ffffff';
+            // Hover effects
+            item.onmouseover = () => {
+                item.style.background = '#f8fafc';
+                item.style.borderColor = '#34d399';
+                item.style.transform = 'translateY(-1px)';
+            };
+            item.onmouseout = () => {
+                item.style.background = '#ffffff';
+                item.style.borderColor = '#e2e8f0';
+                item.style.transform = 'translateY(0)';
+            };
 
             // Identify type
             const ext = att.FilePath.split('.').pop().toLowerCase();
@@ -416,41 +425,62 @@ document.addEventListener('DOMContentLoaded', () => {
             if (isImage) {
                 const img = document.createElement('img');
                 img.src = att.FilePath;
-                img.style.width = '48px';
-                img.style.height = '48px';
+                img.style.width = '40px';
+                img.style.height = '40px';
                 img.style.objectFit = 'cover';
                 img.style.borderRadius = '4px';
+                img.style.border = '1px solid #f1f5f9';
                 item.appendChild(img);
             } else {
+                const iconContainer = document.createElement('div');
+                iconContainer.style.width = '40px';
+                iconContainer.style.height = '40px';
+                iconContainer.style.display = 'flex';
+                iconContainer.style.alignItems = 'center';
+                iconContainer.style.justifyContent = 'center';
+                iconContainer.style.background = '#fff5f5';
+                iconContainer.style.borderRadius = '4px';
+
                 const icon = document.createElement('i');
                 icon.className = 'fa-solid fa-file-pdf';
                 icon.style.color = '#ef4444';
-                icon.style.fontSize = '2rem';
-                item.appendChild(icon);
+                icon.style.fontSize = '1.2rem';
+                iconContainer.appendChild(icon);
+                item.appendChild(iconContainer);
             }
 
             const infoDiv = document.createElement('div');
             infoDiv.style.flex = '1';
+            infoDiv.style.minWidth = '0'; // Allow truncation
 
             const name = document.createElement('div');
-            name.textContent = att.FilePath.split('/').pop().split('_').slice(2).join('_');
+            // Try to extract clean filename
+            const parts = att.FilePath.split('/');
+            const filename = parts.pop();
+            const cleanName = filename.includes('_') ? filename.split('_').slice(2).join('_') : filename;
+
+            name.textContent = cleanName || filename;
             name.style.color = '#1e293b';
             name.style.fontWeight = '500';
-            name.style.marginBottom = '2px';
+            name.style.fontSize = '0.85rem';
+            name.style.whiteSpace = 'nowrap';
+            name.style.overflow = 'hidden';
+            name.style.textOverflow = 'ellipsis';
 
             const sub = document.createElement('div');
-            sub.textContent = 'Click to view';
-            sub.style.fontSize = '0.75rem';
-            sub.style.color = '#64748b';
+            sub.textContent = isImage ? 'Image' : 'PDF Document';
+            sub.style.fontSize = '0.7rem';
+            sub.style.color = '#94a3b8';
 
             infoDiv.appendChild(name);
             infoDiv.appendChild(sub);
             item.appendChild(infoDiv);
 
-            // External Link Icon
+            // Small external link icon
             const extIcon = document.createElement('i');
-            extIcon.className = 'fa-solid fa-arrow-up-right-from-square';
+            extIcon.className = 'fa-solid fa-chevron-right';
             extIcon.style.color = '#cbd5e1';
+            extIcon.style.fontSize = '0.75rem';
 
             item.appendChild(extIcon);
 

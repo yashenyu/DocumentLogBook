@@ -415,6 +415,7 @@ body.auth-page {
     align-items: center;
     gap: 0.5rem;
     cursor: pointer;
+    font-family: inherit;
 }
 
 .btn-dark:hover {
@@ -452,8 +453,29 @@ body.auth-page {
     vertical-align: middle;
 }
 
-.doc-table tr:hover {
-    background-color: #f8fafc;
+/* Table Content Limiter Utilities */
+.text-truncate {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.col-office {
+    max-width: 150px;
+}
+
+.col-subject {
+    max-width: 250px;
+}
+
+.col-received {
+    max-width: 150px;
+}
+
+.doc-table td.col-truncate {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
 }
 
 .doc-table .actions {

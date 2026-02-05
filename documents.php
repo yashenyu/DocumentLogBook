@@ -214,11 +214,11 @@ foreach (['start_date', 'end_date', 'office', 'status', 'sort_by', 'sort_order']
             
             <div class="toolbar-buttons">
                 <!-- Advanced Filters Button -->
-                <button id="openFilterModal" class="btn-dark">
+                <button id="openFilterModal" class="btn btn-dark">
                     <img src="assets/images/filter-icon.svg" alt="Filter" style="width: 16px; height: 16px;"> Advanced Filters
                 </button>
                 
-                <button id="openAddModal" class="btn-dark" style="text-decoration: none;">
+                <button id="openAddModal" class="btn btn-dark" style="text-decoration: none;">
                     <img src="assets/images/add-icon.svg" alt="Add" style="width: 16px; height: 16px;"> Add
                 </button>
             </div>
@@ -266,9 +266,9 @@ foreach (['start_date', 'end_date', 'office', 'status', 'sort_by', 'sort_order']
         endif; ?>
                             </td>
                             <td><?php echo date('m/d/Y', strtotime($row['DocDate'])); ?></td>
-                            <td><?php echo htmlspecialchars($row['Office']); ?></td>
-                            <td><?php echo htmlspecialchars($row['Subject']); ?></td>
-                            <td><?php echo htmlspecialchars($row['ReceivedBy']); ?></td>
+                            <td class="col-truncate col-office" title="<?php echo htmlspecialchars($row['Office']); ?>"><?php echo htmlspecialchars($row['Office']); ?></td>
+                            <td class="col-truncate col-subject" title="<?php echo htmlspecialchars($row['Subject']); ?>"><?php echo htmlspecialchars($row['Subject']); ?></td>
+                            <td class="col-truncate col-received" title="<?php echo htmlspecialchars($row['ReceivedBy']); ?>"><?php echo htmlspecialchars($row['ReceivedBy']); ?></td>
                             <td>
                                 <span class="badge badge-<?php echo strtolower($row['Status']); ?>">
                                     <?php echo htmlspecialchars($row['Status']); ?>
@@ -570,49 +570,56 @@ endif; ?>
 
     <!-- View Document Modal -->
     <div id="viewModal" class="modal-overlay">
-        <div class="modal-content modal-lg" style="max-height: 90vh; display: flex; flex-direction: column; overflow: hidden; width: 95%; max-width: 1000px;">
+        <div class="modal-content modal-lg" style="max-height: 90vh; display: flex; flex-direction: column; overflow: hidden; width: 95%; max-width: 1200px;">
             <div class="modal-header">
                 <h3>Document Details</h3>
                 <span class="close-modal close-view">&times;</span>
             </div>
             <div class="modal-body" style="padding: 1.5rem; overflow-y: auto; flex: 1;">
-                <!-- Header Info -->
-                <div style="margin-bottom: 1.5rem; padding-bottom: 1rem; border-bottom: 1px solid #e2e8f0;">
-                    <h2 id="view_subject" style="margin: 0 0 0.5rem 0; color: #1e293b; word-break: break-word; overflow-wrap: break-word;"></h2>
-                    <span id="view_id_badge" style="background: #e2e8f0; color: #475569; padding: 2px 8px; border-radius: 4px; font-size: 0.8rem; font-weight: 600;"></span>
-                </div>
+                <div class="view-modal-grid" style="display: grid; grid-template-columns: 1fr 300px; gap: 2rem;">
+                    <!-- Left Column: Information -->
+                    <div class="view-info-column">
+                        <!-- Header Info -->
+                        <div style="margin-bottom: 1.5rem; padding-bottom: 1rem; border-bottom: 1px solid #e2e8f0;">
+                            <h2 id="view_subject" style="margin: 0 0 0.5rem 0; color: #1e293b; word-break: break-word; overflow-wrap: break-word;"></h2>
+                            <span id="view_id_badge" style="background: #e2e8f0; color: #475569; padding: 2px 8px; border-radius: 4px; font-size: 0.8rem; font-weight: 600;"></span>
+                        </div>
 
-                <!-- 2x2 Metadata Grid -->
-                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1.5rem; margin-bottom: 1.5rem; background: #f8fafc; padding: 1.25rem; border-radius: 8px; border: 1px solid #e2e8f0;">
-                    <div>
-                        <label style="display: block; font-size: 0.8rem; font-weight: 600; color: #64748b; margin-bottom: 4px; text-transform: uppercase; letter-spacing: 0.5px;">Office / Department</label>
-                        <div id="view_office" style="font-weight: 500; color: #334155; font-size: 1rem; word-break: break-word; overflow-wrap: break-word;"></div>
-                    </div>
-                    <div>
-                        <label style="display: block; font-size: 0.8rem; font-weight: 600; color: #64748b; margin-bottom: 4px; text-transform: uppercase; letter-spacing: 0.5px;">Date Logged</label>
-                        <div id="view_date" style="font-weight: 500; color: #334155; font-size: 1rem;"></div>
-                    </div>
-                    <div>
-                        <label style="display: block; font-size: 0.8rem; font-weight: 600; color: #64748b; margin-bottom: 4px; text-transform: uppercase; letter-spacing: 0.5px;">Status</label>
-                        <div id="view_status"></div>
-                    </div>
-                    <div>
-                        <label style="display: block; font-size: 0.8rem; font-weight: 600; color: #64748b; margin-bottom: 4px; text-transform: uppercase; letter-spacing: 0.5px;">Received By</label>
-                        <div id="view_received_by" style="font-weight: 500; color: #334155; font-size: 1rem; word-break: break-word; overflow-wrap: break-word;"></div>
-                    </div>
-                </div>
+                        <!-- Metadata Grid -->
+                        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 1.25rem; margin-bottom: 1.5rem; background: #f8fafc; padding: 1.25rem; border-radius: 8px; border: 1px solid #e2e8f0;">
+                            <div>
+                                <label style="display: block; font-size: 0.75rem; font-weight: 600; color: #64748b; margin-bottom: 4px; text-transform: uppercase; letter-spacing: 0.5px;">Office / Department</label>
+                                <div id="view_office" style="font-weight: 500; color: #334155; font-size: 0.95rem; word-break: break-word; overflow-wrap: break-word;"></div>
+                            </div>
+                            <div>
+                                <label style="display: block; font-size: 0.75rem; font-weight: 600; color: #64748b; margin-bottom: 4px; text-transform: uppercase; letter-spacing: 0.5px;">Date Logged</label>
+                                <div id="view_date" style="font-weight: 500; color: #334155; font-size: 0.95rem;"></div>
+                            </div>
+                            <div>
+                                <label style="display: block; font-size: 0.75rem; font-weight: 600; color: #64748b; margin-bottom: 4px; text-transform: uppercase; letter-spacing: 0.5px;">Status</label>
+                                <div id="view_status"></div>
+                            </div>
+                            <div>
+                                <label style="display: block; font-size: 0.75rem; font-weight: 600; color: #64748b; margin-bottom: 4px; text-transform: uppercase; letter-spacing: 0.5px;">Received By</label>
+                                <div id="view_received_by" style="font-weight: 500; color: #334155; font-size: 0.95rem; word-break: break-word; overflow-wrap: break-word;"></div>
+                            </div>
+                        </div>
 
-                <!-- Description -->
-                <div style="margin-bottom: 2rem;">
-                    <label style="display: block; font-size: 0.9rem; font-weight: 600; color: #334155; margin-bottom: 0.5rem;">Description</label>
-                    <div id="view_description" style="background: #fff; padding: 1.25rem; border-radius: 8px; border: 1px solid #e2e8f0; min-height: 250px; white-space: pre-wrap; word-break: break-word; overflow-wrap: break-word; color: #334155; line-height: 1.7; font-size: 1rem; box-shadow: inset 0 2px 4px rgba(0,0,0,0.02);"></div>
-                </div>
+                        <!-- Description -->
+                        <div>
+                            <label style="display: block; font-size: 0.9rem; font-weight: 600; color: #334155; margin-bottom: 0.5rem;">Description</label>
+                            <div id="view_description" style="background: #fff; padding: 1.25rem; border-radius: 8px; border: 1px solid #e2e8f0; min-height: 150px; white-space: pre-wrap; word-break: break-word; overflow-wrap: break-word; color: #334155; line-height: 1.6; font-size: 0.95rem; box-shadow: inset 0 2px 4px rgba(0,0,0,0.02);"></div>
+                        </div>
+                    </div>
 
-                <!-- Attachments Gallery -->
-                <div>
-                    <label style="display: block; font-size: 0.9rem; font-weight: 600; color: #334155; margin-bottom: 0.5rem;">Attachments Gallery</label>
-                    <div id="view_attachments" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 1.5rem; padding: 4px;">
-                        <!-- Injected via JS -->
+                    <!-- Right Column: Attachments Sidebar -->
+                    <div class="view-attachments-column" style="border-left: 1px solid #e2e8f0; padding-left: 1.5rem;">
+                        <label style="display: block; font-size: 0.9rem; font-weight: 600; color: #334155; margin-bottom: 1rem; display: flex; align-items: center; gap: 0.5rem;">
+                            <i class="fa-solid fa-paperclip" style="color: #64748b;"></i> Attachments
+                        </label>
+                        <div id="view_attachments" style="display: flex; flex-direction: column; gap: 0.75rem;">
+                            <!-- Injected via JS -->
+                        </div>
                     </div>
                 </div>
             </div>
