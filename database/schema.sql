@@ -15,3 +15,10 @@ CREATE TABLE users (
     password VARCHAR(255) NOT NULL,
     role ENUM('Admin', 'Staff') NOT NULL DEFAULT 'Staff'
 );
+
+CREATE TABLE DocumentAttachments (
+    AttachmentID INT AUTO_INCREMENT PRIMARY KEY,
+    DocID INT NOT NULL,
+    FilePath VARCHAR(255) NOT NULL,
+    FOREIGN KEY (DocID) REFERENCES DocumentLog(DocID) ON DELETE CASCADE
+);

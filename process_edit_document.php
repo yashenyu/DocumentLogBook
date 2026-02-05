@@ -15,63 +15,100 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $receivedBy = $_POST['received_by'] ?? '';
     $status = $_POST['status'] ?? 'Pending';
 
+    // Arrays for handling files
+    $deleteAttachments = $_POST['delete_attachments'] ?? [];
+
     if (!$id || empty($subject) || empty($office)) {
         $_SESSION['error'] = "Valid ID, Name and Office are required.";
-        header("Location: edit_document.php?id=$id");
+        header("Location: documents.php");
         exit;
     }
 
     // Conditional Validation for Outgoing
     if ($status === 'Outgoing' && empty($receivedBy)) {
         $_SESSION['error'] = "Received By is required for Outgoing documents.";
-        header("Location: edit_document.php?id=$id");
+        header("Location: documents.php");
         exit;
     }
 
-    // Handle File Upload if new file provided
-    $docImage = null;
-    $updateImage = false;
+    try {
+        $pdo->beginTransaction();
 
-    if (isset($_FILES['doc_image']) && $_FILES['doc_image']['error'] == 0) {
-        $uploadDir = 'uploads/';
-        if (!file_exists($uploadDir)) {
-            mkdir($uploadDir, 0777, true);
-        }
+        // 1. Handle Deletions
+        if (!empty($deleteAttachments)) {
+            foreach ($deleteAttachments as $attachId) {
+                // Get path to delete file
+                $stmt = $pdo->prepare("SELECT FilePath FROM DocumentAttachments WHERE AttachmentID = ? AND DocID = ?");
+                $stmt->execute([$attachId, $id]);
+                $file = $stmt->fetch(PDO::FETCH_ASSOC);
 
-        $fileName = basename($_FILES['doc_image']['name']);
-        $targetPath = $uploadDir . time() . '_' . $fileName;
-
-        $fileType = pathinfo($targetPath, PATHINFO_EXTENSION);
-        $allowTypes = array('jpg', 'png', 'jpeg', 'gif', 'pdf');
-        if (in_array(strtolower($fileType), $allowTypes)) {
-            if (move_uploaded_file($_FILES['doc_image']['tmp_name'], $targetPath)) {
-                $docImage = $targetPath;
-                $updateImage = true;
+                if ($file) {
+                    if (file_exists($file['FilePath'])) {
+                        unlink($file['FilePath']);
+                    }
+                    // Delete from DB
+                    $delStmt = $pdo->prepare("DELETE FROM DocumentAttachments WHERE AttachmentID = ?");
+                    $delStmt->execute([$attachId]);
+                }
             }
         }
-    }
 
-    try {
-        if ($updateImage) {
-            $sql = "UPDATE DocumentLog SET Office = ?, Subject = ?, Description = ?, ReceivedBy = ?, Status = ?, DocImage = ? WHERE DocID = ?";
-            $params = [$office, $subject, $description, $receivedBy, $status, $docImage, $id];
-        }
-        else {
-            $sql = "UPDATE DocumentLog SET Office = ?, Subject = ?, Description = ?, ReceivedBy = ?, Status = ? WHERE DocID = ?";
-            $params = [$office, $subject, $description, $receivedBy, $status, $id];
+        // 2. Handle New Uploads (Multiple)
+        $newAttachments = [];
+        if (isset($_FILES['doc_image']) && !empty($_FILES['doc_image']['name'][0])) {
+            $uploadDir = 'uploads/';
+            if (!is_dir($uploadDir)) {
+                mkdir($uploadDir, 0777, true);
+            }
+
+            $count = count($_FILES['doc_image']['name']);
+            for ($i = 0; $i < $count; $i++) {
+                $fileName = basename($_FILES['doc_image']['name'][$i]);
+                $targetPath = $uploadDir . time() . '_' . uniqid() . '_' . $fileName;
+                $fileType = strtolower(pathinfo($targetPath, PATHINFO_EXTENSION));
+                $allowTypes = ['jpg', 'png', 'jpeg', 'gif', 'pdf'];
+
+                if (in_array($fileType, $allowTypes)) {
+                    if (move_uploaded_file($_FILES['doc_image']['tmp_name'][$i], $targetPath)) {
+                        // Add to DocumentAttachments
+                        $stmt = $pdo->prepare("INSERT INTO DocumentAttachments (DocID, FilePath) VALUES (?, ?)");
+                        $stmt->execute([$id, $targetPath]);
+                        $newAttachments[] = $targetPath;
+                    }
+                }
+            }
         }
 
+        // 3. Update Primary DocImage Logic
+        // We need to check if the current 'DocImage' (primary) is valid or if it was deleted.
+        // Simplified Logic: 
+        // - Fetch one existing attachment (ORDER BY AttachmentID ASC LIMIT 1)
+        // - Set it as DocImage. If no attachments, DocImage = NULL.
+
+        // This ensures DocImage is always consistent with the Attachments table.
+
+        $stmtFirst = $pdo->prepare("SELECT FilePath FROM DocumentAttachments WHERE DocID = ? ORDER BY AttachmentID ASC LIMIT 1");
+        $stmtFirst->execute([$id]);
+        $firstAttach = $stmtFirst->fetchColumn();
+
+        $primaryImage = $firstAttach ? $firstAttach : null;
+
+
+        // 4. Update Document Log
+        $sql = "UPDATE DocumentLog SET Office = ?, Subject = ?, Description = ?, ReceivedBy = ?, Status = ?, DocImage = ? WHERE DocID = ?";
         $stmt = $pdo->prepare($sql);
-        $stmt->execute($params);
+        $stmt->execute([$office, $subject, $description, $receivedBy, $status, $primaryImage, $id]);
 
+        $pdo->commit();
         $_SESSION['success'] = "Document updated successfully!";
         header('Location: documents.php');
         exit;
 
     }
     catch (PDOException $e) {
+        $pdo->rollBack();
         $_SESSION['error'] = "Database error: " . $e->getMessage();
-        header("Location: edit_document.php?id=$id");
+        header("Location: documents.php");
         exit;
     }
 }
