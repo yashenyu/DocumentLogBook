@@ -281,6 +281,17 @@ endif; ?>
         <div id="tableArea">
             <?php include 'table_data_partial.php'; ?>
         </div>
+
+        <!-- Dashboard Footer -->
+        <footer style="margin-top: 3rem; padding: 2rem 0; border-top: 1px solid #e2e8f0; display: flex; justify-content: space-between; align-items: center; color: #64748b; font-size: 0.85rem;">
+            <div>
+                &copy; <?php echo date('Y'); ?> Document LogBook System
+            </div>
+            <div style="display: flex; gap: 1.5rem;">
+                <a href="#" style="color: inherit; text-decoration: none;">Privacy Policy</a>
+                <a href="about.php" style="color: inherit; text-decoration: none; font-weight: 600;">About Developers</a>
+            </div>
+        </footer>
     </div>
 
     <!-- Advanced Filters Modal -->

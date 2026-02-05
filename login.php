@@ -94,7 +94,7 @@ endif; ?>
 
             <!-- Footer Links (absolute bottom right inside card) -->
             <div class="auth-footer" style="bottom: 1.5rem; right: 2.5rem; text-align: right;">
-                <a href="#">Privacy Policy</a> | <a href="#">System Status</a>
+                <a href="#">Privacy Policy</a>
             </div>
         </div>
     </div>
