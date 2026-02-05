@@ -575,46 +575,43 @@ endif; ?>
                 <h3>Document Details</h3>
                 <span class="close-modal close-view">&times;</span>
             </div>
-            <div class="modal-body" style="display: flex; overflow: hidden; flex: 1; padding: 0;">
-                <!-- Left Column: Details -->
-                <div style="flex: 7; padding: 2rem; overflow-y: auto; border-right: 1px solid #e2e8f0;">
-                    <!-- Header Info -->
-                    <div style="margin-bottom: 1.5rem; padding-bottom: 1rem; border-bottom: 1px solid #e2e8f0;">
-                        <h2 id="view_subject" style="margin: 0 0 0.5rem 0; color: #1e293b; word-break: break-word; overflow-wrap: break-word;"></h2>
-                        <span id="view_id_badge" style="background: #e2e8f0; color: #475569; padding: 2px 8px; border-radius: 4px; font-size: 0.8rem; font-weight: 600;"></span>
-                    </div>
+            <div class="modal-body" style="padding: 1.5rem; overflow-y: auto; flex: 1;">
+                <!-- Header Info -->
+                <div style="margin-bottom: 1.5rem; padding-bottom: 1rem; border-bottom: 1px solid #e2e8f0;">
+                    <h2 id="view_subject" style="margin: 0 0 0.5rem 0; color: #1e293b; word-break: break-word; overflow-wrap: break-word;"></h2>
+                    <span id="view_id_badge" style="background: #e2e8f0; color: #475569; padding: 2px 8px; border-radius: 4px; font-size: 0.8rem; font-weight: 600;"></span>
+                </div>
 
-                    <!-- 2x2 Metadata Grid -->
-                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1.5rem; margin-bottom: 1.5rem; background: #f8fafc; padding: 1.25rem; border-radius: 8px; border: 1px solid #e2e8f0;">
-                        <div>
-                            <label style="display: block; font-size: 0.8rem; font-weight: 600; color: #64748b; margin-bottom: 4px; text-transform: uppercase; letter-spacing: 0.5px;">Office / Department</label>
-                            <div id="view_office" style="font-weight: 500; color: #334155; font-size: 1rem; word-break: break-word; overflow-wrap: break-word;"></div>
-                        </div>
-                        <div>
-                            <label style="display: block; font-size: 0.8rem; font-weight: 600; color: #64748b; margin-bottom: 4px; text-transform: uppercase; letter-spacing: 0.5px;">Date Logged</label>
-                            <div id="view_date" style="font-weight: 500; color: #334155; font-size: 1rem;"></div>
-                        </div>
-                        <div>
-                            <label style="display: block; font-size: 0.8rem; font-weight: 600; color: #64748b; margin-bottom: 4px; text-transform: uppercase; letter-spacing: 0.5px;">Status</label>
-                            <div id="view_status"></div>
-                        </div>
-                        <div>
-                            <label style="display: block; font-size: 0.8rem; font-weight: 600; color: #64748b; margin-bottom: 4px; text-transform: uppercase; letter-spacing: 0.5px;">Received By</label>
-                            <div id="view_received_by" style="font-weight: 500; color: #334155; font-size: 1rem; word-break: break-word; overflow-wrap: break-word;"></div>
-                        </div>
-                    </div>
-
-                    <!-- Description -->
+                <!-- 2x2 Metadata Grid -->
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1.5rem; margin-bottom: 1.5rem; background: #f8fafc; padding: 1.25rem; border-radius: 8px; border: 1px solid #e2e8f0;">
                     <div>
-                        <label style="display: block; font-size: 0.9rem; font-weight: 600; color: #334155; margin-bottom: 0.5rem;">Description</label>
-                        <div id="view_description" style="background: #fff; padding: 1.25rem; border-radius: 8px; border: 1px solid #e2e8f0; min-height: 200px; white-space: pre-wrap; word-break: break-word; overflow-wrap: break-word; color: #334155; line-height: 1.7; font-size: 1rem; box-shadow: inset 0 2px 4px rgba(0,0,0,0.02);"></div>
+                        <label style="display: block; font-size: 0.8rem; font-weight: 600; color: #64748b; margin-bottom: 4px; text-transform: uppercase; letter-spacing: 0.5px;">Office / Department</label>
+                        <div id="view_office" style="font-weight: 500; color: #334155; font-size: 1rem; word-break: break-word; overflow-wrap: break-word;"></div>
+                    </div>
+                    <div>
+                        <label style="display: block; font-size: 0.8rem; font-weight: 600; color: #64748b; margin-bottom: 4px; text-transform: uppercase; letter-spacing: 0.5px;">Date Logged</label>
+                        <div id="view_date" style="font-weight: 500; color: #334155; font-size: 1rem;"></div>
+                    </div>
+                    <div>
+                        <label style="display: block; font-size: 0.8rem; font-weight: 600; color: #64748b; margin-bottom: 4px; text-transform: uppercase; letter-spacing: 0.5px;">Status</label>
+                        <div id="view_status"></div>
+                    </div>
+                    <div>
+                        <label style="display: block; font-size: 0.8rem; font-weight: 600; color: #64748b; margin-bottom: 4px; text-transform: uppercase; letter-spacing: 0.5px;">Received By</label>
+                        <div id="view_received_by" style="font-weight: 500; color: #334155; font-size: 1rem; word-break: break-word; overflow-wrap: break-word;"></div>
                     </div>
                 </div>
 
-                <!-- Right Column: Attachments Sidebar -->
-                <div style="flex: 3; min-width: 320px; padding: 2rem; background: #fcfcfc; display: flex; flex-direction: column; overflow: hidden;">
-                    <label style="display: block; font-size: 0.8rem; font-weight: 700; color: #64748b; margin-bottom: 1.25rem; text-transform: uppercase; letter-spacing: 1px;">Attachments</label>
-                    <div id="view_attachments" style="flex: 1; overflow-y: auto; padding-right: 4px; display: flex; flex-direction: column; gap: 1rem;">
+                <!-- Description -->
+                <div style="margin-bottom: 2rem;">
+                    <label style="display: block; font-size: 0.9rem; font-weight: 600; color: #334155; margin-bottom: 0.5rem;">Description</label>
+                    <div id="view_description" style="background: #fff; padding: 1.25rem; border-radius: 8px; border: 1px solid #e2e8f0; min-height: 250px; white-space: pre-wrap; word-break: break-word; overflow-wrap: break-word; color: #334155; line-height: 1.7; font-size: 1rem; box-shadow: inset 0 2px 4px rgba(0,0,0,0.02);"></div>
+                </div>
+
+                <!-- Attachments Gallery -->
+                <div>
+                    <label style="display: block; font-size: 0.9rem; font-weight: 600; color: #334155; margin-bottom: 0.5rem;">Attachments Gallery</label>
+                    <div id="view_attachments" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 1.5rem; padding: 4px;">
                         <!-- Injected via JS -->
                     </div>
                 </div>
