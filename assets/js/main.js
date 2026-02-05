@@ -488,4 +488,85 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
+    // --- Dynamic Search Logic ---
+    function initDynamicSearch() {
+        const searchInput = document.querySelector('.search-input');
+        const tableArea = document.getElementById('tableArea');
+        if (!searchInput || !tableArea) return;
+
+        let debounceTimer;
+        searchInput.addEventListener('input', () => {
+            clearTimeout(debounceTimer);
+            debounceTimer = setTimeout(async () => {
+                const query = searchInput.value;
+                // Preserve other filters from URL if possible
+                const urlParams = new URLSearchParams(window.location.search);
+                urlParams.set('search', query);
+                urlParams.set('page', 1); // Reset to page 1
+
+                try {
+                    const response = await fetch(`api/get_documents.php?${urlParams.toString()}`);
+                    const html = await response.text();
+
+                    // Replace the table area content
+                    tableArea.innerHTML = html;
+
+                    // Update URL without reload
+                    window.history.replaceState(null, '', `?${urlParams.toString()}`);
+
+                    // Re-initialize resizable columns for the new table
+                    initResizableColumns();
+                } catch (err) {
+                    console.error('Search failed:', err);
+                }
+            }, 300); // 300ms debounce
+        });
+    }
+
+    // --- Resizable Columns Logic ---
+    function initResizableColumns() {
+        const table = document.querySelector('.doc-table');
+        if (!table) return;
+
+        const headers = table.querySelectorAll('th');
+        headers.forEach(th => {
+            // Remove existing resizer if any (during re-init)
+            const existingResizer = th.querySelector('.resizer');
+            if (existingResizer) existingResizer.remove();
+
+            // Create Resizer Handle
+            const resizer = document.createElement('div');
+            resizer.className = 'resizer';
+            th.appendChild(resizer);
+
+            resizer.addEventListener('mousedown', initResize);
+
+            function initResize(e) {
+                e.preventDefault();
+                const startX = e.pageX;
+                const startWidth = th.offsetWidth;
+
+                document.body.classList.add('resizing');
+
+                function doResize(e) {
+                    const newWidth = startWidth + (e.pageX - startX);
+                    th.style.width = newWidth + 'px';
+                }
+
+                function stopResize() {
+                    document.body.classList.remove('resizing');
+                    window.removeEventListener('mousemove', doResize);
+                    window.removeEventListener('mouseup', stopResize);
+                }
+
+                window.addEventListener('mousemove', doResize);
+                window.addEventListener('mouseup', stopResize);
+            }
+        });
+    }
+
+    // Initialize New Features
+    initDynamicSearch();
+    initResizableColumns();
+
 });

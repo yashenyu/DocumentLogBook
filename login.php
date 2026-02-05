@@ -52,12 +52,8 @@ if (isset($_SESSION['user_id'])) {
     <link rel="stylesheet" href="assets/css/style.css">
 </head>
 <body class="auth-page">
-    <!-- Static Blobs -->
-    <div class="blob blob-1"></div>
-    <div class="blob blob-2"></div>
-    <div class="blob blob-3"></div>
-
-<div class="container" style="display: flex; justify-content: center; align-items: center; width: 100%; height: 100vh; position: relative; z-index: 10;">
+    <!-- Centering Wrapper -->
+    <div class="auth-wrapper">
         <div class="auth-card">
             
             <div class="auth-content">
@@ -85,26 +81,37 @@ endif; ?>
                     </div>
                     
                     <!-- Buttons and Links Area -->
-                    <div style="display: flex; align-items: center; justify-content: flex-start; gap: 2rem; margin-top: 1.5rem;">
+                    <div style="margin-top: 1.5rem; margin-bottom: 1.5rem;">
                         <button type="submit" class="btn btn-auth">Login</button>
-                        
-                        <a href="signup.php" class="auth-link">Sign Up?</a>
                     </div>
                 </form>
             </div>
 
             <!-- Decorative Logo Element (Bottom Right) -->
-            <div class="auth-decoration" style="position: absolute; bottom: -23px; right: -12px; width: 160px; height: 160px; z-index: 5;">
+<<<<<<< Updated upstream
+            <div class="auth-decoration">
+                <!-- Using CSS to create a similar isometric shape pattern -->
+                <div class="iso-box iso-box-1"></div>
+                <div class="iso-box iso-box-2"></div>
+=======
+            <div class="auth-decoration" style="position: absolute; bottom: 3.5rem; right: 2rem; width: 140px; height: 140px; z-index: 5;">
                 <!-- User Logo Image -->
-                <img src="assets/images/Logbook Logo.png" alt="Logo" class="auth-logo-img" style="width: 100%; height: 100%; object-fit: contain;">
+                <img src="assets/images/Logbook Logo.png" alt="Logo" class="auth-logo-img" style="width: 110%; height: 125%; object-fit: contain;">
+>>>>>>> Stashed changes
             </div>
 
             <!-- Footer Links (absolute bottom right inside card) -->
-            <div class="auth-footer">
+            <div class="auth-footer" style="bottom: 1.5rem; right: 2.5rem; text-align: right;">
                 <a href="#">Privacy Policy</a> | <a href="#">System Status</a>
             </div>
         </div>
     </div>
+
+    <!-- Background Blobs -->
+    <div class="blob blob-1"></div>
+    <div class="blob blob-2"></div>
+    <div class="blob blob-3"></div>
+    <div class="blob blob-4"></div>
 
     <script src="assets/js/main.js"></script>
 </body>
