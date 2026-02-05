@@ -19,6 +19,7 @@ $sortOrder = $_GET['sort_order'] ?? '';
 $startDate = $_GET['start_date'] ?? '';
 $endDate = $_GET['end_date'] ?? '';
 $officeFilter = $_GET['office'] ?? '';
+$receivedFilter = $_GET['received_by'] ?? '';
 $statusFilter = $_GET['status'] ?? '';
 
 // Build Query
@@ -42,8 +43,27 @@ if (!empty($endDate)) {
 }
 
 if (!empty($officeFilter)) {
-    $whereSQL .= " AND Office LIKE ?";
-    $params[] = "%$officeFilter%";
+    $offices = explode(',', $officeFilter);
+    if (!empty($offices)) {
+        $officeClauses = [];
+        foreach ($offices as $o) {
+            $officeClauses[] = "Office LIKE ?";
+            $params[] = "%" . trim($o) . "%";
+        }
+        $whereSQL .= " AND (" . implode(" OR ", $officeClauses) . ")";
+    }
+}
+
+if (!empty($receivedFilter)) {
+    $receivedNames = explode(',', $receivedFilter);
+    if (!empty($receivedNames)) {
+        $receivedClauses = [];
+        foreach ($receivedNames as $n) {
+            $receivedClauses[] = "ReceivedBy LIKE ?";
+            $params[] = "%" . trim($n) . "%";
+        }
+        $whereSQL .= " AND (" . implode(" OR ", $receivedClauses) . ")";
+    }
 }
 
 if (!empty($statusFilter)) {

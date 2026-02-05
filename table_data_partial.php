@@ -5,13 +5,31 @@
 <table class="doc-table">
     <thead>
         <tr>
-            <th>ID</th>
+            <th class="sortable-th" data-column="DocID" data-order="<?php echo($sortBy === 'DocID') ? ($sortOrder === 'ASC' ? 'DESC' : '') : 'ASC'; ?>">
+                ID <?php if ($sortBy === 'DocID')
+    echo $sortOrder === 'ASC' ? '↑' : '↓'; ?>
+            </th>
             <th>Image</th>
-            <th>Date</th>
-            <th>Office</th>
-            <th>Subject</th>
-            <th>Received By</th>
-            <th>Status</th>
+            <th class="sortable-th" data-column="DocDate" data-order="<?php echo($sortBy === 'DocDate') ? ($sortOrder === 'ASC' ? 'DESC' : '') : 'ASC'; ?>">
+                Date <?php if ($sortBy === 'DocDate')
+    echo $sortOrder === 'ASC' ? '↑' : '↓'; ?>
+            </th>
+            <th class="sortable-th" data-column="Office" data-order="<?php echo($sortBy === 'Office') ? ($sortOrder === 'ASC' ? 'DESC' : '') : 'ASC'; ?>">
+                Office <?php if ($sortBy === 'Office')
+    echo $sortOrder === 'ASC' ? '↑' : '↓'; ?>
+            </th>
+            <th class="sortable-th" data-column="Subject" data-order="<?php echo($sortBy === 'Subject') ? ($sortOrder === 'ASC' ? 'DESC' : '') : 'ASC'; ?>">
+                Subject <?php if ($sortBy === 'Subject')
+    echo $sortOrder === 'ASC' ? '↑' : '↓'; ?>
+            </th>
+            <th class="sortable-th" data-column="ReceivedBy" data-order="<?php echo($sortBy === 'ReceivedBy') ? ($sortOrder === 'ASC' ? 'DESC' : '') : 'ASC'; ?>">
+                Received By <?php if ($sortBy === 'ReceivedBy')
+    echo $sortOrder === 'ASC' ? '↑' : '↓'; ?>
+            </th>
+            <th class="sortable-th" data-column="Status" data-order="<?php echo($sortBy === 'Status') ? ($sortOrder === 'ASC' ? 'DESC' : '') : 'ASC'; ?>">
+                Status <?php if ($sortBy === 'Status')
+    echo $sortOrder === 'ASC' ? '↑' : '↓'; ?>
+            </th>
             <th>Actions</th>
         </tr>
     </thead>
@@ -85,6 +103,7 @@ $paginationQueryParams = [
     'start_date' => $startDate,
     'end_date' => $endDate,
     'office' => $officeFilter,
+    'received_by' => $receivedFilter,
     'status' => $statusFilter,
     'sort_by' => $sortBy,
     'sort_order' => $sortOrder

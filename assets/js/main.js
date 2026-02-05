@@ -512,39 +512,225 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
+    // --- Shared AJAX Refresh Logic ---
+    async function refreshTable(params) {
+        const tableArea = document.getElementById('tableArea');
+        if (!tableArea) return;
+
+        try {
+            const response = await fetch(`api/get_documents.php?${params.toString()}`);
+            const html = await response.text();
+
+            tableArea.innerHTML = html;
+            window.history.replaceState(null, '', `?${params.toString()}`);
+        } catch (err) {
+            console.error('Refresh failed:', err);
+        }
+    }
+
     // --- Dynamic Search Logic ---
     function initDynamicSearch() {
         const searchInput = document.querySelector('.search-input');
-        const tableArea = document.getElementById('tableArea');
-        if (!searchInput || !tableArea) return;
+        if (!searchInput) return;
 
         let debounceTimer;
         searchInput.addEventListener('input', () => {
             clearTimeout(debounceTimer);
-            debounceTimer = setTimeout(async () => {
-                const query = searchInput.value;
-                // Preserve other filters from URL if possible
+            debounceTimer = setTimeout(() => {
                 const urlParams = new URLSearchParams(window.location.search);
-                urlParams.set('search', query);
-                urlParams.set('page', 1); // Reset to page 1
+                urlParams.set('search', searchInput.value);
+                urlParams.set('page', 1);
+                refreshTable(urlParams);
+            }, 300);
+        });
+    }
 
-                try {
-                    const response = await fetch(`api/get_documents.php?${urlParams.toString()}`);
-                    const html = await response.text();
+    // --- Dynamic Sorting Logic ---
+    function initSorting() {
+        document.addEventListener('click', (e) => {
+            const th = e.target.closest('.sortable-th');
+            if (!th) return;
 
-                    // Replace the table area content
-                    tableArea.innerHTML = html;
+            const column = th.dataset.column;
+            const order = th.dataset.order;
 
-                    // Update URL without reload
-                    window.history.replaceState(null, '', `?${urlParams.toString()}`);
-                } catch (err) {
-                    console.error('Search failed:', err);
+            const urlParams = new URLSearchParams(window.location.search);
+
+            if (order) {
+                urlParams.set('sort_by', column);
+                urlParams.set('sort_order', order);
+            } else {
+                urlParams.delete('sort_by');
+                urlParams.delete('sort_order');
+            }
+
+            urlParams.set('page', 1);
+            refreshTable(urlParams);
+        });
+    }
+
+    // --- Dynamic Pagination Logic ---
+    function initPagination() {
+        document.addEventListener('click', (e) => {
+            const link = e.target.closest('.page-link, .page-nav');
+            if (!link || link.classList.contains('disabled')) return;
+
+            if (link.closest('#paginationArea')) {
+                e.preventDefault();
+                const url = new URL(link.href);
+                const urlParams = new URLSearchParams(url.search);
+                refreshTable(urlParams);
+
+                document.querySelector('.table-container').scrollIntoView({ behavior: 'smooth' });
+            }
+        });
+    }
+
+    // --- Multi-select Tag & Autocomplete Logic (In Modal) ---
+    function initMultiSelect() {
+        const containers = document.querySelectorAll('.multi-select-container');
+
+        containers.forEach(container => {
+            const type = container.dataset.type;
+            const tagContainer = container.querySelector('.tag-container');
+            const input = container.querySelector('.autocomplete-input');
+            const dropdown = container.querySelector('.autocomplete-dropdown');
+            const hiddenInput = container.querySelector('input[type="hidden"]');
+
+            let selectedValues = [];
+
+            if (hiddenInput.value) {
+                selectedValues = hiddenInput.value.split(',').filter(v => v.trim() !== '');
+                renderTags();
+            }
+
+            function renderTags() {
+                tagContainer.innerHTML = '';
+                selectedValues.forEach(val => {
+                    const tag = document.createElement('div');
+                    tag.className = 'tag';
+                    tag.innerHTML = `
+                        ${val}
+                        <i class="fa-solid fa-xmark remove-tag" data-val="${val}"></i>
+                    `;
+                    tagContainer.appendChild(tag);
+                });
+                hiddenInput.value = selectedValues.join(',');
+            }
+
+            // Click anywhere in container focuses input
+            container.addEventListener('click', (e) => {
+                if (e.target !== dropdown && !dropdown.contains(e.target)) {
+                    input.focus();
                 }
-            }, 300); // 300ms debounce
+            });
+
+            input.addEventListener('focus', () => container.classList.add('focused'));
+            input.addEventListener('blur', () => container.classList.remove('focused'));
+
+            tagContainer.addEventListener('click', (e) => {
+                if (e.target.classList.contains('remove-tag')) {
+                    e.stopPropagation(); // Don't focus input when clicking x
+                    const valToRemove = e.target.dataset.val;
+                    selectedValues = selectedValues.filter(v => v !== valToRemove);
+                    renderTags();
+                }
+            });
+
+            let debounceTimer;
+            input.addEventListener('input', () => {
+                clearTimeout(debounceTimer);
+                const query = input.value.trim();
+
+                if (query.length < 2) {
+                    dropdown.style.display = 'none';
+                    return;
+                }
+
+                debounceTimer = setTimeout(async () => {
+                    try {
+                        const response = await fetch(`api/get_suggestions.php?type=${type}&query=${encodeURIComponent(query)}`);
+                        const suggestions = await response.json();
+
+                        if (suggestions.length > 0) {
+                            dropdown.innerHTML = '';
+                            suggestions.forEach(item => {
+                                const div = document.createElement('div');
+                                div.className = 'autocomplete-item';
+                                div.textContent = item;
+                                div.onclick = (e) => {
+                                    e.stopPropagation();
+                                    if (!selectedValues.includes(item)) {
+                                        selectedValues.push(item);
+                                        renderTags();
+                                    }
+                                    dropdown.style.display = 'none';
+                                    input.value = '';
+                                    input.focus();
+                                };
+                                dropdown.appendChild(div);
+                            });
+                            dropdown.style.display = 'block';
+                        } else {
+                            dropdown.style.display = 'none';
+                        }
+                    } catch (err) {
+                        console.error('Suggestions fetch failed:', err);
+                    }
+                }, 300);
+            });
+
+            input.addEventListener('keydown', (e) => {
+                if (e.key === 'Enter') {
+                    e.preventDefault();
+                    const val = input.value.trim();
+                    if (val && !selectedValues.includes(val)) {
+                        selectedValues.push(val);
+                        renderTags();
+                        input.value = '';
+                        dropdown.style.display = 'none';
+                    }
+                }
+            });
+
+            document.addEventListener('click', (e) => {
+                if (!container.contains(e.target)) dropdown.style.display = 'none';
+            });
+        });
+    }
+
+    // --- Filter Modal AJAX Logic ---
+    function initFilterForm() {
+        const filterForm = document.getElementById('filterForm');
+        if (!filterForm) return;
+
+        filterForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+
+            const formData = new FormData(filterForm);
+            const urlParams = new URLSearchParams(window.location.search);
+
+            for (const [key, value] of formData.entries()) {
+                if (value) urlParams.set(key, value);
+                else urlParams.delete(key);
+            }
+
+            urlParams.set('page', 1);
+            refreshTable(urlParams);
+
+            const modal = document.getElementById('filterModal');
+            if (modal) {
+                modal.classList.remove('active');
+                setTimeout(() => modal.style.display = 'none', 300);
+            }
         });
     }
 
     // Initialize New Features
     initDynamicSearch();
+    initSorting();
+    initPagination();
+    initMultiSelect();
+    initFilterForm();
 
 });

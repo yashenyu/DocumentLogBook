@@ -1,19 +1,24 @@
 /* Basic Clean Reset and Variables */
 :root {
-    --primary-color: #5a1818; /* Darker HAU Maroon */
+    --primary-color: #5a1818;
+    /* Darker HAU Maroon */
     --primary-hover: #752020;
-    --accent-color: #FFB81C;  /* HAU Gold */
+    --accent-color: #FFB81C;
+    /* HAU Gold */
     --bg-color: #f8fafc;
     --text-color: #1e293b;
     --card-bg: #ffffff;
     --border-color: #e2e8f0;
 
     /* Auth Page Specific Colors */
-    --auth-bg-primary: #5a1818; 
-    --auth-bg-secondary: #3d0a0a; /* Deepest Maroon */
-    --auth-card-bg: rgba(45, 10, 10, 0.95); /* Very Dark Maroon, slightly translucent */
+    --auth-bg-primary: #5a1818;
+    --auth-bg-secondary: #3d0a0a;
+    /* Deepest Maroon */
+    --auth-card-bg: rgba(45, 10, 10, 0.95);
+    /* Very Dark Maroon, slightly translucent */
     --auth-text-color: #ffffff;
-    --auth-input-bg: #ffffff; /* Keep inputs white for high usability */
+    --auth-input-bg: #ffffff;
+    /* Keep inputs white for high usability */
 }
 
 * {
@@ -171,7 +176,8 @@ body.auth-page {
 /* Authentication Card */
 .auth-card {
     background-color: var(--auth-card-bg);
-    backdrop-filter: blur(10px); /* Add glassmorphism effect */
+    backdrop-filter: blur(10px);
+    /* Add glassmorphism effect */
     border: 1px solid rgba(255, 255, 255, 0.1);
     color: var(--auth-text-color);
     border-radius: 2rem;
@@ -196,13 +202,15 @@ body.auth-page {
     font-size: 2.5rem;
     font-weight: 700;
     margin-bottom: 0.5rem;
-    color: var(--accent-color); /* Change title to Gold for better visibility on dark */
+    color: var(--accent-color);
+    /* Change title to Gold for better visibility on dark */
     letter-spacing: -0.5px;
 }
 
 .auth-card .subtitle {
     font-size: 1.1rem;
-    color: rgba(255, 255, 255, 0.85); /* Darkened the transparency (more solid) */
+    color: rgba(255, 255, 255, 0.85);
+    /* Darkened the transparency (more solid) */
     margin-bottom: 2rem;
     font-weight: 400;
 }
@@ -212,7 +220,8 @@ body.auth-page {
     margin-bottom: 0.6rem;
     font-weight: 500;
     font-size: 0.9rem;
-    color: #cbd5e1; /* Darkened from #e2e8f0 */
+    color: #cbd5e1;
+    /* Darkened from #e2e8f0 */
 }
 
 .auth-card input[type="text"],
@@ -380,8 +389,8 @@ body.auth-page {
 
 .search-input {
     width: 50%;
-    background-color: #0f1c2e;
-    border: none;
+    background-color: var(--primary-color);
+    border: 1px solid rgba(255, 255, 255, 0.1);
     padding: 0.75rem 1rem 0.75rem 2.5rem;
     /* Space for icon */
     border-radius: 0.5rem;
@@ -391,20 +400,16 @@ body.auth-page {
 }
 
 .search-input::placeholder {
-    color: #ffffff;
+    color: rgba(255, 255, 255, 0.8);
     opacity: 1;
 }
 
 .search-input:focus {
     outline: none;
     border-color: var(--accent-color);
-    background-color: #0f1c2e;
-    box-shadow: 0 0 10px rgba(255, 184, 28, 0.1);
-}
-
-.search-input::placeholder {
-    color: #ffffff;
-    opacity: 1;
+    background-color: #4a0d0d;
+    /* Slightly darker maroon on focus */
+    box-shadow: 0 0 10px rgba(255, 184, 28, 0.2);
 }
 
 .search-icon {
@@ -421,25 +426,31 @@ body.auth-page {
 }
 
 .btn-dark {
-    background-color: #0f1c2e;
+    background-color: var(--primary-color);
     color: #ffffff;
     padding: 0.5rem 1.25rem;
     border-radius: 0.5rem;
-    border: none;
+    border: 1px solid transparent;
     font-weight: 500;
     display: flex;
     align-items: center;
     gap: 0.5rem;
     cursor: pointer;
     font-family: inherit;
+    transition: all 0.2s;
 }
 
 .btn-dark:hover {
-    background-color: #1e293b;
+    background-color: #4a0d0d;
+    border-color: var(--accent-color);
 }
 
-.btn-dark:hover {
-    background-color: #1e293b;
+.search-input:focus {
+    outline: none;
+    border-color: var(--accent-color);
+    background-color: #ffffff;
+    color: #1e293b;
+    box-shadow: 0 0 10px rgba(255, 184, 28, 0.2);
 }
 
 /* Professional Action Buttons (Pill Style - Matching Admin Badge) */
@@ -639,7 +650,136 @@ body.auth-page {
     width: 120px;
 }
 
-/* Actions */
+/* Unified Multi-select Tag & Autocomplete Styles */
+.multi-select-container {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.5rem;
+    border: 1px solid #cbd5e1;
+    border-radius: 0.5rem;
+    background-color: #f8fafc;
+    min-height: 45px;
+    cursor: text;
+    transition: all 0.2s;
+    position: relative;
+}
+
+.multi-select-container.focused {
+    border-color: var(--accent-color);
+    box-shadow: 0 0 0 2px rgba(255, 184, 28, 0.2);
+    background-color: #ffffff;
+}
+
+.tag-container {
+    display: contents;
+    /* Let tags flow with input */
+}
+
+.tag {
+    background: var(--primary-color) !important;
+    /* HAU Maroon */
+    color: white !important;
+    padding: 0.25rem 0.6rem;
+    border-radius: 4px;
+    font-size: 0.8rem;
+    font-weight: 500;
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+    border-left: 3px solid var(--accent-color) !important;
+    /* HAU Yellow Accent */
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.tag i {
+    cursor: pointer;
+    font-size: 0.75rem;
+    opacity: 0.8;
+}
+
+.tag i:hover {
+    opacity: 1;
+    color: var(--accent-color);
+}
+
+.autocomplete-input {
+    flex: 1;
+    min-width: 120px;
+    border: none !important;
+    background: transparent !important;
+    padding: 0.25rem !important;
+    outline: none !important;
+    box-shadow: none !important;
+    color: #1e293b;
+    font-size: 0.9rem;
+}
+
+.autocomplete-dropdown {
+    position: absolute;
+    top: calc(100% + 5px);
+    left: 0;
+    right: 0;
+    background: white;
+    border: 1px solid #e2e8f0;
+    border-radius: 0.5rem;
+    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+    z-index: 2000;
+    max-height: 200px;
+    overflow-y: auto;
+    display: none;
+}
+
+.autocomplete-item {
+    padding: 0.7rem 1rem;
+    cursor: pointer;
+    font-size: 0.9rem;
+    color: #334155;
+    transition: all 0.2s;
+}
+
+.autocomplete-item:hover {
+    background: var(--primary-color);
+    color: var(--accent-color);
+}
+
+/* Modal Action Buttons (HAU Themed) */
+.modal-actions .btn-primary {
+    background-color: var(--primary-color) !important;
+    color: white !important;
+    border: 1px solid var(--primary-color) !important;
+    transition: all 0.2s;
+}
+
+.modal-actions .btn-primary:hover {
+    background-color: #4a0d0d !important;
+    /* Darker maroon */
+    border-color: var(--accent-color) !important;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.modal-actions .btn-secondary {
+    border: 1px solid #cbd5e1;
+    background: white;
+    color: #4b5563;
+}
+
+.modal-actions .btn-secondary:hover {
+    background: #f1f5f9;
+    border-color: #94a3b8;
+}
+
+/* Sortable Headers Tweak */
+.sortable-th {
+    cursor: pointer;
+    transition: background-color 0.2s;
+}
+
+.sortable-th:hover {
+    background-color: var(--accent-color) !important;
+    color: var(--primary-color) !important;
+}
 
 /* Truncation Utility */
 .col-truncate {

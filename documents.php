@@ -22,6 +22,7 @@ $validColumns = ['DocID', 'DocDate', 'Office', 'Subject', 'ReceivedBy', 'Status'
 $startDate = $_GET['start_date'] ?? '';
 $endDate = $_GET['end_date'] ?? '';
 $officeFilter = $_GET['office'] ?? '';
+$receivedFilter = $_GET['received_by'] ?? '';
 $statusFilter = $_GET['status'] ?? '';
 
 // Build Query
@@ -45,8 +46,27 @@ if (!empty($endDate)) {
 }
 
 if (!empty($officeFilter)) {
-    $whereSQL .= " AND Office LIKE ?";
-    $params[] = "%$officeFilter%";
+    $offices = explode(',', $officeFilter);
+    if (!empty($offices)) {
+        $officeClauses = [];
+        foreach ($offices as $o) {
+            $officeClauses[] = "Office LIKE ?";
+            $params[] = "%" . trim($o) . "%";
+        }
+        $whereSQL .= " AND (" . implode(" OR ", $officeClauses) . ")";
+    }
+}
+
+if (!empty($receivedFilter)) {
+    $receivedNames = explode(',', $receivedFilter);
+    if (!empty($receivedNames)) {
+        $receivedClauses = [];
+        foreach ($receivedNames as $n) {
+            $receivedClauses[] = "ReceivedBy LIKE ?";
+            $params[] = "%" . trim($n) . "%";
+        }
+        $whereSQL .= " AND (" . implode(" OR ", $receivedClauses) . ")";
+    }
 }
 
 if (!empty($statusFilter)) {
@@ -292,25 +312,40 @@ endif; ?>
                     </div>
 
                     <div class="form-group">
-                        <label>Office</label>
-                        <input type="text" name="office" class="form-control" placeholder="e.g. Dean's Office" value="<?php echo htmlspecialchars($_GET['office'] ?? ''); ?>">
-                    </div>
-
-                    <div class="form-group">
                         <label>Status</label>
                         <select name="status" class="form-control">
                             <option value="">All Statuses</option>
-                            <option value="Pending" <?php echo(isset($_GET['status']) && $_GET['status'] == 'Pending') ? 'selected' : ''; ?>>Pending</option>
-                            <option value="Received" <?php echo(isset($_GET['status']) && $_GET['status'] == 'Received') ? 'selected' : ''; ?>>Received</option>
-                            <option value="Released" <?php echo(isset($_GET['status']) && $_GET['status'] == 'Released') ? 'selected' : ''; ?>>Released</option>
-                            <option value="Completed" <?php echo(isset($_GET['status']) && $_GET['status'] == 'Completed') ? 'selected' : ''; ?>>Completed</option>
+                            <option value="Pending" <?php echo($statusFilter == 'Pending') ? 'selected' : ''; ?>>Pending</option>
+                            <option value="Received" <?php echo($statusFilter == 'Received') ? 'selected' : ''; ?>>Received</option>
+                            <option value="Released" <?php echo($statusFilter == 'Released') ? 'selected' : ''; ?>>Released</option>
+                            <option value="Completed" <?php echo($statusFilter == 'Completed') ? 'selected' : ''; ?>>Completed</option>
                         </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Office</label>
+                        <div class="multi-select-container" data-type="office" id="officeContainer">
+                            <div class="tag-container" id="officeTags"></div>
+                            <input type="text" class="autocomplete-input" placeholder="Type to add office...">
+                            <div class="autocomplete-dropdown shadow-sm"></div>
+                            <input type="hidden" name="office" value="<?php echo htmlspecialchars($officeFilter); ?>">
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Received By</label>
+                        <div class="multi-select-container" data-type="received_by" id="receivedContainer">
+                            <div class="tag-container" id="receivedTags"></div>
+                            <input type="text" class="autocomplete-input" placeholder="Type to add name...">
+                            <div class="autocomplete-dropdown shadow-sm"></div>
+                            <input type="hidden" name="received_by" value="<?php echo htmlspecialchars($receivedFilter); ?>">
+                        </div>
                     </div>
                 </div>
 
                 <div class="modal-actions">
                     <a href="documents.php" class="btn-secondary" style="text-decoration: none; text-align: center;">Reset</a>
-                    <button type="submit" class="btn-primary">Apply Filters</button>
+                    <button type="submit" class="btn-primary" id="applyFiltersBtn">Apply Filters</button>
                 </div>
             </form>
         </div>
