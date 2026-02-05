@@ -1,0 +1,27 @@
+<<<<<<< Updated upstream
+=======
+CREATE TABLE DocumentLog (
+    DocID INT AUTO_INCREMENT PRIMARY KEY,
+    DocDate DATE NOT NULL,
+    Office VARCHAR(100) NOT NULL,
+    Subject VARCHAR(255) NOT NULL,
+    Description VARCHAR(255),
+    ReceivedBy VARCHAR(100),
+    Status VARCHAR(50),
+    DocImage VARCHAR(255)
+);
+
+CREATE TABLE users (
+    UserId INT AUTO_INCREMENT PRIMARY KEY,
+    username VARCHAR(100) NOT NULL,
+    password VARCHAR(255) NOT NULL,
+    role ENUM('Admin', 'Staff') NOT NULL DEFAULT 'Staff'
+);
+
+CREATE TABLE DocumentAttachments (
+    AttachmentID INT AUTO_INCREMENT PRIMARY KEY,
+    DocID INT NOT NULL,
+    FilePath VARCHAR(255) NOT NULL,
+    FOREIGN KEY (DocID) REFERENCES DocumentLog(DocID) ON DELETE CASCADE
+);
+>>>>>>> Stashed changes
