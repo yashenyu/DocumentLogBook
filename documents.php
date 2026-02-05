@@ -119,20 +119,22 @@ endif; ?>
         <!-- Toolbar -->
         <div class="doc-toolbar">
             <form action="" method="GET" style="flex: 1; max-width: 400px;">
-                <div class="search-container">
-                    <i class="fa-solid fa-magnifying-glass search-icon"></i>
-                    <input type="text" name="search" class="search-input" placeholder="Search by name, office, etc..." value="<?php echo htmlspecialchars($search); ?>">
+                <div class="search-container" style="position: relative;">
+                    <img src="assets/images/search-icon.svg" class="search-icon" style="position: absolute; left: 12px; top: 50%; transform: translateY(-50%); width: 16px; height: 16px; opacity: 0.5;">
+                    <input type="text" name="search" class="search-input" placeholder="Search by name, office, etc..." value="<?php echo htmlspecialchars($search); ?>" style="padding-left: 40px;">
                 </div>
             </form>
             
             <div class="toolbar-buttons">
                 <!-- Filter Button toggles Date Sort -->
-                <a href="?search=<?php echo urlencode($search); ?>&sort=<?php echo $nextSort; ?>" class="btn-dark" style="text-decoration: none;">
-                    <i class="fa-solid fa-filter"></i> Sort <?php echo($sort == 'DESC') ? 'Newest' : 'Oldest'; ?>
+                <a href="?search=<?php echo urlencode($search); ?>&sort=<?php echo $nextSort; ?>" class="btn-dark" style="text-decoration: none; display: inline-flex; align-items: center; gap: 8px;">
+                    <img src="assets/images/filter-icon.svg" alt="Sort" style="width: 16px; height: 16px; filter: brightness(0) invert(1);"> 
+                    Sort <?php echo($sort == 'DESC') ? 'Newest' : 'Oldest'; ?>
                 </a>
                 
-                <a href="add_document.php" class="btn-dark" style="text-decoration: none;">
-                    <i class="fa-solid fa-plus"></i> Add
+                <a href="add_document.php" class="btn-dark" style="text-decoration: none; display: inline-flex; align-items: center; gap: 8px;">
+                    <img src="assets/images/add-icon.svg" alt="Add" style="width: 16px; height: 16px; filter: brightness(0) invert(1);"> 
+                    Add
                 </a>
             </div>
         </div>
@@ -188,18 +190,14 @@ endif; ?>
                                 </span>
                             </td>
                             <td>
-                                <div class="actions">
-                                    <?php if (!empty($row['DocImage'])): ?>
-                                        <a href="download_document.php?id=<?php echo $row['DocID']; ?>" class="action-btn" title="Download"><i class="fa-solid fa-download"></i></a>
-                                    <?php
-        else: ?>
-                                        <button class="action-btn disabled" style="opacity: 0.5; cursor: not-allowed;"><i class="fa-solid fa-download"></i></button>
-                                    <?php
-        endif; ?>
+                                <div class="actions" style="display: flex; gap: 0.75rem; justify-content: flex-start; align-items: center;">
+                                    <a href="delete_document.php?id=<?php echo $row['DocID']; ?>" class="action-btn" title="Delete" onclick="return confirm('Are you sure you want to delete this document?');">
+                                        <img src="assets/images/delete-icon.svg" alt="Delete" style="width: 18px; height: 18px; opacity: 0.6;">
+                                    </a>
                                     
-                                    <a href="delete_document.php?id=<?php echo $row['DocID']; ?>" class="action-btn" title="Delete" onclick="return confirm('Are you sure you want to delete this document?');"><i class="fa-regular fa-trash-can"></i></a>
-                                    
-                                    <a href="edit_document.php?id=<?php echo $row['DocID']; ?>" class="action-btn" title="Edit"><i class="fa-solid fa-pen"></i></a>
+                                    <a href="edit_document.php?id=<?php echo $row['DocID']; ?>" class="action-btn" title="Edit">
+                                        <img src="assets/images/edit-icon.svg" alt="Edit" style="width: 18px; height: 18px; opacity: 0.6;">
+                                    </a>
                                 </div>
                             </td>
                         </tr>
@@ -219,10 +217,14 @@ endif; ?>
         <!-- Pagination -->
         <div class="pagination-area">
             <?php if ($page > 1): ?>
-                <a href="?page=<?php echo $page - 1; ?>&search=<?php echo urlencode($search); ?>&sort=<?php echo $sort; ?>" class="page-nav"><i class="fa-solid fa-chevron-left"></i></a>
+                <a href="?page=<?php echo $page - 1; ?>&search=<?php echo urlencode($search); ?>&sort=<?php echo $sort; ?>" class="page-nav">
+                    <img src="assets/images/chevron-left-icon.svg" alt="Prev" style="width: 14px; height: 14px; opacity: 0.4;">
+                </a>
             <?php
 else: ?>
-                <div class="page-nav disabled"><i class="fa-solid fa-chevron-left"></i></div>
+                <div class="page-nav disabled">
+                    <img src="assets/images/chevron-left-icon.svg" alt="Prev" style="width: 14px; height: 14px; opacity: 0.2;">
+                </div>
             <?php
 endif; ?>
 
@@ -234,10 +236,14 @@ endfor; ?>
             </div>
 
             <?php if ($page < $totalPages): ?>
-                <a href="?page=<?php echo $page + 1; ?>&search=<?php echo urlencode($search); ?>&sort=<?php echo $sort; ?>" class="page-nav"><i class="fa-solid fa-chevron-right"></i></a>
+                <a href="?page=<?php echo $page + 1; ?>&search=<?php echo urlencode($search); ?>&sort=<?php echo $sort; ?>" class="page-nav">
+                    <img src="assets/images/chevron-right-icon.svg" alt="Next" style="width: 14px; height: 14px; opacity: 0.4;">
+                </a>
             <?php
 else: ?>
-                <div class="page-nav disabled"><i class="fa-solid fa-chevron-right"></i></div>
+                <div class="page-nav disabled">
+                    <img src="assets/images/chevron-right-icon.svg" alt="Next" style="width: 14px; height: 14px; opacity: 0.2;">
+                </div>
             <?php
 endif; ?>
         </div>
