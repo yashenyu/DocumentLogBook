@@ -89,7 +89,7 @@ endif; ?>
 
             <div class="auth-decoration" style="position: absolute; bottom: 3.5rem; right: 2rem; width: 140px; height: 140px; z-index: 5;">
                 <!-- User Logo Image -->
-                <img src="assets/images/Logbook Logo.png" alt="Logo" class="auth-logo-img" style="width: 110%; height: 125%; object-fit: contain;">
+                <img src="assets/images/HAU.png" alt="Logo" class="auth-logo-img" style="width: 110%; height: 125%; object-fit: contain;">
             </div>
 
             <!-- Footer Links (absolute bottom right inside card) -->

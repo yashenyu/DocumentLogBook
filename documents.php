@@ -141,17 +141,17 @@ $filterParams = [
     <!-- Navbar -->
     <nav class="navbar" style="justify-content: space-between;">
         <div style="display: flex; align-items: center;">
-            <div class="logo-area">
+            <div class="logo-area" id="changeLogoTrigger" style="cursor: pointer;" title="Click to change logo">
                 <span class="logo-text">LogBook</span>
                 <div class="nav-iso-box-container" style="display: flex; align-items: center; justify-content: center;">
-                    <img src="assets/images/Logbook Logo.png" alt="Logo" style="width: 150%; height: 150%; object-fit: contain;">
+                    <img id="navbarLogo" src="assets/images/HAU.png" alt="Logo" style="width: 150%; height: 150%; object-fit: contain;">
                 </div>
             </div>
             <div class="nav-divider"></div>
             <div class="nav-subtitle" style="display: flex; align-items: center; gap: 0.6rem;">
                 <?php if (($_SESSION['role'] ?? '') === 'Admin'): ?>
-                    <span style="background-color: rgba(52, 211, 153, 0.1); color: #34d399; padding: 2px 10px; border-radius: 99px; font-size: 0.7rem; font-weight: 700; border: 1px solid rgba(52, 211, 153, 0.2); letter-spacing: 0.5px; text-transform: uppercase; display: inline-flex; align-items: center; gap: 5px;">
-                        <span style="width: 5px; height: 5px; background-color: #34d399; border-radius: 50%;"></span>
+                    <span style="background-color: rgba(255, 184, 28, 0.05); color: var(--accent-color); padding: 2px 12px; border-radius: 99px; font-size: 0.7rem; font-weight: 700; border: 1px solid rgba(255, 184, 28, 0.4); letter-spacing: 0.5px; text-transform: uppercase; display: inline-flex; align-items: center; gap: 5px;">
+                        <span style="width: 6px; height: 6px; background-color: var(--accent-color); border-radius: 50%;"></span>
                         Admin
                     </span>
                 <?php
@@ -164,9 +164,9 @@ endif; ?>
 
         <div style="display: flex; gap: 0.75rem; align-items: center;">
             <?php if (isset($_SESSION['role']) && $_SESSION['role'] === 'Admin'): ?>
-                <a href="register_staff.php" class="btn-outline btn-staff" style="text-decoration: none; font-size: 0.85rem; padding: 0.5rem 1.2rem;">
+                <button id="openStaffModal" class="btn-outline btn-staff" style="text-decoration: none; font-size: 0.85rem; padding: 0.5rem 1.2rem; cursor: pointer;">
                     <i class="fa-solid fa-user-plus"></i> Add Staff
-                </a>
+                </button>
             <?php
 endif; ?>
             <a href="logout.php" class="btn-outline btn-logout" style="text-decoration: none; font-size: 0.85rem; padding: 0.5rem 1.2rem;">
@@ -529,10 +529,139 @@ endif; ?>
             </div>
         </div>
     </div>
+    <!-- Add Staff Modal -->
+    <div id="staffModal" class="modal-overlay">
+        <div class="modal-content" style="max-width: 500px;">
+            <div class="modal-header">
+                <h3>Add New Staff</h3>
+                <span class="close-modal close-staff">&times;</span>
+            </div>
+            <form action="process_register_staff.php" method="POST">
+                <div class="form-group">
+                    <label for="reg_username">Username</label>
+                    <input type="text" id="reg_username" name="username" class="form-control" required placeholder="Enter Username" maxlength="100">
+                </div>
+                
+                <div class="form-group">
+                    <label for="reg_password">Initial Password</label>
+                    <input type="password" id="reg_password" name="password" class="form-control" required placeholder="Set Password">
+                </div>
 
+                <div class="form-group">
+                    <label for="reg_role">Role</label>
+                    <select id="reg_role" name="role" class="form-control">
+                        <option value="Staff">Staff</option>
+                        <option value="Admin">Admin</option>
+                    </select>
+                </div>
+
+                <div class="modal-actions">
+                    <button type="button" class="btn-secondary close-staff-btn">Cancel</button>
+                    <button type="submit" class="btn-primary">Create Account</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+
+    <!-- Logo Selection Modal -->
+    <div id="logoModal" class="modal-overlay">
+        <div class="modal-content" style="max-width: 500px;">
+            <div class="modal-header">
+                <h3>Change Institution Logo</h3>
+                <span class="close-modal close-logo">&times;</span>
+            </div>
+            <div class="logo-options" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(130px, 1fr)); gap: 1rem; padding: 1rem; max-height: 400px; overflow-y: auto;">
+                <!-- HAU Logo -->
+                <div class="logo-option-card" onclick="updateAppLogo('assets/images/HAU.png')" style="cursor: pointer; border: 2px solid #e2e8f0; border-radius: 12px; padding: 1rem; text-align: center; transition: all 0.2s;">
+                    <img src="assets/images/HAU.png" alt="HAU" style="width: 80px; height: 80px; object-fit: contain; margin-bottom: 0.5rem;">
+                    <div style="font-weight: 600; font-size: 0.8rem; color: #1e293b;">HAU Institutional</div>
+                </div>
+
+                <!-- SOC -->
+                <div class="logo-option-card" onclick="updateAppLogo('assets/images/SOC.png')" style="cursor: pointer; border: 2px solid #e2e8f0; border-radius: 12px; padding: 1rem; text-align: center; transition: all 0.2s;">
+                    <img src="assets/images/SOC.png" alt="SOC" style="width: 80px; height: 80px; object-fit: contain; margin-bottom: 0.5rem;">
+                    <div style="font-weight: 600; font-size: 0.8rem; color: #1e293b;">SOC</div>
+                </div>
+
+                <!-- SEA -->
+                <div class="logo-option-card" onclick="updateAppLogo('assets/images/SEA.png')" style="cursor: pointer; border: 2px solid #e2e8f0; border-radius: 12px; padding: 1rem; text-align: center; transition: all 0.2s;">
+                    <img src="assets/images/SEA.png" alt="SEA" style="width: 80px; height: 80px; object-fit: contain; margin-bottom: 0.5rem;">
+                    <div style="font-weight: 600; font-size: 0.8rem; color: #1e293b;">SEA</div>
+                </div>
+
+                <!-- SBA -->
+                <div class="logo-option-card" onclick="updateAppLogo('assets/images/SBA.png')" style="cursor: pointer; border: 2px solid #e2e8f0; border-radius: 12px; padding: 1rem; text-align: center; transition: all 0.2s;">
+                    <img src="assets/images/SBA.png" alt="SBA" style="width: 80px; height: 80px; object-fit: contain; margin-bottom: 0.5rem;">
+                    <div style="font-weight: 600; font-size: 0.8rem; color: #1e293b;">SBA</div>
+                </div>
+
+                <!-- SAS -->
+                <div class="logo-option-card" onclick="updateAppLogo('assets/images/SAS.png')" style="cursor: pointer; border: 2px solid #e2e8f0; border-radius: 12px; padding: 1rem; text-align: center; transition: all 0.2s;">
+                    <img src="assets/images/SAS.png" alt="SAS" style="width: 80px; height: 80px; object-fit: contain; margin-bottom: 0.5rem;">
+                    <div style="font-weight: 600; font-size: 0.8rem; color: #1e293b;">SAS</div>
+                </div>
+
+                <!-- SHTM -->
+                <div class="logo-option-card" onclick="updateAppLogo('assets/images/SHTM.png')" style="cursor: pointer; border: 2px solid #e2e8f0; border-radius: 12px; padding: 1rem; text-align: center; transition: all 0.2s;">
+                    <img src="assets/images/SHTM.png" alt="SHTM" style="width: 80px; height: 80px; object-fit: contain; margin-bottom: 0.5rem;">
+                    <div style="font-weight: 600; font-size: 0.8rem; color: #1e293b;">SHTM</div>
+                </div>
+
+                <!-- SNAMS -->
+                <div class="logo-option-card" onclick="updateAppLogo('assets/images/SNAMS.png')" style="cursor: pointer; border: 2px solid #e2e8f0; border-radius: 12px; padding: 1rem; text-align: center; transition: all 0.2s;">
+                    <img src="assets/images/SNAMS.png" alt="SNAMS" style="width: 80px; height: 80px; object-fit: contain; margin-bottom: 0.5rem;">
+                    <div style="font-weight: 600; font-size: 0.8rem; color: #1e293b;">SNAMS</div>
+                </div>
+
+                <!-- CCJEF -->
+                <div class="logo-option-card" onclick="updateAppLogo('assets/images/CCJEF.png')" style="cursor: pointer; border: 2px solid #e2e8f0; border-radius: 12px; padding: 1rem; text-align: center; transition: all 0.2s;">
+                    <img src="assets/images/CCJEF.png" alt="CCJEF" style="width: 80px; height: 80px; object-fit: contain; margin-bottom: 0.5rem;">
+                    <div style="font-weight: 600; font-size: 0.8rem; color: #1e293b;">CCJEF</div>
+                </div>
+
+                <!-- Bed -->
+                <div class="logo-option-card" onclick="updateAppLogo('assets/images/Bed.png')" style="cursor: pointer; border: 2px solid #e2e8f0; border-radius: 12px; padding: 1rem; text-align: center; transition: all 0.2s;">
+                    <img src="assets/images/Bed.png" alt="Bed" style="width: 80px; height: 80px; object-fit: contain; margin-bottom: 0.5rem;">
+                    <div style="font-weight: 600; font-size: 0.8rem; color: #1e293b;">Basic Education</div>
+                </div>
+
+                <!-- Logbook Logo -->
+                <div class="logo-option-card" onclick="updateAppLogo('assets/images/Logbook Logo.png')" style="cursor: pointer; border: 2px solid #e2e8f0; border-radius: 12px; padding: 1rem; text-align: center; transition: all 0.2s;">
+                    <img src="assets/images/Logbook Logo.png" alt="Logbook Logo" style="width: 80px; height: 80px; object-fit: contain; margin-bottom: 0.5rem;">
+                    <div style="font-weight: 600; font-size: 0.8rem; color: #1e293b;">Simple Logbook</div>
+                </div>
+            </div>
+            <div class="modal-actions" style="border-top: none; margin-top: 0;">
+                <button type="button" class="btn-secondary close-logo-btn" style="width: 100%;">Cancel</button>
+            </div>
+        </div>
+    </div>
 
     <script src="assets/js/main.js?v=<?php echo time(); ?>"></script>
     <script>
+        // Inline logic for persistent logo
+        function updateAppLogo(path) {
+            localStorage.setItem('app_logo_path', path);
+            const logo = document.getElementById('navbarLogo');
+            if(logo) logo.src = path;
+            
+            const modal = document.getElementById('logoModal');
+            if(modal) modal.classList.remove('active');
+            
+            if(typeof showToast === 'function') {
+                showToast("Logo updated successfully!", "success");
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            const savedLogo = localStorage.getItem('app_logo_path');
+            if(savedLogo) {
+                const logo = document.getElementById('navbarLogo');
+                if(logo) logo.src = savedLogo;
+            }
+        });
+        
         function toggleReceivedBy() {
             const status = document.getElementById('status').value;
             const receivedInput = document.getElementById('received_by');
@@ -549,4 +678,3 @@ endif; ?>
     </script>
 </body>
 </html>
-```

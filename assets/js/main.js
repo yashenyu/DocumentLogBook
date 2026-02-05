@@ -11,8 +11,12 @@ document.addEventListener('DOMContentLoaded', () => {
         if (openBtn && modal) {
             openBtn.addEventListener('click', (e) => {
                 e.preventDefault();
+                console.log(`Opening modal: ${modalId}`);
                 modal.classList.add('active');
             });
+        } else {
+            if (!modal) console.warn(`Modal not found: ${modalId}`);
+            if (!openBtn && openBtnId) console.warn(`Open button not found: ${openBtnId}`);
         }
 
         if (modal) {
@@ -36,6 +40,8 @@ document.addEventListener('DOMContentLoaded', () => {
     // Setup Modals
     setupModal('filterModal', 'openFilterModal', 'close-filter');
     setupModal('addModal', 'openAddModal', 'close-add');
+    setupModal('staffModal', 'openStaffModal', 'close-staff');
+    setupModal('logoModal', 'changeLogoTrigger', 'close-logo');
     setupModal('editModal', null, 'close-edit'); // Edit modal opens via delegation
 
     // Additional case for Cancel button in Add Modal
@@ -51,6 +57,24 @@ document.addEventListener('DOMContentLoaded', () => {
     if (closeEditBtn) {
         closeEditBtn.addEventListener('click', () => {
             const modal = document.getElementById('editModal');
+            if (modal) modal.classList.remove('active');
+        });
+    }
+
+    // Cancel button in Staff Modal
+    const staffCancel = document.querySelector('.close-staff-btn');
+    if (staffCancel) {
+        staffCancel.addEventListener('click', () => {
+            const modal = document.getElementById('staffModal');
+            if (modal) modal.classList.remove('active');
+        });
+    }
+
+    // Cancel button in Logo Modal
+    const logoCancel = document.querySelector('.close-logo-btn');
+    if (logoCancel) {
+        logoCancel.addEventListener('click', () => {
+            const modal = document.getElementById('logoModal');
             if (modal) modal.classList.remove('active');
         });
     }
@@ -90,7 +114,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
         function highlight(e) {
             uploadTrigger.classList.add('highlight');
-            uploadTrigger.style.borderColor = '#34d399';
+            uploadTrigger.style.borderColor = '#FFB81C';
             uploadTrigger.style.backgroundColor = '#f1f5f9';
         }
 
@@ -409,7 +433,7 @@ document.addEventListener('DOMContentLoaded', () => {
             // Hover effects
             item.onmouseover = () => {
                 item.style.background = '#f8fafc';
-                item.style.borderColor = '#34d399';
+                item.style.borderColor = '#FFB81C';
                 item.style.transform = 'translateY(-1px)';
             };
             item.onmouseout = () => {
