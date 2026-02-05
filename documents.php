@@ -50,7 +50,7 @@ $documents = $stmt->fetchAll(PDO::FETCH_ASSOC);
     <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     
     <!-- Icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
@@ -64,13 +64,25 @@ $documents = $stmt->fetchAll(PDO::FETCH_ASSOC);
         <div style="display: flex; align-items: center;">
             <div class="logo-area">
                 <span class="logo-text">LogBook</span>
-                <div class="nav-iso-box-container">
-                    <div class="nav-iso-box nav-iso-1"></div>
-                    <div class="nav-iso-box nav-iso-2"></div>
+                <div class="nav-iso-box-container" style="display: flex; align-items: center; justify-content: center;">
+                    <img src="assets/images/Logbook Logo.png" alt="Logo" style="width: 150%; height: 150%; object-fit: contain;">
                 </div>
             </div>
             <div class="nav-divider"></div>
-            <div class="nav-subtitle">Simple Document Logbook | <?php echo htmlspecialchars($_SESSION['role'] ?? 'Staff'); ?></div>
+            <div class="nav-subtitle" style="display: flex; align-items: center; gap: 0.6rem;">
+                Simple Document Logbook 
+                <span style="opacity: 0.2;">|</span>
+                <?php if (($_SESSION['role'] ?? '') === 'Admin'): ?>
+                    <span style="background-color: rgba(52, 211, 153, 0.1); color: #34d399; padding: 2px 10px; border-radius: 99px; font-size: 0.7rem; font-weight: 700; border: 1px solid rgba(52, 211, 153, 0.2); letter-spacing: 0.5px; text-transform: uppercase; display: inline-flex; align-items: center; gap: 5px;">
+                        <span style="width: 5px; height: 5px; background-color: #34d399; border-radius: 50%;"></span>
+                        Admin
+                    </span>
+                <?php
+else: ?>
+                    <span style="color: #94a3b8; font-size: 0.8rem; font-weight: 500;">Staff</span>
+                <?php
+endif; ?>
+            </div>
         </div>
 
         <div style="display: flex; gap: 1rem; align-items: center;">
@@ -107,20 +119,22 @@ endif; ?>
         <!-- Toolbar -->
         <div class="doc-toolbar">
             <form action="" method="GET" style="flex: 1; max-width: 400px;">
-                <div class="search-container">
-                    <i class="fa-solid fa-magnifying-glass search-icon"></i>
-                    <input type="text" name="search" class="search-input" placeholder="Search by name, office, etc..." value="<?php echo htmlspecialchars($search); ?>">
+                <div class="search-container" style="position: relative;">
+                    <img src="assets/images/search-icon.svg" class="search-icon" style="position: absolute; left: 12px; top: 50%; transform: translateY(-50%); width: 16px; height: 16px; opacity: 0.5;">
+                    <input type="text" name="search" class="search-input" placeholder="Search by name, office, etc..." value="<?php echo htmlspecialchars($search); ?>" style="padding-left: 40px;">
                 </div>
             </form>
             
             <div class="toolbar-buttons">
                 <!-- Filter Button toggles Date Sort -->
-                <a href="?search=<?php echo urlencode($search); ?>&sort=<?php echo $nextSort; ?>" class="btn-dark" style="text-decoration: none;">
-                    <i class="fa-solid fa-filter"></i> Sort <?php echo($sort == 'DESC') ? 'Newest' : 'Oldest'; ?>
+                <a href="?search=<?php echo urlencode($search); ?>&sort=<?php echo $nextSort; ?>" class="btn-dark" style="text-decoration: none; display: inline-flex; align-items: center; gap: 8px;">
+                    <img src="assets/images/filter-icon.svg" alt="Sort" style="width: 16px; height: 16px; filter: brightness(0) invert(1);"> 
+                    Sort <?php echo($sort == 'DESC') ? 'Newest' : 'Oldest'; ?>
                 </a>
                 
-                <a href="add_document.php" class="btn-dark" style="text-decoration: none;">
-                    <i class="fa-solid fa-plus"></i> Add
+                <a href="add_document.php" class="btn-dark" style="text-decoration: none; display: inline-flex; align-items: center; gap: 8px;">
+                    <img src="assets/images/add-icon.svg" alt="Add" style="width: 16px; height: 16px; filter: brightness(0) invert(1);"> 
+                    Add
                 </a>
             </div>
         </div>
@@ -176,18 +190,14 @@ endif; ?>
                                 </span>
                             </td>
                             <td>
-                                <div class="actions">
-                                    <?php if (!empty($row['DocImage'])): ?>
-                                        <a href="download_document.php?id=<?php echo $row['DocID']; ?>" class="action-btn" title="Download"><i class="fa-solid fa-download"></i></a>
-                                    <?php
-        else: ?>
-                                        <button class="action-btn disabled" style="opacity: 0.5; cursor: not-allowed;"><i class="fa-solid fa-download"></i></button>
-                                    <?php
-        endif; ?>
+                                <div class="actions" style="display: flex; gap: 0.75rem; justify-content: flex-start; align-items: center;">
+                                    <a href="delete_document.php?id=<?php echo $row['DocID']; ?>" class="action-btn" title="Delete" onclick="return confirm('Are you sure you want to delete this document?');">
+                                        <img src="assets/images/delete-icon.svg" alt="Delete" style="width: 18px; height: 18px; opacity: 0.6;">
+                                    </a>
                                     
-                                    <a href="delete_document.php?id=<?php echo $row['DocID']; ?>" class="action-btn" title="Delete" onclick="return confirm('Are you sure you want to delete this document?');"><i class="fa-regular fa-trash-can"></i></a>
-                                    
-                                    <a href="edit_document.php?id=<?php echo $row['DocID']; ?>" class="action-btn" title="Edit"><i class="fa-solid fa-pen"></i></a>
+                                    <a href="edit_document.php?id=<?php echo $row['DocID']; ?>" class="action-btn" title="Edit">
+                                        <img src="assets/images/edit-icon.svg" alt="Edit" style="width: 18px; height: 18px; opacity: 0.6;">
+                                    </a>
                                 </div>
                             </td>
                         </tr>
@@ -207,10 +217,14 @@ endif; ?>
         <!-- Pagination -->
         <div class="pagination-area">
             <?php if ($page > 1): ?>
-                <a href="?page=<?php echo $page - 1; ?>&search=<?php echo urlencode($search); ?>&sort=<?php echo $sort; ?>" class="page-nav"><i class="fa-solid fa-chevron-left"></i></a>
+                <a href="?page=<?php echo $page - 1; ?>&search=<?php echo urlencode($search); ?>&sort=<?php echo $sort; ?>" class="page-nav">
+                    <img src="assets/images/chevron-left-icon.svg" alt="Prev" style="width: 14px; height: 14px; opacity: 0.4;">
+                </a>
             <?php
 else: ?>
-                <div class="page-nav disabled"><i class="fa-solid fa-chevron-left"></i></div>
+                <div class="page-nav disabled">
+                    <img src="assets/images/chevron-left-icon.svg" alt="Prev" style="width: 14px; height: 14px; opacity: 0.2;">
+                </div>
             <?php
 endif; ?>
 
@@ -222,10 +236,14 @@ endfor; ?>
             </div>
 
             <?php if ($page < $totalPages): ?>
-                <a href="?page=<?php echo $page + 1; ?>&search=<?php echo urlencode($search); ?>&sort=<?php echo $sort; ?>" class="page-nav"><i class="fa-solid fa-chevron-right"></i></a>
+                <a href="?page=<?php echo $page + 1; ?>&search=<?php echo urlencode($search); ?>&sort=<?php echo $sort; ?>" class="page-nav">
+                    <img src="assets/images/chevron-right-icon.svg" alt="Next" style="width: 14px; height: 14px; opacity: 0.4;">
+                </a>
             <?php
 else: ?>
-                <div class="page-nav disabled"><i class="fa-solid fa-chevron-right"></i></div>
+                <div class="page-nav disabled">
+                    <img src="assets/images/chevron-right-icon.svg" alt="Next" style="width: 14px; height: 14px; opacity: 0.2;">
+                </div>
             <?php
 endif; ?>
         </div>

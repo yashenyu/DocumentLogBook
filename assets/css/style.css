@@ -23,7 +23,7 @@
 
 body {
   font-family:
-    "Inter",
+    "Poppins",
     system-ui,
     -apple-system,
     sans-serif;
@@ -142,7 +142,7 @@ body.auth-page {
     box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
     position: relative;
     z-index: 10;
-    overflow: hidden; /* For the internal footer/decoration */
+    /* overflow: hidden; removed to prevent clipping decorative elements */
     display: flex;
     flex-wrap: wrap; /* Allow content to wrap */
 }
@@ -186,7 +186,7 @@ body.auth-page {
     color: #334155;
     font-size: 0.9rem;
     margin-bottom: 0; /* Margin handled by container */
-    font-family: 'Inter', sans-serif;
+    font-family: 'Poppins', sans-serif;
 }
 
 .auth-card input::placeholder {
@@ -233,7 +233,7 @@ body.auth-page {
 .auth-footer {
     position: absolute;
     bottom: 1.5rem;
-    right: 9rem;
+    left: 3rem;
     font-size: 0.7rem;
     color: #94a3b8;
     z-index: 20;
@@ -252,12 +252,20 @@ body.auth-page {
 /* Decorative Isometric Boxes (CSS approximation) */
 .auth-decoration {
     position: absolute;
-    bottom: 1.5rem;
-    right: 3rem;
-    width: 100px;
-    height: 100px;
+    bottom: 2rem;
+    right: 2rem;
+    width: 90px;
+    height: 90px;
     pointer-events: none;
-    z-index: 15;
+    z-index: 5;
+    opacity: 0.8;
+}
+
+.auth-logo-img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    display: block;
 }
 
 /* Creating CSS Shapes for the logo */
@@ -274,7 +282,6 @@ body.auth-page {
     bottom: 0px;
     right: 20px;
     background-color: transparent;
-    z-index: 2;
     z-index: 2;
     box-shadow: -5px 5px 0px #065f46; /* Fake depth */
 }
