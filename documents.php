@@ -119,21 +119,21 @@ endif; ?>
         <!-- Toolbar -->
         <div class="doc-toolbar">
             <form action="" method="GET" style="flex: 1; max-width: 400px;">
-                <div class="search-container" style="position: relative;">
-                    <img src="assets/images/search-icon.svg" class="search-icon" style="position: absolute; left: 12px; top: 50%; transform: translateY(-50%); width: 16px; height: 16px; opacity: 0.5;">
-                    <input type="text" name="search" class="search-input" placeholder="Search by name, office, etc..." value="<?php echo htmlspecialchars($search); ?>" style="padding-left: 40px;">
+                <div class="search-container" style="position: relative; display: flex; align-items: center;">
+                    <i class="fa-solid fa-magnifying-glass" style="position: absolute; left: 14px; color: #94a3b8; font-size: 0.9rem;"></i>
+                    <input type="text" name="search" class="search-input" placeholder="Search by name, office, etc..." value="<?php echo htmlspecialchars($search); ?>" style="padding-left: 40px; width: 100%;">
                 </div>
             </form>
             
             <div class="toolbar-buttons">
                 <!-- Filter Button toggles Date Sort -->
                 <a href="?search=<?php echo urlencode($search); ?>&sort=<?php echo $nextSort; ?>" class="btn-dark" style="text-decoration: none; display: inline-flex; align-items: center; gap: 8px;">
-                    <img src="assets/images/filter-icon.svg" alt="Sort" style="width: 16px; height: 16px; filter: brightness(0) invert(1);"> 
+                    <i class="fa-solid fa-filter" style="font-size: 0.9rem; color: #ffffff;"></i>
                     Sort <?php echo($sort == 'DESC') ? 'Newest' : 'Oldest'; ?>
                 </a>
                 
                 <a href="add_document.php" class="btn-dark" style="text-decoration: none; display: inline-flex; align-items: center; gap: 8px;">
-                    <img src="assets/images/add-icon.svg" alt="Add" style="width: 16px; height: 16px; filter: brightness(0) invert(1);"> 
+                    <i class="fa-solid fa-plus" style="font-size: 0.9rem; color: #ffffff;"></i>
                     Add
                 </a>
             </div>

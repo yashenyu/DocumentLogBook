@@ -12,94 +12,98 @@ if (!isset($_SESSION['user_id'])) {
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Add Document - Document LogBook</title>
     
+    <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <!-- Styles -->
     <link rel="stylesheet" href="assets/css/style.css">
 </head>
-<body>
-    <div class="container" style="max-width: 600px;">
-        <header style="margin-bottom: 2rem;">
-            <h1>Add New Document</h1>
-        </header>
+<body class="auth-page" style="display: block; overflow-y: auto;">
+    <!-- Static Blobs for consistency -->
+    <div class="blob blob-1"></div>
+    <div class="blob blob-2"></div>
+    <div class="blob blob-3"></div>
 
-        <div class="card">
-            <form action="process_add_document.php" method="POST" enctype="multipart/form-data">
-                <!-- Office -->
-                <div style="margin-bottom: 1rem;">
-                    <label for="office" style="display: block; margin-bottom: 0.5rem; font-weight: 500;">Office / Department</label>
-                    <input type="text" id="office" name="office" required 
-                           style="width: 100%; padding: 0.75rem; border: 1px solid var(--border-color); border-radius: 0.5rem;"
-                           placeholder="e.g. Finance, HR, SOC">
+    <div class="container" style="max-width: 600px; padding-top: 4rem; padding-bottom: 4rem; position: relative; z-index: 10;">
+        <div class="auth-card" style="display: block;">
+            <div class="auth-content">
+                <div style="display: flex; align-items: center; gap: 1rem; margin-bottom: 0.5rem;">
+                    <h2 style="margin-bottom: 0;">Add New Document</h2>
                 </div>
+                <p class="subtitle">Enter document details below to log it.</p>
 
-                <!-- Document Name -->
-                <div style="margin-bottom: 1rem;">
-                    <label for="doc_name" style="display: block; margin-bottom: 0.5rem; font-weight: 500;">Document Name</label>
-                    <input type="text" id="doc_name" name="doc_name" required 
-                           style="width: 100%; padding: 0.75rem; border: 1px solid var(--border-color); border-radius: 0.5rem;"
-                           placeholder="e.g. Invoice #12345">
-                </div>
+                <?php if (isset($_SESSION['error'])): ?>
+                    <div style="background: rgba(231, 76, 60, 0.2); border: 1px solid #e74c3c; color: #ff8a80; padding: 10px; border-radius: 5px; margin-bottom: 20px;">
+                        <?php echo $_SESSION['error'];
+    unset($_SESSION['error']); ?>
+                    </div>
+                <?php
+endif; ?>
 
-                <!-- Description -->
-                <div style="margin-bottom: 1rem;">
-                    <label for="description" style="display: block; margin-bottom: 0.5rem; font-weight: 500;">Description</label>
-                    <textarea id="description" name="description" rows="4" 
-                              style="width: 100%; padding: 0.75rem; border: 1px solid var(--border-color); border-radius: 0.5rem;"
-                              placeholder="Brief details about the document..."></textarea>
-                </div>
+                <form action="process_add_document.php" method="POST" enctype="multipart/form-data">
+                    <div style="margin-bottom: 1.2rem;">
+                        <label for="office">Office / Department</label>
+                        <input type="text" id="office" name="office" required placeholder="e.g. SOC, Marketing">
+                    </div>
 
-                <!-- Status -->
-                <div style="margin-bottom: 1rem;">
-                    <label for="status" style="display: block; margin-bottom: 0.5rem; font-weight: 500;">Status</label>
-                    <select id="status" name="status" style="width: 100%; padding: 0.75rem; border: 1px solid var(--border-color); border-radius: 0.5rem;" onchange="toggleReceivedBy()">
-                        <option value="Incoming" selected>Incoming</option>
-                        <option value="Outgoing">Outgoing</option>
-                    </select>
-                </div>
+                    <div style="margin-bottom: 1.2rem;">
+                        <label for="doc_name">Document Name / Subject</label>
+                        <input type="text" id="doc_name" name="doc_name" required placeholder="e.g. Budget Report 2026">
+                    </div>
 
-                <!-- Received By -->
-                <div style="margin-bottom: 1.5rem;">
-                    <label for="received_by" style="display: block; margin-bottom: 0.5rem; font-weight: 500;">Received By <span id="received_req" style="color: red; display: none;">*</span></label>
-                    <input type="text" id="received_by" name="received_by" 
-                           style="width: 100%; padding: 0.75rem; border: 1px solid var(--border-color); border-radius: 0.5rem;"
-                           placeholder="Name of receiver">
-                </div>
+                    <div style="margin-bottom: 1.2rem;">
+                        <label for="description">Description</label>
+                        <textarea id="description" name="description" rows="3" style="width: 100%; padding: 0.75rem 1rem; border: none; border-radius: 0.375rem; background-color: #ffffff; color: #334155; font-size: 0.9rem; font-family: 'Poppins', sans-serif;" placeholder="Briefly describe the document..."></textarea>
+                    </div>
 
-                <script>
-                    function toggleReceivedBy() {
-                        const status = document.getElementById('status').value;
-                        const receivedInput = document.getElementById('received_by');
-                        const receivedReq = document.getElementById('received_req');
-                        
-                        if (status === 'Outgoing') {
-                            receivedInput.required = true;
-                            receivedReq.style.display = 'inline';
-                        } else {
-                            receivedInput.required = false;
-                            receivedReq.style.display = 'none';
-                        }
-                    }
-                    // Run on load
-                    window.onload = toggleReceivedBy;
-                </script>
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-bottom: 1.2rem;">
+                        <div>
+                            <label for="status">Status</label>
+                            <select id="status" name="status" onchange="toggleReceivedBy()" style="width: 100%; padding: 0.75rem 1rem; border: none; border-radius: 0.375rem; background-color: #ffffff; color: #334155; font-size: 0.9rem; font-family: 'Poppins', sans-serif;">
+                                <option value="Incoming">Incoming</option>
+                                <option value="Outgoing">Outgoing</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label for="received_by">Received By <span id="received_req" style="color: #ff6b6b; display: none;">*</span></label>
+                            <input type="text" id="received_by" name="received_by" placeholder="Name">
+                        </div>
+                    </div>
 
-                <!-- File Upload -->
-                <div style="margin-bottom: 1.5rem;">
-                    <label for="doc_image" style="display: block; margin-bottom: 0.5rem; font-weight: 500;">Document File (Image/PDF)</label>
-                    <input type="file" id="doc_image" name="doc_image" 
-                           style="width: 100%; padding: 0.75rem; border: 1px solid var(--border-color); border-radius: 0.5rem;">
-                </div>
+                    <div style="margin-bottom: 2rem;">
+                        <label for="doc_image">Upload Document (Image/PDF)</label>
+                        <input type="file" id="doc_image" name="doc_image" accept="image/*,.pdf" style="padding: 0.5rem 0; color: #cbd5e1; font-size: 0.85rem;">
+                    </div>
 
-                <!-- Actions -->
-                <div style="display: flex; gap: 1rem; justify-content: flex-end;">
-                    <a href="documents.php" class="btn btn-secondary">Cancel</a>
-                    <button type="submit" class="btn btn-primary">Submit Document</button>
-                </div>
-            </form>
+                    <div style="display: flex; gap: 1rem; margin-top: 1rem;">
+                        <button type="submit" class="btn btn-auth" style="flex: 1;">Save Document</button>
+                        <a href="documents.php" class="auth-link" style="padding: 0.6rem 0; text-decoration: none; display: flex; align-items: center; justify-content: center;">Cancel</a>
+                    </div>
+                </form>
+            </div>
         </div>
     </div>
 
+    <script>
+        function toggleReceivedBy() {
+            const status = document.getElementById('status').value;
+            const receivedLabel = document.getElementById('received_req');
+            const receivedInput = document.getElementById('received_by');
+            
+            if (status === 'Outgoing') {
+                receivedLabel.style.display = 'inline';
+                receivedInput.required = true;
+            } else {
+                receivedLabel.style.display = 'none';
+                receivedInput.required = false;
+            }
+        }
+    </script>
     <script src="assets/js/main.js"></script>
 </body>
 </html>
