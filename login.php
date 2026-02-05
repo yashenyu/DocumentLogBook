@@ -46,7 +46,7 @@ if (isset($_SESSION['user_id'])) {
     <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     
     <!-- Styles -->
     <link rel="stylesheet" href="assets/css/style.css">
@@ -72,9 +72,9 @@ endif; ?>
                 <form action="" method="POST">
                     <!-- Email/Username -->
                     <div style="margin-bottom: 1.5rem;">
-                        <label for="username">Email Address</label>
+                        <label for="username">Username</label>
                         <input type="text" id="username" name="username" required 
-                               placeholder="Your Email Address Here">
+                               placeholder="Enter Your Username">
                     </div>
                     
                     <!-- Password -->
@@ -94,10 +94,9 @@ endif; ?>
             </div>
 
             <!-- Decorative Logo Element (Bottom Right) -->
-            <div class="auth-decoration">
-                <!-- Using CSS to create a similar isometric shape pattern -->
-                <div class="iso-box iso-box-1"></div>
-                <div class="iso-box iso-box-2"></div>
+            <div class="auth-decoration" style="position: absolute; bottom: -23px; right: -12px; width: 160px; height: 160px; z-index: 5;">
+                <!-- User Logo Image -->
+                <img src="assets/images/Logbook Logo.png" alt="Logo" class="auth-logo-img" style="width: 100%; height: 100%; object-fit: contain;">
             </div>
 
             <!-- Footer Links (absolute bottom right inside card) -->

@@ -15,7 +15,7 @@ if (!isset($_SESSION['user_id'])) {
     <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     
     <!-- Icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
@@ -29,13 +29,25 @@ if (!isset($_SESSION['user_id'])) {
         <div style="display: flex; align-items: center;">
             <div class="logo-area">
                 <span class="logo-text">LogBook</span>
-                <div class="nav-iso-box-container">
-                    <div class="nav-iso-box nav-iso-1"></div>
-                    <div class="nav-iso-box nav-iso-2"></div>
+                <div class="nav-iso-box-container" style="display: flex; align-items: center; justify-content: center;">
+                    <img src="assets/images/Logbook Logo.png" alt="Logo" style="width: 150%; height: 150%; object-fit: contain;">
                 </div>
             </div>
             <div class="nav-divider"></div>
-            <div class="nav-subtitle">Simple Document Logbook | <?php echo htmlspecialchars($_SESSION['role'] ?? 'Staff'); ?></div>
+            <div class="nav-subtitle" style="display: flex; align-items: center; gap: 0.6rem;">
+                Simple Document Logbook 
+                <span style="opacity: 0.2;">|</span>
+                <?php if (($_SESSION['role'] ?? '') === 'Admin'): ?>
+                    <span style="background-color: rgba(52, 211, 153, 0.1); color: #34d399; padding: 2px 10px; border-radius: 99px; font-size: 0.7rem; font-weight: 700; border: 1px solid rgba(52, 211, 153, 0.2); letter-spacing: 0.5px; text-transform: uppercase; display: inline-flex; align-items: center; gap: 5px;">
+                        <span style="width: 5px; height: 5px; background-color: #34d399; border-radius: 50%;"></span>
+                        Admin
+                    </span>
+                <?php
+else: ?>
+                    <span style="color: #94a3b8; font-size: 0.8rem; font-weight: 500;">Staff</span>
+                <?php
+endif; ?>
+            </div>
         </div>
 
         <div style="display: flex; gap: 1rem; align-items: center;">
