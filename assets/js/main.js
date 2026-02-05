@@ -513,9 +513,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
                     // Update URL without reload
                     window.history.replaceState(null, '', `?${urlParams.toString()}`);
-
-                    // Re-initialize resizable columns for the new table
-                    initResizableColumns();
                 } catch (err) {
                     console.error('Search failed:', err);
                 }
@@ -523,50 +520,7 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    // --- Resizable Columns Logic ---
-    function initResizableColumns() {
-        const table = document.querySelector('.doc-table');
-        if (!table) return;
-
-        const headers = table.querySelectorAll('th');
-        headers.forEach(th => {
-            // Remove existing resizer if any (during re-init)
-            const existingResizer = th.querySelector('.resizer');
-            if (existingResizer) existingResizer.remove();
-
-            // Create Resizer Handle
-            const resizer = document.createElement('div');
-            resizer.className = 'resizer';
-            th.appendChild(resizer);
-
-            resizer.addEventListener('mousedown', initResize);
-
-            function initResize(e) {
-                e.preventDefault();
-                const startX = e.pageX;
-                const startWidth = th.offsetWidth;
-
-                document.body.classList.add('resizing');
-
-                function doResize(e) {
-                    const newWidth = startWidth + (e.pageX - startX);
-                    th.style.width = newWidth + 'px';
-                }
-
-                function stopResize() {
-                    document.body.classList.remove('resizing');
-                    window.removeEventListener('mousemove', doResize);
-                    window.removeEventListener('mouseup', stopResize);
-                }
-
-                window.addEventListener('mousemove', doResize);
-                window.addEventListener('mouseup', stopResize);
-            }
-        });
-    }
-
     // Initialize New Features
     initDynamicSearch();
-    initResizableColumns();
 
 });

@@ -86,7 +86,7 @@ endif; ?>
                 <form action="" method="POST">
                     <div style="margin-bottom: 1.2rem;">
                         <label for="username">Username</label>
-                        <input type="text" id="username" name="username" required placeholder="Enter Username">
+                        <input type="text" id="username" name="username" required placeholder="Enter Username" maxlength="100">
                     </div>
                     
                     <div style="margin-bottom: 1.2rem;">

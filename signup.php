@@ -39,7 +39,7 @@ if (isset($_SESSION['user_id'])) {
                     <div style="margin-bottom: 1.5rem;">
                         <label for="username">Username</label>
                         <input type="text" id="username" name="username" required 
-                               placeholder="Choose a Username">
+                               placeholder="Choose a Username" maxlength="100">
                     </div>
 
                     <!-- Email -->

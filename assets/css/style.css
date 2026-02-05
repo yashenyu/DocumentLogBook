@@ -19,28 +19,14 @@
 }
 
 * {
-    <<<<<<< HEAD box-sizing: border-box;
+    box-sizing: border-box;
     margin: 0;
     padding: 0;
     font-family: inherit;
-    =======box-sizing: border-box;
-    margin: 0;
-    padding: 0;
-    >>>>>>>83fa8177c2b3ed4eeb870e361d118c2a57e03a24 box-sizing: border-box;
-    margin: 0;
-    padding: 0;
 }
 
 body {
-    <<<<<<< Updated upstream font-family:
-        "Inter",
-        system-ui,
-        -apple-system,
-        sans-serif;
-    background-color: var(--bg-color);
-    color: var(--text-color);
-    line-height: 1.5;
-    =======font-family:
+    font-family:
         "Poppins",
         system-ui,
         -apple-system,
@@ -48,7 +34,6 @@ body {
     background-color: var(--bg-color);
     color: var(--text-color);
     line-height: 1.5;
-    >>>>>>>Stashed changes
 }
 
 .container {
@@ -111,24 +96,12 @@ body {
 /* --- Auth Page Specific Styles (Login/Signup) --- */
 /* --- Auth Page Specific Styles (Login/Signup) --- */
 body.auth-page {
-    <<<<<<< HEAD background-color: #0d283d;
+    background-color: #0d283d;
     margin: 0;
     padding: 0;
     width: 100vw;
     height: 100vh;
-    =======background: linear-gradient(135deg, #10b981 0%, #064e3b 100%);
-    /* Fallback */
-    background: #00e5ff;
-    /* Vivid cyan base */
-    background: linear-gradient(120deg, #34d399 0%, #059669 40%, #0f172a 40%, #0f172a 100%);
-    /* The image has complex large shapes - using a simpler but close approximation with gradient and blobs */
-    background-color: #0f172a;
-    position: relative;
-    min-height: 100vh;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    >>>>>>>83fa8177c2b3ed4eeb870e361d118c2a57e03a24 overflow: hidden;
+    overflow: hidden;
     font-family: 'Poppins', sans-serif;
     position: relative;
 }
@@ -146,9 +119,7 @@ body.auth-page {
 /* Precise 1:1 Background Copy */
 .blob {
     position: absolute;
-    <<<<<<< HEAD=======filter: blur(0px);
-    /* Sharp shapes in the reference image */
-    >>>>>>>83fa8177c2b3ed4eeb870e361d118c2a57e03a24 z-index: 1;
+    z-index: 1;
     pointer-events: none;
 }
 
@@ -164,7 +135,6 @@ body.auth-page {
 }
 
 .blob-2 {
-    <<<<<<< HEAD
     /* Top Left Brighter Accent */
     width: 45vw;
     height: 70vh;
@@ -198,38 +168,13 @@ body.auth-page {
     border-radius: 30% 70% 40% 60% / 40% 40% 60% 60%;
     transform: rotate(-20deg);
     z-index: 2;
-    =======
-    /* Large Top Left Brighter Accent */
-    width: 40%;
-    height: 80%;
-    background: #4ade80;
-    top: -20%;
-    left: -10%;
-    border-radius: 50%;
-    opacity: 0.8;
-}
-
-.blob-3 {
-    /* Right Dark Wave */
-    width: 70%;
-    height: 120%;
-    background: #0f1c2e;
-    /* Dark Navy matches card */
-    bottom: -20%;
-    right: -20%;
-    border-radius: 60% 40% 70% 30% / 60% 50% 60% 50%;
-    transform: rotate(-15deg);
-    z-index: 0;
-    >>>>>>>83fa8177c2b3ed4eeb870e361d118c2a57e03a24
 }
 
 /* Authentication Card */
 .auth-card {
-    <<<<<<< HEAD background-color: #0d283d;
+    background-color: #0d283d;
     /* Match the dark teal in image */
-    =======background-color: #0f1c2e;
-    /* Deep Navy Blue */
-    >>>>>>>83fa8177c2b3ed4eeb870e361d118c2a57e03a24 color: #ffffff;
+    color: #ffffff;
     border-radius: 2rem;
     padding: 3.5rem;
     width: 100%;
@@ -237,16 +182,10 @@ body.auth-page {
     box-shadow: 0 40px 100px -20px rgba(0, 0, 0, 0.7);
     position: relative;
     z-index: 10;
-    <<<<<<< Updated upstream overflow: hidden;
-    /* For the internal footer/decoration */
-    =======<<<<<<< HEAD>>>>>>>Stashed changes display: flex;
-    flex-direction: column;
-    =======overflow: hidden;
+    overflow: hidden;
     /* For the internal footer/decoration */
     display: flex;
-    flex-wrap: wrap;
-    /* Allow content to wrap */
-    >>>>>>>83fa8177c2b3ed4eeb870e361d118c2a57e03a24
+    flex-direction: column;
 }
 
 .auth-content {
@@ -264,12 +203,9 @@ body.auth-page {
 }
 
 .auth-card .subtitle {
-    <<<<<<< HEAD font-size: 1.1rem;
+    font-size: 1.1rem;
     color: #ffffff;
-    =======font-size: 0.95rem;
-    color: #cbd5e1;
-    /* Light gray */
-    >>>>>>>83fa8177c2b3ed4eeb870e361d118c2a57e03a24 margin-bottom: 2rem;
+    margin-bottom: 2rem;
     font-weight: 400;
 }
 
@@ -277,12 +213,8 @@ body.auth-page {
     display: block;
     margin-bottom: 0.6rem;
     font-weight: 500;
-    <<<<<<< HEAD font-size: 0.9rem;
+    font-size: 0.9rem;
     color: #e2e8f0;
-    =======font-size: 0.85rem;
-    color: #cad5e2;
-    /* Slightly accented gray */
-    >>>>>>>83fa8177c2b3ed4eeb870e361d118c2a57e03a24
 }
 
 .auth-card input[type="text"],
@@ -291,38 +223,20 @@ body.auth-page {
     width: 100%;
     padding: 0.85rem 1.25rem;
     border: none;
-    <<<<<<< HEAD border-radius: 0.6rem;
+    border-radius: 0.6rem;
     background-color: #ffffff;
     color: #1e293b;
     font-size: 1rem;
     margin-bottom: 1.5rem;
-    =======border-radius: 0.375rem;
-    /* ~6px */
-    background-color: #ffffff;
-    color: #334155;
-    font-size: 0.9rem;
-    <<<<<<< Updated upstream margin-bottom: 0;
-    /* Margin handled by container */
-    font-family: 'Inter', sans-serif;
-    =======margin-bottom: 0;
-    /* Margin handled by container */
-    >>>>>>>83fa8177c2b3ed4eeb870e361d118c2a57e03a24 font-family: 'Poppins', sans-serif;
-    >>>>>>>Stashed changes
+    font-family: 'Poppins', sans-serif;
 }
 
 .auth-card input::placeholder {
     color: #94a3b8;
 }
 
-/* Login Button */
 .btn-auth {
-    <<<<<<< HEAD background-color: #00f295;
-    color: #0d283d;
-    font-weight: 700;
-    padding: 0.6rem 2.8rem;
-    border-radius: 0.75rem;
-    font-size: 1.05rem;
-    =======background-color: #34d399;
+    background-color: #34d399;
     /* Bright Emerald/Mint */
     color: #064e3b;
     /* Dark Green Text */
@@ -331,7 +245,7 @@ body.auth-page {
     border-radius: 9999px;
     /* Pill shape */
     font-size: 0.95rem;
-    >>>>>>>83fa8177c2b3ed4eeb870e361d118c2a57e03a24 text-align: center;
+    text-align: center;
     border: none;
     cursor: pointer;
     transition: all 0.2s ease;
@@ -345,10 +259,8 @@ body.auth-page {
 
 /* Sign Up Link */
 .auth-link {
-    <<<<<<< HEAD color: #ffffff;
-    =======color: #e2e8f0;
-    /* Off-white */
-    >>>>>>>83fa8177c2b3ed4eeb870e361d118c2a57e03a24 text-decoration: underline;
+    color: #ffffff;
+    text-decoration: underline;
     font-size: 0.95rem;
     font-weight: 600;
     opacity: 0.9;
@@ -362,11 +274,9 @@ body.auth-page {
 .auth-footer {
     position: absolute;
     bottom: 1.5rem;
-    <<<<<<< Updated upstream right: 9rem;
-    font-size: 0.7rem;
-    =======right: 2.5rem;
+    right: 2.5rem;
     font-size: 0.75rem;
-    >>>>>>>Stashed changes color: #94a3b8;
+    color: #94a3b8;
     z-index: 20;
 }
 
@@ -383,13 +293,7 @@ body.auth-page {
 /* Decorative Logo Area */
 .auth-decoration {
     position: absolute;
-    <<<<<<< Updated upstream bottom: 1.5rem;
-    right: 3rem;
-    width: 100px;
-    height: 100px;
-    pointer-events: none;
-    z-index: 15;
-    =======bottom: 3rem;
+    bottom: 3rem;
     right: 2rem;
     width: 130px;
     height: 130px;
@@ -403,7 +307,6 @@ body.auth-page {
     object-fit: contain;
     display: block;
     filter: drop-shadow(0 10px 20px rgba(0, 0, 0, 0.2));
-    >>>>>>>Stashed changes
 }
 
 /* Creating CSS Shapes for the logo */
@@ -421,12 +324,8 @@ body.auth-page {
     right: 20px;
     background-color: transparent;
     z-index: 2;
-    z-index: 2;
-    <<<<<<< Updated upstream box-shadow: -5px 5px 0px #065f46;
+    box-shadow: -5px 5px 0px #065f46;
     /* Fake depth */
-    =======box-shadow: -5px 5px 0px #065f46;
-    /* Fake depth */
-    >>>>>>>Stashed changes
 }
 
 /* --- Documents Page Styles --- */
@@ -467,9 +366,9 @@ body.auth-page {
 }
 
 .main-content {
-    max-width: 1400px;
+    max-width: 95%;
     margin: 2rem auto;
-    padding: 0 2rem;
+    padding: 0 1rem;
 }
 
 /* Toolbar */
@@ -486,20 +385,13 @@ body.auth-page {
 }
 
 .search-input {
-    <<<<<<< HEAD width: 40%;
-    background-color: #0d283d;
-    /* Match the dark navy dashboard theme */
-    border: .3px solid rgba(255, 255, 255, 0.1);
-    padding: 0.5rem 0.75rem 0.5rem 2.1rem;
-    border-radius: 99px;
-    /* Pill style */
-    =======width: 100%;
+    width: 50%;
     background-color: #0f1c2e;
     border: none;
     padding: 0.75rem 1rem 0.75rem 2.5rem;
     /* Space for icon */
     border-radius: 0.5rem;
-    >>>>>>>83fa8177c2b3ed4eeb870e361d118c2a57e03a24 color: #ffffff;
+    color: #ffffff;
     font-size: 0.8rem;
     transition: all 0.2s ease;
 }
@@ -516,11 +408,12 @@ body.auth-page {
     box-shadow: 0 0 10px rgba(52, 211, 153, 0.1);
 }
 
-<<<<<<< HEAD=======.search-input::placeholder {
+.search-input::placeholder {
     color: #94a3b8;
+    opacity: 0.6;
 }
 
->>>>>>>83fa8177c2b3ed4eeb870e361d118c2a57e03a24 .search-icon {
+.search-icon {
     position: absolute;
     left: 1rem;
     top: 50%;
@@ -677,16 +570,13 @@ body.auth-page {
 
 .table-container {
     background: #ffffff;
-    <<<<<<< HEAD border-radius: 1rem;
-    overflow: hidden;
+    border-radius: 1rem;
+    overflow-x: auto;
+    max-width: 100%;
+    /* Ensure it doesn't spill past its parent */
     box-shadow: 0 15px 35px rgba(0, 0, 0, 0.05);
     /* Softer shadow */
     border: 1px solid rgba(0, 0, 0, 0.05);
-    =======border-radius: 0.5rem;
-    /* Only outer corners */
-    overflow: hidden;
-    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
-    >>>>>>>83fa8177c2b3ed4eeb870e361d118c2a57e03a24
 }
 
 .doc-table {
@@ -694,6 +584,67 @@ body.auth-page {
     border-collapse: separate;
     /* Changed to separate for better rounding control */
     border-spacing: 0;
+    table-layout: fixed;
+    /* Required for truncation to work */
+    min-width: 900px;
+    /* Prevent total collapse on small screens */
+}
+
+/* ID column */
+.doc-table th:nth-child(1),
+.doc-table td:nth-child(1) {
+    width: 70px;
+}
+
+/* Image column */
+.doc-table th:nth-child(2),
+.doc-table td:nth-child(2) {
+    width: 80px;
+}
+
+/* Date column */
+.doc-table th:nth-child(3),
+.doc-table td:nth-child(3) {
+    width: 110px;
+}
+
+/* Office column */
+.doc-table th:nth-child(4),
+.doc-table td:nth-child(4) {
+    width: 150px;
+}
+
+/* Subject column */
+.doc-table th:nth-child(5),
+.doc-table td:nth-child(5) {
+    width: 200px;
+}
+
+/* Received By column */
+.doc-table th:nth-child(6),
+.doc-table td:nth-child(6) {
+    width: 150px;
+}
+
+/* Status column */
+.doc-table th:nth-child(7),
+.doc-table td:nth-child(7) {
+    width: 110px;
+}
+
+/* Actions column */
+.doc-table th:nth-child(8),
+.doc-table td:nth-child(8) {
+    width: 120px;
+}
+
+/* Actions */
+
+/* Truncation Utility */
+.col-truncate {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 
 .doc-table th {
@@ -769,36 +720,76 @@ body.auth-page {
 
 .action-btn {
     cursor: pointer;
-    background: #f8fafc;
-    border: 1px solid #e2e8f0;
+    background: transparent;
+    border: none;
     color: #64748b;
-    width: 32px;
-    height: 32px;
-    border-radius: 8px;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    /* Circle for better hover centering if needed */
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: 0.9rem;
-    transition: all 0.2s;
+    font-size: 1.2rem;
+    /* Slightly larger for icon-only feel */
+    transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+    box-shadow: none;
+    text-decoration: none;
+}
+
+.action-btn i {
+    transition: all 0.2s ease;
+    opacity: 0.8;
+}
+
+.action-btn img {
+    transition: all 0.2s ease;
+    opacity: 0.7;
 }
 
 .action-btn:hover {
-    background-color: #0d283d;
-    color: #ffffff;
-    border-color: #0d283d;
-    transform: translateY(-2px);
+    background-color: transparent;
+    border: none;
+    color: #34d399;
+    transform: translateY(-4px) scale(1.1);
+    box-shadow: none;
 }
 
-.action-btn.delete:hover {
-    background-color: #ef4444;
-    border-color: #ef4444;
+.action-btn:hover i {
+    opacity: 1;
+    transform: scale(1.1);
+    color: inherit;
 }
 
-<<<<<<< HEAD=======.action-btn:hover {
-    color: #0f1c2e;
+.action-btn:hover img {
+    opacity: 1;
+    transform: scale(1.1);
 }
 
->>>>>>>83fa8177c2b3ed4eeb870e361d118c2a57e03a24
+/* Specific View Hover */
+.action-btn.view-btn:hover {
+    color: #34d399;
+}
+
+/* Specific Edit Hover */
+.action-btn.edit-btn:hover {
+    color: #34d399;
+    border-color: #34d399;
+}
+
+/* Specific Delete Hover */
+.action-btn.delete-btn:hover,
+.action-btn[title="Delete"]:hover {
+    background-color: transparent;
+    border: none;
+    color: #ef4444 !important;
+    box-shadow: none;
+}
+
+.action-btn.delete-btn:hover i,
+.action-btn[title="Delete"]:hover i {
+    color: #ef4444 !important;
+}
 
 /* Pagination */
 .pagination-area {

@@ -87,17 +87,9 @@ endif; ?>
                 </form>
             </div>
 
-            <!-- Decorative Logo Element (Bottom Right) -->
-<<<<<<< Updated upstream
-            <div class="auth-decoration">
-                <!-- Using CSS to create a similar isometric shape pattern -->
-                <div class="iso-box iso-box-1"></div>
-                <div class="iso-box iso-box-2"></div>
-=======
             <div class="auth-decoration" style="position: absolute; bottom: 3.5rem; right: 2rem; width: 140px; height: 140px; z-index: 5;">
                 <!-- User Logo Image -->
                 <img src="assets/images/Logbook Logo.png" alt="Logo" class="auth-logo-img" style="width: 110%; height: 125%; object-fit: contain;">
->>>>>>> Stashed changes
             </div>
 
             <!-- Footer Links (absolute bottom right inside card) -->
