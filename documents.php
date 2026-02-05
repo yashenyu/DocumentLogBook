@@ -146,15 +146,21 @@ endif; ?>
                         <tr>
                             <td>#<?php echo $row['DocID']; ?></td>
                             <td>
-                                <?php if (!empty($row['DocImage']) && file_exists($row['DocImage'])):
-            $ext = pathinfo($row['DocImage'], PATHINFO_EXTENSION);
-            if (in_array(strtolower($ext), ['jpg', 'jpeg', 'png', 'gif'])): ?>
-                                        <img src="<?php echo htmlspecialchars($row['DocImage']); ?>" alt="Doc" style="width: 50px; height: 50px; object-fit: cover; border-radius: 4px; border: 1px solid #e2e8f0;">
-                                    <?php
+                                <?php
+        if (!empty($row['DocImage']) && file_exists($row['DocImage'])):
+            $ext = strtolower(pathinfo($row['DocImage'], PATHINFO_EXTENSION));
+            $isImage = in_array($ext, ['jpg', 'jpeg', 'png', 'gif']);
+?>
+                                    <a href="<?php echo htmlspecialchars($row['DocImage']); ?>" target="_blank" class="action-btn" title="View Document">
+                                        <?php if ($isImage): ?>
+                                            <img src="<?php echo htmlspecialchars($row['DocImage']); ?>" alt="Preview" style="width: 50px; height: 50px; object-fit: cover; border-radius: 4px; border: 1px solid #e2e8f0;">
+                                        <?php
             else: ?>
-                                        <i class="fa-solid fa-file-pdf" style="font-size: 1.5rem; color: #e74c3c;"></i>
-                                    <?php
-            endif;
+                                            <i class="fa-regular fa-file-pdf" style="font-size: 1.5rem; color: #ef4444;"></i>
+                                        <?php
+            endif; ?>
+                                    </a>
+                                <?php
         else: ?>
                                     <span style="opacity: 0.3;">-</span>
                                 <?php
