@@ -285,9 +285,9 @@ document.addEventListener('DOMContentLoaded', () => {
             row.style.borderRadius = '4px';
             row.style.background = '#fff';
 
-            // Identify type
-            const ext = att.FilePath.split('.').pop().toLowerCase();
-            const isImage = ['jpg', 'jpeg', 'png', 'gif'].includes(ext);
+            // Identify type from FileType (MIME type)
+            const isImage = att.FileType && att.FileType.startsWith('image/');
+            const attachmentUrl = `view_attachment.php?id=${att.AttachmentID}`;
 
             const leftDiv = document.createElement('div');
             leftDiv.style.display = 'flex';
@@ -296,7 +296,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
             if (isImage) {
                 const img = document.createElement('img');
-                img.src = att.FilePath;
+                img.src = attachmentUrl;
                 img.style.width = '40px';
                 img.style.height = '40px';
                 img.style.objectFit = 'cover';
@@ -311,7 +311,7 @@ document.addEventListener('DOMContentLoaded', () => {
             }
 
             const nameSpan = document.createElement('span');
-            nameSpan.textContent = att.FilePath.split('/').pop().split('_').slice(2).join('_'); // Try to strip timestamp
+            nameSpan.textContent = `Attachment #${att.AttachmentID}`;
             nameSpan.style.fontSize = '0.9rem';
             nameSpan.style.color = '#334155';
             nameSpan.style.maxWidth = '200px';
@@ -417,8 +417,11 @@ document.addEventListener('DOMContentLoaded', () => {
         }
 
         attachments.forEach(att => {
+            const isImage = att.FileType && att.FileType.startsWith('image/');
+            const attachmentUrl = `view_attachment.php?id=${att.AttachmentID}`;
+
             const item = document.createElement('a');
-            item.href = att.FilePath;
+            item.href = attachmentUrl;
             item.target = '_blank';
             item.style.display = 'flex';
             item.style.alignItems = 'center';
@@ -442,13 +445,9 @@ document.addEventListener('DOMContentLoaded', () => {
                 item.style.transform = 'translateY(0)';
             };
 
-            // Identify type
-            const ext = att.FilePath.split('.').pop().toLowerCase();
-            const isImage = ['jpg', 'jpeg', 'png', 'gif'].includes(ext);
-
             if (isImage) {
                 const img = document.createElement('img');
-                img.src = att.FilePath;
+                img.src = attachmentUrl;
                 img.style.width = '40px';
                 img.style.height = '40px';
                 img.style.objectFit = 'cover';
@@ -478,12 +477,7 @@ document.addEventListener('DOMContentLoaded', () => {
             infoDiv.style.minWidth = '0'; // Allow truncation
 
             const name = document.createElement('div');
-            // Try to extract clean filename
-            const parts = att.FilePath.split('/');
-            const filename = parts.pop();
-            const cleanName = filename.includes('_') ? filename.split('_').slice(2).join('_') : filename;
-
-            name.textContent = cleanName || filename;
+            name.textContent = `Attachment #${att.AttachmentID}`;
             name.style.color = '#1e293b';
             name.style.fontWeight = '500';
             name.style.fontSize = '0.85rem';
@@ -732,5 +726,208 @@ document.addEventListener('DOMContentLoaded', () => {
     initPagination();
     initMultiSelect();
     initFilterForm();
+
+    // --- Gallery Lightbox Logic ---
+    function initGalleryLightbox() {
+        const galleryModal = document.getElementById('galleryModal');
+        const galleryImage = document.getElementById('galleryImage');
+        const galleryPdf = document.getElementById('galleryPdf');
+        const galleryLoading = document.getElementById('galleryLoading');
+        const galleryThumbnails = document.getElementById('galleryThumbnails');
+        const galleryCounter = document.getElementById('galleryCounter');
+        const galleryTitle = document.getElementById('galleryTitle');
+        const prevBtn = document.getElementById('galleryPrev');
+        const nextBtn = document.getElementById('galleryNext');
+        const closeBtn = document.querySelector('.close-gallery');
+        const downloadOneBtn = document.getElementById('galleryDownloadOne');
+        const downloadAllBtn = document.getElementById('galleryDownloadAll');
+
+        if (!galleryModal) return;
+
+        let currentAttachments = [];
+        let currentIndex = 0;
+        let currentDocId = null;
+
+
+        // Close gallery
+        if (closeBtn) {
+            closeBtn.addEventListener('click', () => {
+                galleryModal.classList.remove('active');
+                // Clear content
+                galleryImage.style.display = 'none';
+                galleryPdf.style.display = 'none';
+                galleryPdf.src = '';
+            });
+        }
+
+        // Close on outside click
+        galleryModal.addEventListener('click', (e) => {
+            if (e.target === galleryModal) {
+                galleryModal.classList.remove('active');
+                galleryImage.style.display = 'none';
+                galleryPdf.style.display = 'none';
+                galleryPdf.src = '';
+            }
+        });
+
+        // Download single attachment
+        if (downloadOneBtn) {
+            downloadOneBtn.addEventListener('click', () => {
+                if (currentAttachments.length > 0 && currentAttachments[currentIndex]) {
+                    const att = currentAttachments[currentIndex];
+                    window.location.href = `download_attachment.php?id=${att.AttachmentID}`;
+                }
+            });
+        }
+
+        // Download all attachments (as ZIP if multiple)
+        if (downloadAllBtn) {
+            downloadAllBtn.addEventListener('click', () => {
+                if (currentDocId) {
+                    window.location.href = `download_attachment.php?doc_id=${currentDocId}`;
+                }
+            });
+        }
+
+        // Navigation
+        prevBtn.addEventListener('click', () => {
+            if (currentIndex > 0) {
+                currentIndex--;
+                showAttachment(currentIndex);
+            }
+        });
+
+        nextBtn.addEventListener('click', () => {
+            if (currentIndex < currentAttachments.length - 1) {
+                currentIndex++;
+                showAttachment(currentIndex);
+            }
+        });
+
+        // Keyboard navigation
+        document.addEventListener('keydown', (e) => {
+            if (!galleryModal.classList.contains('active')) return;
+
+            if (e.key === 'ArrowLeft' && currentIndex > 0) {
+                currentIndex--;
+                showAttachment(currentIndex);
+            } else if (e.key === 'ArrowRight' && currentIndex < currentAttachments.length - 1) {
+                currentIndex++;
+                showAttachment(currentIndex);
+            } else if (e.key === 'Escape') {
+                galleryModal.classList.remove('active');
+            }
+        });
+
+        function showAttachment(index) {
+            const att = currentAttachments[index];
+            const isImage = att.FileType && att.FileType.startsWith('image/');
+            const url = `view_attachment.php?id=${att.AttachmentID}`;
+
+            // Show loading
+            galleryLoading.style.display = 'block';
+            galleryImage.style.display = 'none';
+            galleryPdf.style.display = 'none';
+
+            if (isImage) {
+                galleryImage.onload = () => {
+                    galleryLoading.style.display = 'none';
+                    galleryImage.style.display = 'block';
+                };
+                galleryImage.src = url;
+            } else {
+                galleryLoading.style.display = 'none';
+                galleryPdf.src = url;
+                galleryPdf.style.display = 'block';
+            }
+
+            // Update counter
+            galleryCounter.textContent = `${index + 1} / ${currentAttachments.length}`;
+
+            // Update nav buttons
+            prevBtn.disabled = index === 0;
+            nextBtn.disabled = index === currentAttachments.length - 1;
+
+            // Update thumbnail active state
+            const thumbs = galleryThumbnails.querySelectorAll('.lightbox-thumb');
+            thumbs.forEach((thumb, i) => {
+                thumb.classList.toggle('active', i === index);
+            });
+        }
+
+        function renderThumbnails() {
+            galleryThumbnails.innerHTML = '';
+            currentAttachments.forEach((att, i) => {
+                const isImage = att.FileType && att.FileType.startsWith('image/');
+                const url = `view_attachment.php?id=${att.AttachmentID}`;
+
+                const thumb = document.createElement('div');
+                thumb.className = `lightbox-thumb ${i === currentIndex ? 'active' : ''}`;
+
+                if (isImage) {
+                    const img = document.createElement('img');
+                    img.src = url;
+                    thumb.appendChild(img);
+                } else {
+                    thumb.classList.add('lightbox-thumb-pdf');
+                    thumb.innerHTML = '<i class="fa-solid fa-file-pdf"></i>';
+                }
+
+                thumb.addEventListener('click', () => {
+                    currentIndex = i;
+                    showAttachment(currentIndex);
+                });
+
+                galleryThumbnails.appendChild(thumb);
+            });
+        }
+
+        // Open gallery via delegation (clicking on gallery-trigger elements)
+        document.addEventListener('click', async (e) => {
+            const trigger = e.target.closest('.gallery-trigger');
+            if (trigger) {
+                e.preventDefault();
+                const docId = trigger.dataset.docid;
+
+                if (!docId) return;
+
+                // Show modal with loading state
+                galleryModal.classList.add('active');
+                galleryLoading.style.display = 'block';
+                galleryImage.style.display = 'none';
+                galleryPdf.style.display = 'none';
+                galleryThumbnails.innerHTML = '<div style="color: #94a3b8;">Loading...</div>';
+
+                try {
+                    const response = await fetch(`get_document.php?id=${docId}`);
+                    const data = await response.json();
+
+                    if (data.error || !data.attachments || data.attachments.length === 0) {
+                        galleryThumbnails.innerHTML = '<div style="color: #94a3b8;">No attachments found.</div>';
+                        galleryLoading.style.display = 'none';
+                        return;
+                    }
+
+                    currentAttachments = data.attachments;
+                    currentIndex = 0;
+                    currentDocId = docId; // Store for download all functionality
+
+
+                    // Update title
+                    galleryTitle.textContent = data.doc.Subject || 'Document Attachments';
+
+                    renderThumbnails();
+                    showAttachment(0);
+
+                } catch (err) {
+                    console.error('Failed to load attachments:', err);
+                    galleryThumbnails.innerHTML = '<div style="color: #ef4444;">Failed to load attachments.</div>';
+                    galleryLoading.style.display = 'none';
+                }
+            }
+        });
+    }
+
+    initGalleryLightbox();
 
 });

@@ -31,11 +31,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             exit;
         }
 
-        // Handle File Upload via Helper
-        $bucket = [];
+        // Handle File Upload via Helper (now returns binary data)
+        $uploadedFiles = [];
         if (isset($_FILES['doc_image']) && !empty($_FILES['doc_image']['name'][0])) {
             try {
-                $bucket = UploadHelper::handleUploads($_FILES['doc_image']);
+                $uploadedFiles = UploadHelper::handleUploads($_FILES['doc_image']);
             }
             catch (Exception $e) {
                 $_SESSION['error'] = "Upload failed: " . $e->getMessage();
@@ -44,11 +44,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             }
         }
 
-        $primaryImagePath = (count($bucket) > 0) ? $bucket[0] : null;
-
-        // Insert Document Log
-        $sql = "INSERT INTO DocumentLog (DocDate, Office, Subject, Description, ReceivedBy, Status, DocImage) 
-            VALUES (:docDate, :office, :subject, :description, :receivedBy, :status, :docImage)";
+        // Insert Document Log (no DocImage column anymore)
+        $sql = "INSERT INTO DocumentLog (DocDate, Office, Subject, Description, ReceivedBy, Status) 
+            VALUES (:docDate, :office, :subject, :description, :receivedBy, :status)";
 
         $stmt = $pdo->prepare($sql);
         $stmt->execute([
@@ -57,18 +55,17 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             ':subject' => $subject,
             ':description' => $description,
             ':receivedBy' => $receivedBy,
-            ':status' => $status,
-            ':docImage' => $primaryImagePath
+            ':status' => $status
         ]);
 
         $newDocID = $pdo->lastInsertId();
 
-        // Insert Attributes/Attachments
-        if ($newDocID && count($bucket) > 0) {
-            $sqlAttach = "INSERT INTO DocumentAttachments (DocID, FilePath) VALUES (?, ?)";
+        // Insert Attachments as BLOBs
+        if ($newDocID && count($uploadedFiles) > 0) {
+            $sqlAttach = "INSERT INTO DocumentAttachments (DocID, DocImage, FileType) VALUES (?, ?, ?)";
             $stmtAttach = $pdo->prepare($sqlAttach);
-            foreach ($bucket as $path) {
-                $stmtAttach->execute([$newDocID, $path]);
+            foreach ($uploadedFiles as $file) {
+                $stmtAttach->execute([$newDocID, $file['data'], $file['type']]);
             }
         }
 

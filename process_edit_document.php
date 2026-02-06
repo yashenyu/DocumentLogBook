@@ -35,32 +35,21 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     try {
         $pdo->beginTransaction();
 
-        // 1. Handle Deletions
+        // 1. Handle Deletions (just remove from DB, no file system needed)
         if (!empty($deleteAttachments)) {
             foreach ($deleteAttachments as $attachId) {
-                // Get path to delete file
-                $stmt = $pdo->prepare("SELECT FilePath FROM DocumentAttachments WHERE AttachmentID = ? AND DocID = ?");
-                $stmt->execute([$attachId, $id]);
-                $file = $stmt->fetch(PDO::FETCH_ASSOC);
-
-                if ($file) {
-                    if (file_exists($file['FilePath'])) {
-                        unlink($file['FilePath']);
-                    }
-                    // Delete from DB
-                    $delStmt = $pdo->prepare("DELETE FROM DocumentAttachments WHERE AttachmentID = ?");
-                    $delStmt->execute([$attachId]);
-                }
+                $delStmt = $pdo->prepare("DELETE FROM DocumentAttachments WHERE AttachmentID = ? AND DocID = ?");
+                $delStmt->execute([$attachId, $id]);
             }
         }
 
-        // 2. Handle New Uploads (Multiple) via Helper
+        // 2. Handle New Uploads (Multiple) via Helper - now returns binary data
         if (isset($_FILES['doc_image']) && !empty($_FILES['doc_image']['name'][0])) {
             try {
                 $newFiles = UploadHelper::handleUploads($_FILES['doc_image']);
-                foreach ($newFiles as $targetPath) {
-                    $stmt = $pdo->prepare("INSERT INTO DocumentAttachments (DocID, FilePath) VALUES (?, ?)");
-                    $stmt->execute([$id, $targetPath]);
+                foreach ($newFiles as $file) {
+                    $stmt = $pdo->prepare("INSERT INTO DocumentAttachments (DocID, DocImage, FileType) VALUES (?, ?, ?)");
+                    $stmt->execute([$id, $file['data'], $file['type']]);
                 }
             }
             catch (Exception $e) {
@@ -71,25 +60,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             }
         }
 
-        // 3. Update Primary DocImage Logic
-        // We need to check if the current 'DocImage' (primary) is valid or if it was deleted.
-        // Simplified Logic: 
-        // - Fetch one existing attachment (ORDER BY AttachmentID ASC LIMIT 1)
-        // - Set it as DocImage. If no attachments, DocImage = NULL.
-
-        // This ensures DocImage is always consistent with the Attachments table.
-
-        $stmtFirst = $pdo->prepare("SELECT FilePath FROM DocumentAttachments WHERE DocID = ? ORDER BY AttachmentID ASC LIMIT 1");
-        $stmtFirst->execute([$id]);
-        $firstAttach = $stmtFirst->fetchColumn();
-
-        $primaryImage = $firstAttach ? $firstAttach : null;
-
-
-        // 4. Update Document Log
-        $sql = "UPDATE DocumentLog SET Office = ?, Subject = ?, Description = ?, ReceivedBy = ?, Status = ?, DocImage = ? WHERE DocID = ?";
+        // 3. Update Document Log (no DocImage field anymore)
+        $sql = "UPDATE DocumentLog SET Office = ?, Subject = ?, Description = ?, ReceivedBy = ?, Status = ? WHERE DocID = ?";
         $stmt = $pdo->prepare($sql);
-        $stmt->execute([$office, $subject, $description, $receivedBy, $status, $primaryImage, $id]);
+        $stmt->execute([$office, $subject, $description, $receivedBy, $status, $id]);
 
         $pdo->commit();
         $_SESSION['success'] = "Document updated successfully!";
