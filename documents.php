@@ -613,13 +613,13 @@ endif; ?>
     </div>
     <!-- Manage Staff Modal -->
     <div id="staffModal" class="modal-overlay">
-        <div class="modal-content modal-xl">
+        <div class="modal-content modal-fixed-90">
             <div class="modal-header">
                 <h3>Staff Management</h3>
                 <span class="close-modal close-staff">&times;</span>
             </div>
             
-            <div class="modal-body" style="padding: 1.5rem;">
+            <div class="modal-body">
                 <!-- Modal Tabs -->
                 <div class="modal-tabs">
                     <button type="button" class="tab-btn active" data-tab="tab-add-staff">Add New Staff</button>
