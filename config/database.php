@@ -42,6 +42,19 @@ try {
         }
     }
 
+    // Check for DocumentAttachments table and create if not exists
+    $stmt = $pdo->query("SHOW TABLES LIKE 'DocumentAttachments'");
+    if ($stmt->rowCount() == 0) {
+        $sql = "CREATE TABLE DocumentAttachments (
+            AttachmentID INT AUTO_INCREMENT PRIMARY KEY,
+            DocID INT NOT NULL,
+            FilePath VARCHAR(255) NOT NULL,
+            UploadedAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+            FOREIGN KEY (DocID) REFERENCES DocumentLog(DocID) ON DELETE CASCADE
+        )";
+        $pdo->exec($sql);
+    }
+
 }
 catch (PDOException $e) {
     die("Connection failed: " . $e->getMessage());
