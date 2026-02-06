@@ -1,0 +1,10 @@
+{
+    "name": "yashenyu/document-log-book",
+    "description": "A clean MVC refactor of the Document Log Book",
+    "autoload": {
+        "psr-4": {
+            "App\\": "app/"
+        }
+    },
+    "require": {}
+}
