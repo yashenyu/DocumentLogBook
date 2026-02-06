@@ -56,6 +56,9 @@ session_start();
             border: 1px solid #f1f5f9;
             border-radius: 1rem;
             transition: all 0.3s ease;
+            text-decoration: none;
+            color: inherit;
+            display: block;
         }
         .dev-card:hover {
             transform: translateY(-10px);
@@ -119,40 +122,40 @@ session_start();
             
             <div class="developers-grid">
                 <!-- Developer 1 -->
-                <div class="dev-card">
+                <a class="dev-card" href="https://github.com/yashenyu" target="_blank" rel="noopener noreferrer">
                     <div class="dev-avatar">
                         <i class="fa-solid fa-code"></i>
                     </div>
-                    <div class="dev-name">Mark Aaron Dayrit</div>
-                    <div class="dev-role">Integration Developer</div>
-                </div>
+                    <div class="dev-name">Mark Aaron B. Dayrit</div>
+                    <div class="dev-role">Web Developer</div>
+                </a>
 
                 <!-- Developer 2 -->
-                <div class="dev-card">
+                <a class="dev-card" href="https://github.com/Jasper-Andrew-L-Chan" target="_blank" rel="noopener noreferrer">
                     <div class="dev-avatar">
                         <i class="fa-solid fa-laptop-code"></i>
                     </div>
                     <div class="dev-name">Jasper Andrew L. Chan</div>
                     <div class="dev-role">Frontend Developer</div>
-                </div>
+                </a>
 
                 <!-- Developer 3 -->
-                <div class="dev-card">
+                <a class="dev-card" href="https://github.com/carlosiron" target="_blank" rel="noopener noreferrer">
                     <div class="dev-avatar">
                         <i class="fa-solid fa-palette"></i>
                     </div>
                     <div class="dev-name">Carlo T. Siron</div>
                     <div class="dev-role">UI/UX Designer</div>
-                </div>
+                </a>
 
                 <!-- Developer 4 -->
-                <div class="dev-card">
+                <a class="dev-card" href="https://github.com/CSiron21" target="_blank" rel="noopener noreferrer">
                     <div class="dev-avatar">
                         <i class="fa-solid fa-database"></i>
                     </div>
                     <div class="dev-name">Clark T. Siron</div>
                     <div class="dev-role">Backend Specialist</div>
-                </div>
+                </a>
             </div>
             
             <a href="login.php" class="btn-back">

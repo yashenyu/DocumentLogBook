@@ -1,6 +1,7 @@
 <?php
 session_start();
 require_once 'config/database.php';
+require_once __DIR__ . '/helpers/OfficeHelper.php';
 
 if (!isset($_SESSION['user_id'])) {
     header('Location: login.php');
@@ -24,6 +25,13 @@ $endDate = $_GET['end_date'] ?? '';
 $officeFilter = $_GET['office'] ?? '';
 $receivedFilter = $_GET['received_by'] ?? '';
 $statusFilter = $_GET['status'] ?? '';
+
+// Office dropdown options (stored in file; no DB dependency)
+$officeOptions = OfficeHelper::getOffices();
+$selectedOfficeForDropdown = '';
+if (!empty($officeFilter)) {
+    $selectedOfficeForDropdown = trim(explode(',', $officeFilter)[0] ?? '');
+}
 
 // Build Query
 $whereSQL = "1=1";
@@ -347,12 +355,14 @@ endif; ?>
 
                     <div class="form-group">
                         <label>Office</label>
-                        <div class="multi-select-container" data-type="office" id="officeContainer">
-                            <div class="tag-container" id="officeTags"></div>
-                            <input type="text" class="autocomplete-input" placeholder="Type to add office...">
-                            <div class="autocomplete-dropdown shadow-sm"></div>
-                            <input type="hidden" name="office" value="<?php echo htmlspecialchars($officeFilter); ?>">
-                        </div>
+                        <select name="office" class="form-control" id="officeFilterSelect">
+                            <option value="">All Offices</option>
+                            <?php foreach ($officeOptions as $officeOpt): ?>
+                                <option value="<?php echo htmlspecialchars($officeOpt); ?>" <?php echo ($selectedOfficeForDropdown === $officeOpt) ? 'selected' : ''; ?>>
+                                    <?php echo htmlspecialchars($officeOpt); ?>
+                                </option>
+                            <?php endforeach; ?>
+                        </select>
                     </div>
 
                     <div class="form-group">
@@ -371,6 +381,30 @@ endif; ?>
                     <button type="submit" class="btn-primary" id="applyFiltersBtn">Apply Filters</button>
                 </div>
             </form>
+
+            <?php if (($_SESSION['role'] ?? '') === 'Admin'): ?>
+                <div style="margin-top: 1.25rem; padding-top: 1.25rem; border-top: 1px solid #f1f5f9;">
+                    <form action="process_add_office.php" method="POST">
+                        <div class="form-grid-2" style="align-items: end; grid-template-columns: 1fr auto;">
+                            <div class="form-group" style="margin-bottom: 0;">
+                                <label for="new_office_name">Add Office</label>
+                                <input
+                                    type="text"
+                                    id="new_office_name"
+                                    name="office_name"
+                                    class="form-control"
+                                    placeholder="e.g. Graduate School"
+                                    maxlength="60"
+                                    required
+                                >
+                            </div>
+                            <div class="modal-actions" style="margin-top: 0; padding-top: 0; border-top: 0;">
+                                <button type="submit" class="btn-primary">Add Office</button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            <?php endif; ?>
         </div>
     </div>
 
