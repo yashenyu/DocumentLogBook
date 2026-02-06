@@ -58,7 +58,7 @@ endif; ?>
 
                     <div style="margin-bottom: 1.2rem;">
                         <label for="description">Description</label>
-                        <textarea id="description" name="description" rows="3" style="width: 100%; padding: 0.75rem 1rem; border: none; border-radius: 0.375rem; background-color: #ffffff; color: #334155; font-size: 0.9rem; font-family: 'Poppins', sans-serif;" placeholder="Briefly describe the document..."></textarea>
+                        <textarea id="description" name="description" required rows="3" style="width: 100%; padding: 0.75rem 1rem; border: none; border-radius: 0.375rem; background-color: #ffffff; color: #334155; font-size: 0.9rem; font-family: 'Poppins', sans-serif;" placeholder="Briefly describe the document..."></textarea>
                     </div>
 
                     <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-bottom: 1.2rem;">

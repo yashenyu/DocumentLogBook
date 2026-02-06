@@ -18,8 +18,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $docDate = date('Y-m-d');
 
         // Basic Validation
-        if (empty($subject) || empty($office)) {
-            $_SESSION['error'] = "Document Name and Office are required.";
+        if (empty($subject) || empty($office) || empty($description)) {
+            $_SESSION['error'] = "Document Name, Office, and Description are required.";
             header('Location: documents.php');
             exit;
         }

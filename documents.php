@@ -175,12 +175,14 @@ endif; ?>>
                         <span style="width: 6px; height: 6px; background-color: var(--accent-color); border-radius: 50%;"></span>
                         Admin
                     </span>
-                <?php else: ?>
+                <?php
+else: ?>
                     <span style="background-color: rgba(255, 255, 255, 0.15); color: #ffffff; padding: 2px 12px; border-radius: 99px; font-size: 0.7rem; font-weight: 700; border: 1px solid rgba(255, 255, 255, 0.5); letter-spacing: 0.5px; text-transform: uppercase; display: inline-flex; align-items: center; gap: 5px;">
                         <span style="width: 6px; height: 6px; background-color: #ffffff; border-radius: 50%;"></span>
                         Staff
                     </span>
-                <?php endif; ?>
+                <?php
+endif; ?>
             </div>
         </div>
 
@@ -395,7 +397,7 @@ endif; ?>
 
                         <div class="form-group" style="flex: 1; display: flex; flex-direction: column;">
                             <label for="description">Description</label>
-                            <textarea id="description" name="description" class="form-control" style="flex: 1; resize: none; min-height: 150px;" placeholder="Brief details about the document..." maxlength="255"></textarea>
+                            <textarea id="description" name="description" class="form-control" required style="flex: 1; resize: none; min-height: 150px;" placeholder="Brief details about the document..." maxlength="255"></textarea>
                         </div>
                     </div>
 
