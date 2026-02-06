@@ -1370,84 +1370,160 @@ body.auth-page {
 }
 
 /* Lightbox Gallery Styles */
+#galleryModal {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.9);
+    z-index: 10000;
+    -webkit-box-align: center;
+    -ms-flex-align: center;
+    align-items: center;
+    -webkit-box-pack: center;
+    -ms-flex-pack: center;
+    justify-content: center;
+}
+
+#galleryModal.active {
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+}
+
 .lightbox-container {
     position: relative;
     width: 90%;
-    max-width: 1000px;
-    max-height: 90vh;
-    background: rgba(15, 23, 42, 0.98);
-    border-radius: 1rem;
+    max-width: 900px;
+    max-height: 85vh;
+    background: #1e293b;
+    border-radius: 12px;
     overflow: hidden;
+    display: -webkit-box;
+    display: -ms-flexbox;
     display: flex;
+    -webkit-box-orient: vertical;
+    -webkit-box-direction: normal;
+    -ms-flex-direction: column;
     flex-direction: column;
+    -webkit-box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
     box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+    margin: 20px;
 }
 
 .lightbox-header {
+    display: -webkit-box;
+    display: -ms-flexbox;
     display: flex;
+    -webkit-box-pack: justify;
+    -ms-flex-pack: justify;
     justify-content: space-between;
+    -webkit-box-align: center;
+    -ms-flex-align: center;
     align-items: center;
-    padding: 1rem 1.5rem;
-    background: rgba(0, 0, 0, 0.3);
+    padding: 12px 20px;
+    background: #0f172a;
     border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    -ms-flex-negative: 0;
+    flex-shrink: 0;
 }
 
 .lightbox-close {
     color: #ffffff;
-    font-size: 2rem;
+    font-size: 28px;
+    font-weight: bold;
     cursor: pointer;
     opacity: 0.7;
-    transition: opacity 0.2s, transform 0.2s;
+    -webkit-transition: opacity 0.2s;
+    transition: opacity 0.2s;
     line-height: 1;
+    padding: 0 5px;
 }
 
 .lightbox-close:hover {
     opacity: 1;
-    transform: scale(1.1);
 }
 
 .lightbox-body {
+    -webkit-box-flex: 1;
+    -ms-flex: 1;
     flex: 1;
+    display: -webkit-box;
+    display: -ms-flexbox;
     display: flex;
+    -webkit-box-align: center;
+    -ms-flex-align: center;
     align-items: center;
+    -webkit-box-pack: center;
+    -ms-flex-pack: center;
     justify-content: center;
     position: relative;
-    min-height: 400px;
-    padding: 1rem;
+    min-height: 300px;
+    max-height: 50vh;
+    padding: 15px;
+    background: #0f172a;
 }
 
 .lightbox-main {
-    flex: 1;
+    width: 100%;
+    height: 100%;
+    display: -webkit-box;
+    display: -ms-flexbox;
     display: flex;
+    -webkit-box-align: center;
+    -ms-flex-align: center;
     align-items: center;
+    -webkit-box-pack: center;
+    -ms-flex-pack: center;
     justify-content: center;
-    max-height: 60vh;
     overflow: hidden;
 }
 
 .lightbox-main img {
     max-width: 100%;
-    max-height: 60vh;
+    max-height: 45vh;
+    width: auto;
+    height: auto;
+    -o-object-fit: contain;
     object-fit: contain;
-    border-radius: 0.5rem;
-    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
+    border-radius: 6px;
 }
+
+.lightbox-main iframe {
+    width: 100%;
+    height: 45vh;
+    border: none;
+    border-radius: 6px;
+    background: #ffffff;
+}
+
 
 .lightbox-nav {
     position: absolute;
     top: 50%;
+    -webkit-transform: translateY(-50%);
+    -ms-transform: translateY(-50%);
     transform: translateY(-50%);
-    background: rgba(255, 255, 255, 0.1);
+    background: rgba(255, 255, 255, 0.15);
     border: none;
     color: #ffffff;
-    width: 50px;
-    height: 50px;
+    width: 44px;
+    height: 44px;
     border-radius: 50%;
     cursor: pointer;
-    font-size: 1.25rem;
+    font-size: 18px;
+    -webkit-transition: all 0.2s;
     transition: all 0.2s;
+    display: -webkit-box;
+    display: -ms-flexbox;
     display: flex;
+    -webkit-box-align: center;
+    -ms-flex-align: center;
     align-items: center;
+    -webkit-box-pack: center;
+    -ms-flex-pack: center;
     justify-content: center;
     z-index: 10;
 }
@@ -1455,56 +1531,68 @@ body.auth-page {
 .lightbox-nav:hover {
     background: var(--accent-color);
     color: var(--primary-color);
-    transform: translateY(-50%) scale(1.1);
 }
 
 .lightbox-nav:disabled {
     opacity: 0.3;
     cursor: not-allowed;
-}
-
-.lightbox-nav:disabled:hover {
-    background: rgba(255, 255, 255, 0.1);
-    color: #ffffff;
-    transform: translateY(-50%);
+    pointer-events: none;
 }
 
 .lightbox-prev {
-    left: 1rem;
+    left: 15px;
 }
 
 .lightbox-next {
-    right: 1rem;
+    right: 15px;
 }
 
+
 .lightbox-footer {
-    padding: 1rem 1.5rem;
-    background: rgba(0, 0, 0, 0.3);
+    padding: 15px 20px;
+    background: #0f172a;
     border-top: 1px solid rgba(255, 255, 255, 0.1);
+    display: -webkit-box;
+    display: -ms-flexbox;
     display: flex;
+    -webkit-box-orient: vertical;
+    -webkit-box-direction: normal;
+    -ms-flex-direction: column;
     flex-direction: column;
+    -webkit-box-align: center;
+    -ms-flex-align: center;
     align-items: center;
-    gap: 0.75rem;
+    gap: 12px;
+    -ms-flex-negative: 0;
+    flex-shrink: 0;
 }
 
 .lightbox-thumbnails {
+    display: -webkit-box;
+    display: -ms-flexbox;
     display: flex;
-    gap: 0.5rem;
+    gap: 8px;
+    -webkit-box-pack: center;
+    -ms-flex-pack: center;
     justify-content: center;
+    -ms-flex-wrap: wrap;
     flex-wrap: wrap;
     max-width: 100%;
     overflow-x: auto;
 }
 
 .lightbox-thumb {
-    width: 60px;
-    height: 60px;
-    border-radius: 0.375rem;
+    width: 55px;
+    height: 55px;
+    border-radius: 6px;
     overflow: hidden;
     cursor: pointer;
     border: 2px solid transparent;
+    -webkit-transition: all 0.2s;
     transition: all 0.2s;
+    -ms-flex-negative: 0;
     flex-shrink: 0;
+    background: rgba(255, 255, 255, 0.05);
 }
 
 .lightbox-thumb:hover {
@@ -1513,62 +1601,82 @@ body.auth-page {
 
 .lightbox-thumb.active {
     border-color: var(--accent-color);
-    box-shadow: 0 0 10px rgba(255, 184, 28, 0.5);
+    -webkit-box-shadow: 0 0 8px rgba(255, 184, 28, 0.5);
+    box-shadow: 0 0 8px rgba(255, 184, 28, 0.5);
 }
 
 .lightbox-thumb img {
     width: 100%;
     height: 100%;
+    -o-object-fit: cover;
     object-fit: cover;
 }
 
 .lightbox-thumb-pdf {
     background: rgba(255, 255, 255, 0.1);
+    display: -webkit-box;
+    display: -ms-flexbox;
     display: flex;
+    -webkit-box-align: center;
+    -ms-flex-align: center;
     align-items: center;
+    -webkit-box-pack: center;
+    -ms-flex-pack: center;
     justify-content: center;
     color: #ef4444;
-    font-size: 1.5rem;
+    font-size: 22px;
 }
 
 .lightbox-counter {
-    color: rgba(255, 255, 255, 0.7);
-    font-size: 0.85rem;
+    color: rgba(255, 255, 255, 0.6);
+    font-size: 13px;
     font-weight: 500;
 }
+
 
 /* Image preview button in table */
 .gallery-trigger {
     cursor: pointer;
+    -webkit-transition: transform 0.2s, box-shadow 0.2s;
     transition: transform 0.2s, box-shadow 0.2s;
     position: relative;
     display: inline-block;
 }
 
 .gallery-trigger:hover {
+    -webkit-transform: scale(1.05);
+    -ms-transform: scale(1.05);
     transform: scale(1.05);
+    -webkit-box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
 }
 
 /* Lightbox Actions (Download Buttons) */
 .lightbox-actions {
+    display: -webkit-box;
+    display: -ms-flexbox;
     display: flex;
-    gap: 0.75rem;
-    margin-bottom: 0.5rem;
+    gap: 10px;
+    margin-bottom: 8px;
 }
 
 .lightbox-btn {
+    display: -webkit-inline-box;
+    display: -ms-inline-flexbox;
     display: inline-flex;
+    -webkit-box-align: center;
+    -ms-flex-align: center;
     align-items: center;
-    gap: 0.5rem;
-    padding: 0.5rem 1rem;
+    gap: 6px;
+    padding: 8px 16px;
     background: rgba(255, 255, 255, 0.1);
     border: 1px solid rgba(255, 255, 255, 0.2);
-    border-radius: 0.5rem;
+    border-radius: 6px;
     color: #ffffff;
-    font-size: 0.85rem;
+    font-size: 13px;
     font-weight: 500;
     cursor: pointer;
+    -webkit-transition: all 0.2s;
     transition: all 0.2s;
     font-family: inherit;
 }
@@ -1587,10 +1695,8 @@ body.auth-page {
 .lightbox-btn-accent:hover {
     background: #e5a519;
     border-color: #e5a519;
-    transform: translateY(-1px);
-    box-shadow: 0 4px 12px rgba(255, 184, 28, 0.3);
 }
 
 .lightbox-btn i {
-    font-size: 0.9rem;
+    font-size: 14px;
 }

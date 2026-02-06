@@ -685,7 +685,8 @@ endif; ?>
     </div>
 
     <!-- Lightbox Gallery Modal -->
-    <div id="galleryModal" class="modal-overlay" style="z-index: 10000;">
+    <div id="galleryModal">
+
         <div class="lightbox-container">
             <div class="lightbox-header">
                 <span id="galleryTitle" style="font-weight: 600; font-size: 1rem; color: #ffffff;">Document Attachments</span>
