@@ -1124,44 +1124,40 @@ body.auth-page {
     -webkit-transform: translateY(-20px);
     -ms-transform: translateY(-20px);
     transform: translateY(-20px);
-    -webkit-transition: transform 0.3s ease;
     transition: transform 0.3s ease;
-    overflow-y: auto;
-    overflow-x: hidden;
-    display: -webkit-box;
-    display: -ms-flexbox;
+    overflow: hidden;
+    /* Lock parent container */
     display: flex;
-    -webkit-box-orient: vertical;
-    -webkit-box-direction: normal;
-    -ms-flex-direction: column;
     flex-direction: column;
+    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+    /* Premium floating shadow */
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 1.25rem;
 }
 
 /* Specific class for Wide Modals (80% screen width as requested) */
 .modal-lg {
-    max-width: 80vw;
-    width: 80vw;
-    min-height: 400px;
-    max-height: 90vh;
-    display: -webkit-box;
-    display: -ms-flexbox;
+    width: 95%;
+    max-width: 1200px;
+    height: 90vh;
+    max-height: 900px;
     display: flex;
-    -webkit-box-orient: vertical;
-    -webkit-box-direction: normal;
-    -ms-flex-direction: column;
     flex-direction: column;
 }
 
-/* Fixed 90% Modal (Add/Edit) */
+/* Adaptive Fixed Modal (Add/Edit/Staff) */
 .modal-fixed-90 {
-    width: 90vw;
-    height: 90vh;
-    max-width: 90vw;
-    max-height: 90vh;
+    width: 95%;
+    max-width: 1400px;
+    /* Limit ultrawide stretching */
+    height: 92vh;
+    max-height: 1000px;
+    /* Limit tall monitor stretching */
     display: flex;
     flex-direction: column;
     overflow: hidden;
     position: relative;
+    border-radius: 1.25rem;
 }
 
 .modal-fixed-90 form {
@@ -1845,15 +1841,21 @@ body.auth-page {
 .form-grid-2 {
     display: grid;
     grid-template-columns: 1fr 1fr;
-    gap: 1.5rem;
+    gap: 2rem;
+    /* Increased gap for cleaner separation */
     align-items: stretch;
     flex: 1;
     min-height: 0;
-    /* Critical for internal scroll */
+    width: 100%;
+    margin: 0 auto;
 }
 
+/* Safe Area for Ultrawide: Prevent inputs from stretching too wide */
 .form-group {
-    margin-bottom: 1rem;
+    margin-bottom: 1.25rem;
+    max-width: 700px;
+    /* Safe readable width */
+    width: 100%;
 }
 
 .form-group:last-child {
@@ -1927,14 +1929,22 @@ textarea.form-control {
     overflow-y: auto;
 }
 
-@media (max-width: 850px) {
+@media (max-width: 1024px) {
+
+    /* Break earlier for tablets to avoid cramped 2-column look */
     .form-grid-2 {
         grid-template-columns: 1fr;
+        gap: 1rem;
     }
 
-    .modal-content.modal-lg {
-        width: 95vw;
-        max-width: 95vw;
+    .form-group {
+        max-width: 100%;
+        /* Go full width on smaller screens */
+    }
+
+    .modal-fixed-90 {
+        width: 98%;
+        height: 95vh;
     }
 }
 
