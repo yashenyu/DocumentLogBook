@@ -10,6 +10,29 @@ try {
     $pdo = new PDO("mysql:host=" . DB_HOST, DB_USER, DB_PASS);
     $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
+    // Auto-configure max_allowed_packet for large uploads (4K images)
+    try {
+        $stmt = $pdo->query("SELECT @@global.max_allowed_packet");
+        $currentMax = $stmt->fetchColumn();
+        $targetMax = 64 * 1024 * 1024; // 64MB
+
+        if ($currentMax < $targetMax) {
+            // Attempt to increase packet size
+            $pdo->exec("SET GLOBAL max_allowed_packet = $targetMax");
+
+            // Reconnect to apply changes for the current session
+            // The initial connection was without a DB, so we reconnect without one here too.
+            $pdo = null;
+            $pdo = new PDO("mysql:host=" . DB_HOST, DB_USER, DB_PASS);
+            $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+        }
+    }
+    catch (Exception $e) {
+    // Silently fail if we don't have privileges (e.g. shared hosting)
+    // functionality will just be limited by server config
+    }
+
+
     // 2. Create Database if it doesn't exist
     $pdo->exec("CREATE DATABASE IF NOT EXISTS " . DB_NAME);
 
@@ -80,7 +103,15 @@ try {
         if ($stmt->rowCount() == 0) {
             $pdo->exec("ALTER TABLE DocumentAttachments ADD COLUMN UploadedAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP AFTER FileType");
         }
+
+        // 5. Ensure DocImage is LONGBLOB (not just BLOB)
+        $stmt = $pdo->query("SHOW COLUMNS FROM DocumentAttachments WHERE Field = 'DocImage'");
+        $column = $stmt->fetch(PDO::FETCH_ASSOC);
+        if ($column && stripos($column['Type'], 'longblob') === false) {
+            $pdo->exec("ALTER TABLE DocumentAttachments MODIFY COLUMN DocImage LONGBLOB NOT NULL");
+        }
     }
+
 
     // Remove DocImage column from DocumentLog if it exists (since we use Attachments now)
     $stmt = $pdo->query("SHOW COLUMNS FROM DocumentLog LIKE 'DocImage'");
