@@ -39,21 +39,21 @@ if (isset($_SESSION['user_id'])) {
                 
                 <form action="auth_register.php" method="POST">
                     <!-- Username -->
-                    <div style="margin-bottom: 1.5rem;">
+                    <div style="margin-bottom: 1rem;">
                         <label for="username">Username</label>
                         <input type="text" id="username" name="username" required 
                                placeholder="Choose a Username" maxlength="100">
                     </div>
 
                     <!-- Email -->
-                    <div style="margin-bottom: 1.5rem;">
+                    <div style="margin-bottom: 1rem;">
                         <label for="email">Email Address</label>
                         <input type="email" id="email" name="email" required 
                                placeholder="Your Email Address Here">
                     </div>
                     
                     <!-- Password -->
-                    <div style="margin-bottom: 1.5rem;">
+                    <div style="margin-bottom: 1rem;">
                         <label for="password">Password</label>
                         <input type="password" id="password" name="password" required 
                                placeholder="Your Password Here">
@@ -76,7 +76,7 @@ if (isset($_SESSION['user_id'])) {
             </div>
 
             <!-- Decorative Logo Element (Bottom Right) -->
-            <div class="auth-decoration" style="position: absolute; bottom: -20px; right: -15px; width: 160px; height: 160px; z-index: 5;">
+            <div class="auth-decoration" style="position: absolute; bottom: 1.5rem; right: 1.5rem; width: 110px; height: 110px; z-index: 5;">
                 <!-- User Logo Image -->
                 <img src="assets/images/Logbook Logo.png" alt="Logo" class="auth-logo-img" style="width: 100%; height: 100%; object-fit: contain;">
             </div>

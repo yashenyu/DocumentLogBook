@@ -37,6 +37,9 @@ body {
     background-color: var(--bg-color);
     color: var(--text-color);
     line-height: 1.5;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
 }
 
 .container {
@@ -192,9 +195,9 @@ body.auth-page {
     border: 1px solid rgba(255, 255, 255, 0.1);
     color: var(--auth-text-color);
     border-radius: 2rem;
-    padding: 3.5rem;
-    width: 100%;
-    max-width: 650px;
+    padding: 2.2rem;
+    width: 40%;
+    max-width: 600px;
     box-shadow: 0 40px 100px -20px rgba(0, 0, 0, 0.6);
     position: relative;
     z-index: 100;
@@ -210,19 +213,19 @@ body.auth-page {
 }
 
 .auth-card h2 {
-    font-size: 2.5rem;
+    font-size: 1.8rem;
     font-weight: 700;
-    margin-bottom: 0.5rem;
+    margin-bottom: 0.25rem;
     color: var(--accent-color);
     /* Change title to Gold for better visibility on dark */
     letter-spacing: -0.5px;
 }
 
 .auth-card .subtitle {
-    font-size: 1.1rem;
+    font-size: 0.9rem;
     color: rgba(255, 255, 255, 0.85);
     /* Darkened the transparency (more solid) */
-    margin-bottom: 2rem;
+    margin-bottom: 1.5rem;
     font-weight: 400;
 }
 
@@ -239,13 +242,13 @@ body.auth-page {
 .auth-card input[type="email"],
 .auth-card input[type="password"] {
     width: 100%;
-    padding: 0.85rem 1.25rem;
+    padding: 0.65rem 1rem;
     border: 1px solid var(--border-color);
     border-radius: 0.6rem;
     background-color: var(--auth-input-bg);
     color: #1e293b;
-    font-size: 1rem;
-    margin-bottom: 1.5rem;
+    font-size: 0.9rem;
+    margin-bottom: 1rem;
     font-family: 'Poppins', sans-serif;
 }
 
@@ -257,9 +260,9 @@ body.auth-page {
     background-color: var(--accent-color);
     color: var(--primary-color);
     font-weight: 700;
-    padding: 0.8rem 3rem;
+    padding: 0.6rem 2.5rem;
     border-radius: 9999px;
-    font-size: 1rem;
+    font-size: 0.9rem;
     text-align: center;
     border: none;
     cursor: pointer;
@@ -396,8 +399,8 @@ body.auth-page {
     padding: 0 1rem;
     display: flex;
     flex-direction: column;
-    min-height: 0;
-    /* Important for flex child scrolling */
+    flex: 1;
+    width: 100%;
 }
 
 /* Toolbar */
@@ -1148,6 +1151,265 @@ body.auth-page {
     flex-direction: column;
 }
 
+/* Fixed 90% Modal (Add/Edit) */
+.modal-fixed-90 {
+    width: 90vw;
+    height: 90vh;
+    max-width: 90vw;
+    max-height: 90vh;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    position: relative;
+}
+
+.modal-fixed-90 form {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    min-height: 0;
+    overflow: hidden;
+    height: 100%;
+}
+
+.modal-fixed-90 .modal-body {
+    flex: 1;
+    overflow: hidden;
+    /* Strictly prevent global scrollbar */
+    padding: 1.5rem 1.5rem 1.25rem 1.5rem;
+    min-height: 0;
+    display: flex;
+    flex-direction: column;
+}
+
+.modal-fixed-90 .modal-actions {
+    margin-top: 0;
+    padding: 1rem 1.5rem;
+    background: #fbfcfd;
+    border-top: 1px solid #e2e8f0;
+    flex-shrink: 0;
+}
+
+/* 20% Scale Down for Edit Modal */
+.modal-body-scaled {
+    zoom: 0.8;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    min-height: 0;
+}
+
+.modal-body>.form-grid-2 {
+    flex: 1;
+}
+
+/* Tab Navigation Styles */
+.modal-tabs {
+    display: flex;
+    gap: 1rem;
+    margin-bottom: 1.5rem;
+    border-bottom: 2px solid var(--border-color);
+    padding-bottom: 0.5rem;
+}
+
+.tab-btn {
+    padding: 0.6rem 1.5rem;
+    cursor: pointer;
+    font-weight: 600;
+    color: #64748b;
+    border-bottom: 3px solid transparent;
+    transition: all 0.2s;
+    background: transparent;
+    border-top: none;
+    border-left: none;
+    border-right: none;
+    font-size: 0.95rem;
+}
+
+.tab-btn:hover {
+    color: var(--primary-color);
+}
+
+.tab-btn.active {
+    color: var(--primary-color);
+    border-bottom-color: var(--accent-color);
+}
+
+.tab-content {
+    display: none;
+    animation: fadeIn 0.3s ease;
+}
+
+.tab-content.active {
+    display: block;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(5px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* User Management Table in Tab */
+.user-management-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 0;
+    table-layout: fixed;
+}
+
+.user-management-table th {
+    text-align: left;
+    padding: 1.2rem 1.5rem;
+    background: #fdfdfd;
+    border-bottom: 2px solid #edf2f7;
+    color: #4a5568;
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    font-weight: 700;
+}
+
+.user-management-table td {
+    padding: 1.2rem 1.5rem;
+    border-bottom: 1px solid #edf2f7;
+    vertical-align: middle;
+    color: #2d3748;
+    font-size: 0.95rem;
+}
+
+.user-management-table tr:hover td {
+    background-color: #f7fafc;
+}
+
+/* User Action Buttons */
+.user-actions {
+    display: flex;
+    gap: 0.75rem;
+    align-items: center;
+}
+
+.btn-action {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 38px;
+    height: 38px;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    border: 1px solid transparent;
+}
+
+.btn-action-pass {
+    background-color: #ebf8ff;
+    color: #3182ce;
+    border-color: #bee3f8;
+}
+
+.btn-action-pass:hover {
+    background-color: #3182ce;
+    color: #ffffff;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+}
+
+.btn-action-delete {
+    background-color: #fff5f5;
+    color: #e53e3e;
+    border-color: #fed7d7;
+}
+
+.btn-action-delete:hover {
+    background-color: #e53e3e;
+    color: #ffffff;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+}
+
+/* Inline Password Editor Styles */
+.inline-pass-editor {
+    display: flex;
+    gap: 0.5rem;
+    align-items: center;
+    width: 100%;
+    animation: slideInRight 0.3s ease;
+}
+
+.inline-pass-input {
+    flex: 1;
+    padding: 0.5rem 0.8rem;
+    border: 1px solid var(--border-color);
+    border-radius: 6px;
+    font-size: 0.85rem;
+    outline: none;
+}
+
+.inline-pass-input:focus {
+    border-color: var(--accent-color);
+    box-shadow: 0 0 0 2px rgba(255, 184, 28, 0.1);
+}
+
+.btn-inline-save {
+    padding: 0.5rem 0.8rem;
+    background: #48bb78;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    font-size: 0.8rem;
+    font-weight: 600;
+    cursor: pointer;
+}
+
+.btn-inline-cancel {
+    padding: 0.5rem 0.8rem;
+    background: #edf2f7;
+    color: #4a5568;
+    border: none;
+    border-radius: 6px;
+    font-size: 0.8rem;
+    font-weight: 600;
+    cursor: pointer;
+}
+
+@keyframes slideInRight {
+    from {
+        opacity: 0;
+        transform: translateX(10px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+.btn-action i {
+    font-size: 0.9rem;
+}
+
+/* Specific Widths */
+.user-management-table th:nth-child(1),
+.user-management-table td:nth-child(1) {
+    width: 40%;
+}
+
+.user-management-table th:nth-child(2),
+.user-management-table td:nth-child(2) {
+    width: 30%;
+}
+
+.user-management-table th:nth-child(3),
+.user-management-table td:nth-child(3) {
+    width: 30%;
+}
+
 .modal-lg .modal-content {
     height: 100%;
     display: -webkit-box;
@@ -1400,13 +1662,17 @@ body.auth-page {
 .custom-upload-container {
     display: flex;
     gap: 1rem;
-    height: 150px;
-    /* Fixed height for consistency */
+    flex: 1;
+    min-height: 100px;
+    /* Ensure at least a small area is visible */
+    max-height: 100%;
+    /* Strictly contain within parent form-group */
+    overflow: hidden;
 }
 
 .upload-trigger {
-    flex: 2;
-    /* Takes up more space */
+    flex: 1.2;
+    /* Reduced from flex: 2 */
     background-color: #f8fafc;
     /* Theme Light Gray */
     border: 2px dashed #cbd5e1;
@@ -1431,19 +1697,40 @@ body.auth-page {
 }
 
 .preview-sidebar {
-    flex: 1;
-    /* Side column */
+    flex: 0.8;
+    /* Expanded to take more space */
     display: flex;
     flex-direction: column;
     gap: 0.5rem;
-    padding-right: 2px;
-    /* Scrollbar space if needed */
-    overflow-y: auto;
+    padding: 2px 10px 2px 0;
+    /* Extra space for scrollbar */
+    overflow-y: auto !important;
+    background: #fdfdfd;
+    border-radius: 4px;
+    height: 100%;
+}
+
+/* Custom Scrollbar for Preview Sidebar (Universal for easier detection) */
+.preview-sidebar::-webkit-scrollbar {
+    width: 6px;
+}
+
+.preview-sidebar::-webkit-scrollbar-track {
+    background: #f1f5f9;
+    border-radius: 10px;
+}
+
+.preview-sidebar::-webkit-scrollbar-thumb {
+    background: #cbd5e1;
+    border-radius: 10px;
+}
+
+.preview-sidebar::-webkit-scrollbar-thumb:hover {
+    background: #94a3b8;
 }
 
 .preview-item {
     width: 60px;
-    /* Smaller thumbnails */
     height: 60px;
     background-color: #ffffff;
     border: 1px solid #e2e8f0;
@@ -1500,8 +1787,8 @@ body.auth-page {
 
 /* Dashboard Footer */
 .dashboard-footer {
-    margin-top: 1rem;
-    padding: 0.5rem 0;
+    margin-top: auto;
+    padding: 1.5rem 0 1rem 0;
     border-top: 1px solid #e2e8f0;
     display: flex;
     justify-content: space-between;
@@ -1529,18 +1816,55 @@ body.auth-page {
     font-weight: 600;
 }
 
-/* Character Counter Styles */
+/* Character Counter Styles - Integrated into Label */
 .char-counter {
-    font-size: 0.7rem;
+    font-size: 0.75rem;
+    font-weight: 500;
     color: #94a3b8;
-    text-align: right;
-    margin-top: 4px;
     transition: color 0.2s;
 }
 
 .char-counter.char-warning {
     color: #ef4444;
-    font-weight: 600;
+    font-weight: 700;
+}
+
+.form-group label {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 0.5rem;
+}
+
+/* Modal Content Fit & Alignment */
+.form-grid-2 {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1.5rem;
+    align-items: stretch;
+    flex: 1;
+    min-height: 0;
+    /* Critical for internal scroll */
+}
+
+.form-group {
+    margin-bottom: 1rem;
+}
+
+.form-group:last-child {
+    margin-bottom: 0;
+}
+
+/* Ensure large elements expand to fill remaining space */
+textarea.form-control {
+    min-height: 80px !important;
+    overflow-y: auto;
+    flex: 1;
+    /* Grow to fill all available space */
+}
+
+#existingFilesContainer {
+    max-height: 180px !important;
 }
 
 /* --- Professional Responsiveness & Desktop Optimization --- */

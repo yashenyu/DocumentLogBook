@@ -2,58 +2,57 @@
 session_start();
 require_once 'config/database.php';
 
-// Check if any users exist. If not, redirect to setup page.
+// Check if any users exist
 $stmt = $pdo->query("SELECT COUNT(*) FROM users");
 $userCount = $stmt->fetchColumn();
-if ($userCount == 0) {
-    header('Location: install.php');
+
+// If users already exist, redirect to login
+if ($userCount > 0) {
+    header('Location: login.php');
     exit;
 }
 
-// Handle Login Submission
+// Handle Form Submission
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $username = $_POST['username'] ?? '';
-    // Form field might be 'password' or 'password'
+    $username = trim($_POST['username'] ?? '');
     $password = $_POST['password'] ?? '';
+    $confirm_password = $_POST['confirm_password'] ?? '';
 
-    if (!empty($username) && !empty($password)) {
-        $stmt = $pdo->prepare("SELECT * FROM users WHERE username = ?");
-        $stmt->execute([$username]);
-        $user = $stmt->fetch(PDO::FETCH_ASSOC);
+    if (!empty($username) && !empty($password) && !empty($confirm_password)) {
+        if ($password === $confirm_password) {
+            try {
+                // Initial Admin account creation
+                $hashed = password_hash($password, PASSWORD_DEFAULT);
+                $stmt = $pdo->prepare("INSERT INTO users (username, password, role) VALUES (?, ?, 'Admin')");
 
-        // Check password: hash verification first, then fallback to plain text (legacy support)
-        if ($user && (password_verify($password, $user['password']) || $password === $user['password'])) {
-            $_SESSION['user_id'] = $user['UserId'];
-            $_SESSION['username'] = $user['username'];
-            $_SESSION['role'] = $user['role'];
-            header('Location: documents.php');
-            exit;
+                if ($stmt->execute([$username, $hashed])) {
+                    $_SESSION['success'] = "First Admin account created successfully! You can now login.";
+                    header('Location: login.php');
+                    exit;
+                }
+                else {
+                    $error = "Failed to create account.";
+                }
+            }
+            catch (PDOException $e) {
+                $error = "Database error: " . $e->getMessage();
+            }
         }
         else {
-            $error = "Invalid username or password.";
+            $error = "Passwords do not match.";
         }
     }
     else {
         $error = "Please fill in all fields.";
     }
 }
-
-// If already logged in, redirect to index
-if (isset($_SESSION['user_id'])) {
-    header('Location: documents.php');
-    exit;
-}
-
-// Check for success messages (e.g. from install.php)
-$success = $_SESSION['success'] ?? null;
-unset($_SESSION['success']);
 ?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Login - Document LogBook</title>
+    <title>Initial Setup - Document LogBook</title>
     
     <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -69,37 +68,39 @@ unset($_SESSION['success']);
         <div class="auth-card">
             
             <div class="auth-content">
-                <h2>Document Logbook</h2>
-                <p class="subtitle">Welcome! Please login!</p>
+                <h2>Initial Setup</h2>
+                <p class="subtitle">Create the first Admin account!</p>
                 
                 <?php if (isset($error)): ?>
                     <div style="color: #ff6b6b; margin-bottom: 1rem; text-align: left; font-size: 0.9rem;"><?php echo htmlspecialchars($error); ?></div>
                 <?php
 endif; ?>
 
-                <?php if (isset($success)): ?>
-                    <div style="color: #4cd137; margin-bottom: 1rem; text-align: left; font-size: 0.9rem;"><?php echo htmlspecialchars($success); ?></div>
-                <?php
-endif; ?>
-
                 <form action="" method="POST">
-                    <!-- Email/Username -->
+                    <!-- Username -->
                     <div style="margin-bottom: 1rem;">
-                        <label for="username">Username</label>
+                        <label for="username">Admin Username</label>
                         <input type="text" id="username" name="username" required 
-                               placeholder="Enter Your Username">
+                               placeholder="Set Admin Username">
                     </div>
                     
                     <!-- Password -->
-                    <div style="margin-bottom: 0.5rem;">
-                        <label for="password">Password</label>
+                    <div style="margin-bottom: 1rem;">
+                        <label for="password">Admin Password</label>
                         <input type="password" id="password" name="password" required 
-                               placeholder="Your Password Here">
+                               placeholder="Set Admin Password">
+                    </div>
+
+                    <!-- Confirm Password -->
+                    <div style="margin-bottom: 0.5rem;">
+                        <label for="confirm_password">Confirm Password</label>
+                        <input type="password" id="confirm_password" name="confirm_password" required 
+                               placeholder="Confirm Admin Password">
                     </div>
                     
-                    <!-- Buttons and Links Area -->
+                    <!-- Buttons Area -->
                     <div style="margin-top: 1.5rem; margin-bottom: 1.5rem;">
-                        <button type="submit" class="btn btn-auth">Login</button>
+                        <button type="submit" class="btn btn-auth">Create Admin</button>
                     </div>
                 </form>
             </div>

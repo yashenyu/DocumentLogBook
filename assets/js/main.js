@@ -765,12 +765,19 @@ document.addEventListener('DOMContentLoaded', () => {
             if (!maxLen) return;
 
             // Create counter element
-            const counter = document.createElement('div');
+            const counter = document.createElement('span');
             counter.className = 'char-counter';
             counter.textContent = `0 / ${maxLen}`;
 
-            // Insert after the input
-            input.parentNode.insertBefore(counter, input.nextSibling);
+            // Find associated label
+            const label = document.querySelector(`label[for="${input.id}"]`);
+            if (label) {
+                // Insert into label (CSS handles alignment via flexbox)
+                label.appendChild(counter);
+            } else {
+                // Fallback: put it after the input
+                input.parentNode.insertBefore(counter, input.nextSibling);
+            }
 
             // Update counter on input
             const updateCounter = () => {
@@ -1074,6 +1081,173 @@ document.addEventListener('DOMContentLoaded', () => {
         };
     }
 
-    initGalleryLightbox();
+    // --- Manage Staff Modal Tabs & Account Management ---
+    function initStaffManagement() {
+        const staffModal = document.getElementById('staffModal');
+        if (!staffModal) return;
 
+        const tabBtns = staffModal.querySelectorAll('.tab-btn');
+        const tabContents = staffModal.querySelectorAll('.tab-content');
+        const triggerManageAccounts = document.getElementById('triggerManageAccounts');
+        const userListContainer = document.getElementById('userListContainer');
+
+        // Tab Switching Logic
+        tabBtns.forEach(btn => {
+            btn.addEventListener('click', () => {
+                const targetTab = btn.dataset.tab;
+
+                // Toggle Buttons
+                tabBtns.forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+
+                // Toggle Content
+                tabContents.forEach(content => {
+                    content.classList.remove('active');
+                    if (content.id === targetTab) content.classList.add('active');
+                });
+
+                // If switching to Manage Accounts, load the users
+                if (targetTab === 'tab-manage-accounts') {
+                    loadUserList();
+                }
+            });
+        });
+
+        // Load User List Function
+        async function loadUserList() {
+            userListContainer.innerHTML = '<tr><td colspan="3" style="text-align: center; padding: 2rem; color: #64748b;"><i class="fa-solid fa-spinner fa-spin"></i> Loading users...</td></tr>';
+
+            try {
+                const response = await fetch('api/get_users.php');
+                const users = await response.json();
+
+                if (users.error) {
+                    userListContainer.innerHTML = `<tr><td colspan="3" style="text-align: center; color: #ef4444; padding: 1rem;">${users.error}</td></tr>`;
+                    return;
+                }
+
+                if (users.length === 0) {
+                    userListContainer.innerHTML = '<tr><td colspan="3" style="text-align: center; color: #64748b; padding: 1rem;">No users found.</td></tr>';
+                    return;
+                }
+
+                userListContainer.innerHTML = '';
+                users.forEach(user => {
+                    const tr = document.createElement('tr');
+                    tr.innerHTML = `
+                        <td style="font-weight: 600; color: #1e293b;">${user.username}</td>
+                        <td>
+                            <span class="badge ${user.role === 'Admin' ? 'badge-outgoing' : 'badge-incoming'}" style="padding: 0.4rem 0.8rem; border-radius: 6px;">
+                                ${user.role}
+                            </span>
+                        </td>
+                        <td>
+                            <div class="user-actions" id="actions-${user.UserId}">
+                                <button class="btn-action btn-action-pass change-pass-btn" data-id="${user.UserId}" data-username="${user.username}" title="Change Password">
+                                    <i class="fa-solid fa-key"></i>
+                                </button>
+                                ${user.UserId != 1 ? `<button class="btn-action btn-action-delete delete-user-btn" data-id="${user.UserId}" title="Delete Account">
+                                    <i class="fa-solid fa-trash-can"></i>
+                                </button>` : ''}
+                            </div>
+                            <!-- Inline Password Editor (Hidden by default) -->
+                            <div class="inline-pass-editor" id="editor-${user.UserId}" style="display: none;">
+                                <input type="password" class="inline-pass-input" placeholder="New Password" id="input-${user.UserId}">
+                                <button class="btn-inline-save save-pass-btn" data-id="${user.UserId}">Save</button>
+                                <button class="btn-inline-cancel cancel-pass-btn" data-id="${user.UserId}">Cancel</button>
+                            </div>
+                        </td>
+                    `;
+                    userListContainer.appendChild(tr);
+                });
+
+            } catch (err) {
+                console.error('Failed to load users:', err);
+                userListContainer.innerHTML = '<tr><td colspan="3" style="text-align: center; color: #ef4444; padding: 1rem;">Failed to fetch user list.</td></tr>';
+            }
+        }
+
+        // Action Delegation (Change Password / Delete / Save / Cancel)
+        userListContainer.addEventListener('click', async (e) => {
+            const passBtn = e.target.closest('.change-pass-btn');
+            const delBtn = e.target.closest('.delete-user-btn');
+            const saveBtn = e.target.closest('.save-pass-btn');
+            const cancelBtn = e.target.closest('.cancel-pass-btn');
+
+            if (passBtn) {
+                const userId = passBtn.dataset.id;
+                document.getElementById(`actions-${userId}`).style.display = 'none';
+                document.getElementById(`editor-${userId}`).style.display = 'flex';
+                document.getElementById(`input-${userId}`).focus();
+            }
+
+            if (cancelBtn) {
+                const userId = cancelBtn.dataset.id;
+                document.getElementById(`actions-${userId}`).style.display = 'flex';
+                document.getElementById(`editor-${userId}`).style.display = 'none';
+                document.getElementById(`input-${userId}`).value = '';
+            }
+
+            if (saveBtn) {
+                const userId = saveBtn.dataset.id;
+                const newPass = document.getElementById(`input-${userId}`).value;
+
+                if (newPass && newPass.trim().length > 0) {
+                    const formData = new FormData();
+                    formData.append('user_id', userId);
+                    formData.append('action', 'change_password');
+                    formData.append('new_password', newPass);
+
+                    try {
+                        const response = await fetch('api/update_user.php', {
+                            method: 'POST',
+                            body: formData
+                        });
+                        const result = await response.json();
+                        if (result.success) {
+                            if (typeof showToast === 'function') showToast(result.success, 'success');
+                            // Reset UI
+                            document.getElementById(`actions-${userId}`).style.display = 'flex';
+                            document.getElementById(`editor-${userId}`).style.display = 'none';
+                            document.getElementById(`input-${userId}`).value = '';
+                        } else {
+                            if (typeof showToast === 'function') showToast(result.error, 'error');
+                        }
+                    } catch (err) {
+                        console.error('Update failed:', err);
+                    }
+                } else {
+                    if (typeof showToast === 'function') showToast('Password cannot be empty', 'error');
+                }
+            }
+
+            if (delBtn) {
+                const userId = delBtn.dataset.id;
+                if (confirm('Are you sure you want to delete this account? This cannot be undone.')) {
+                    const formData = new FormData();
+                    formData.append('user_id', userId);
+                    formData.append('action', 'delete_user');
+
+                    try {
+                        const response = await fetch('api/update_user.php', {
+                            method: 'POST',
+                            body: formData
+                        });
+                        const result = await response.json();
+                        if (result.success) {
+                            if (typeof showToast === 'function') showToast(result.success, 'success');
+                            loadUserList(); // Refresh table
+                        } else {
+                            if (typeof showToast === 'function') showToast(result.error, 'error');
+                        }
+                    } catch (err) {
+                        console.error('Delete failed:', err);
+                    }
+                }
+            }
+        });
+    }
+
+    initStaffManagement();
+    initGalleryLightbox();
 });
