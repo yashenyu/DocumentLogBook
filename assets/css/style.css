@@ -1165,14 +1165,15 @@ body.auth-page {
     flex-direction: column;
     flex: 1;
     min-height: 0;
-    overflow: hidden;
+    overflow: visible;
+    /* Allow internal elements to grow for scroll */
     height: 100%;
 }
 
 .modal-fixed-90 .modal-body {
     flex: 1;
-    overflow: hidden;
-    /* Strictly prevent global scrollbar */
+    overflow-y: auto !important;
+    /* Restore scroll for high zoom fallback */
     padding: 1.5rem 1.5rem 1.25rem 1.5rem;
     min-height: 0;
     display: flex;
@@ -1835,6 +1836,8 @@ body.auth-page {
     justify-content: space-between;
     align-items: center;
     margin-bottom: 0.5rem;
+    flex-shrink: 0;
+    /* Keep labels visible */
 }
 
 /* Modal Content Fit & Alignment */
@@ -1856,6 +1859,10 @@ body.auth-page {
     max-width: 700px;
     /* Safe readable width */
     width: 100%;
+    min-height: fit-content;
+    /* Prevent vertical collapse */
+    flex-shrink: 0;
+    /* Don't allow groups to overlap */
 }
 
 .form-group:last-child {
