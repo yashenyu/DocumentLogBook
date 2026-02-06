@@ -560,7 +560,7 @@ endif; ?>
 
                         <!-- Description -->
                         <div>
-                            <label style="display: block; font-size: 0.9rem; font-weight: 600; color: #334155; margin-bottom: 0.5rem;">Subject</label>
+                            <label style="display: block; font-size: 0.9rem; font-weight: 600; color: #334155; margin-bottom: 0.5rem;">Description</label>
                             <div id="view_description" style="background: #fff; padding: 1.25rem; border-radius: 8px; border: 1px solid #e2e8f0; min-height: 150px; white-space: pre-wrap; word-break: break-word; overflow-wrap: break-word; color: #334155; line-height: 1.6; font-size: 0.95rem; box-shadow: inset 0 2px 4px rgba(0,0,0,0.02);"></div>
                         </div>
                     </div>

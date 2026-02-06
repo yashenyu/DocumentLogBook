@@ -396,7 +396,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 statusDiv.innerHTML = `<span class="badge badge-${data.doc.Status.toLowerCase()}">${data.doc.Status}</span>`;
 
                 // Render Attachments
-                renderViewAttachments(data.attachments);
+                renderViewAttachments(data.attachments, data.doc.Subject);
 
             } catch (err) {
                 console.error(err);
@@ -406,30 +406,36 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 
-    function renderViewAttachments(attachments) {
+    // Store attachments for gallery opening
+    let currentViewAttachments = [];
+    let currentViewTitle = '';
+
+    function renderViewAttachments(attachments, title = 'Attachments') {
         const container = document.getElementById('view_attachments');
         if (!container) return;
         container.innerHTML = '';
+
+        // Store for gallery use
+        currentViewAttachments = attachments;
+        currentViewTitle = title;
 
         if (!attachments || attachments.length === 0) {
             container.innerHTML = '<div style="font-size:0.85rem; color:#94a3b8; font-style:italic; padding: 10px; text-align: center;">No attachments found.</div>';
             return;
         }
 
-        attachments.forEach(att => {
+        attachments.forEach((att, index) => {
             const isImage = att.FileType && att.FileType.startsWith('image/');
             const attachmentUrl = `view_attachment.php?id=${att.AttachmentID}`;
 
-            const item = document.createElement('a');
-            item.href = attachmentUrl;
-            item.target = '_blank';
+            const item = document.createElement('div');
             item.style.display = 'flex';
             item.style.alignItems = 'center';
             item.style.gap = '10px';
             item.style.padding = '8px';
             item.style.border = '1px solid #e2e8f0';
             item.style.borderRadius = '6px';
-            item.style.textDecoration = 'none';
+            item.style.cursor = 'pointer';
             item.style.transition = 'all 0.2s';
             item.style.background = '#ffffff';
 
@@ -444,6 +450,13 @@ document.addEventListener('DOMContentLoaded', () => {
                 item.style.borderColor = '#e2e8f0';
                 item.style.transform = 'translateY(0)';
             };
+
+            // Click to open gallery at this index
+            item.addEventListener('click', () => {
+                if (window.openGalleryWithAttachments) {
+                    window.openGalleryWithAttachments(currentViewAttachments, index, currentViewTitle, true);
+                }
+            });
 
             if (isImage) {
                 const img = document.createElement('img');
@@ -494,13 +507,13 @@ document.addEventListener('DOMContentLoaded', () => {
             infoDiv.appendChild(sub);
             item.appendChild(infoDiv);
 
-            // Small external link icon
-            const extIcon = document.createElement('i');
-            extIcon.className = 'fa-solid fa-chevron-right';
-            extIcon.style.color = '#cbd5e1';
-            extIcon.style.fontSize = '0.75rem';
+            // View icon instead of external link
+            const viewIcon = document.createElement('i');
+            viewIcon.className = 'fa-solid fa-eye';
+            viewIcon.style.color = '#cbd5e1';
+            viewIcon.style.fontSize = '0.85rem';
 
-            item.appendChild(extIcon);
+            item.appendChild(viewIcon);
 
             container.appendChild(item);
         });
@@ -740,6 +753,43 @@ document.addEventListener('DOMContentLoaded', () => {
     initMultiSelect();
     initFilterForm();
     initLimitSelector();
+    initCharCounters();
+
+    // --- Character Counter Logic ---
+    function initCharCounters() {
+        // Target all inputs and textareas with maxlength in modals
+        const inputs = document.querySelectorAll('.modal-content input[maxlength], .modal-content textarea[maxlength]');
+
+        inputs.forEach(input => {
+            const maxLen = parseInt(input.getAttribute('maxlength'), 10);
+            if (!maxLen) return;
+
+            // Create counter element
+            const counter = document.createElement('div');
+            counter.className = 'char-counter';
+            counter.textContent = `0 / ${maxLen}`;
+
+            // Insert after the input
+            input.parentNode.insertBefore(counter, input.nextSibling);
+
+            // Update counter on input
+            const updateCounter = () => {
+                const len = input.value.length;
+                counter.textContent = `${len} / ${maxLen}`;
+
+                // Add warning class when >= 90% of max
+                if (len >= maxLen * 0.9) {
+                    counter.classList.add('char-warning');
+                } else {
+                    counter.classList.remove('char-warning');
+                }
+            };
+
+            input.addEventListener('input', updateCounter);
+            // Initial update in case of pre-filled values
+            updateCounter();
+        });
+    }
 
     // --- Gallery Lightbox Logic ---
     function initGalleryLightbox() {
@@ -761,26 +811,27 @@ document.addEventListener('DOMContentLoaded', () => {
         let currentAttachments = [];
         let currentIndex = 0;
         let currentDocId = null;
+        let openedFromViewModal = false; // Track if opened from view modal
 
+        // Close gallery function
+        function closeGallery() {
+            galleryModal.classList.remove('active');
+            galleryImage.style.display = 'none';
+            galleryPdf.style.display = 'none';
+            galleryPdf.src = '';
+            resetZoom();
+            // openedFromViewModal is reset when opening, not closing
+        }
 
         // Close gallery
         if (closeBtn) {
-            closeBtn.addEventListener('click', () => {
-                galleryModal.classList.remove('active');
-                // Clear content
-                galleryImage.style.display = 'none';
-                galleryPdf.style.display = 'none';
-                galleryPdf.src = '';
-            });
+            closeBtn.addEventListener('click', closeGallery);
         }
 
         // Close on outside click
         galleryModal.addEventListener('click', (e) => {
             if (e.target === galleryModal) {
-                galleryModal.classList.remove('active');
-                galleryImage.style.display = 'none';
-                galleryPdf.style.display = 'none';
-                galleryPdf.src = '';
+                closeGallery();
             }
         });
 
@@ -829,7 +880,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 currentIndex++;
                 showAttachment(currentIndex);
             } else if (e.key === 'Escape') {
-                galleryModal.classList.remove('active');
+                closeGallery();
             }
         });
 
@@ -967,6 +1018,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
                 if (!docId) return;
 
+                openedFromViewModal = false; // Opening from table, not view modal
+
                 // Show modal with loading state
                 galleryModal.classList.add('active');
                 galleryLoading.style.display = 'block';
@@ -1002,6 +1055,23 @@ document.addEventListener('DOMContentLoaded', () => {
                 }
             }
         });
+
+        // Expose function to open gallery with pre-loaded attachments (for view modal)
+        window.openGalleryWithAttachments = function (attachments, startIndex, title, fromViewModal = false) {
+            if (!attachments || attachments.length === 0) return;
+
+            currentAttachments = attachments;
+            currentIndex = startIndex || 0;
+            currentDocId = null; // Not from doc trigger
+            openedFromViewModal = fromViewModal;
+
+            galleryTitle.textContent = title || 'Attachments';
+            galleryModal.classList.add('active');
+            galleryLoading.style.display = 'none';
+
+            renderThumbnails();
+            showAttachment(currentIndex);
+        };
     }
 
     initGalleryLightbox();

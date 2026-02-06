@@ -117,7 +117,8 @@ body.auth-page {
     bottom: 0;
     width: 100vw;
     height: 100vh;
-    z-index: 5; /* Above blobs, below content */
+    z-index: 5;
+    /* Above blobs, below content */
     pointer-events: none;
 }
 
@@ -1528,6 +1529,20 @@ body.auth-page {
     font-weight: 600;
 }
 
+/* Character Counter Styles */
+.char-counter {
+    font-size: 0.7rem;
+    color: #94a3b8;
+    text-align: right;
+    margin-top: 4px;
+    transition: color 0.2s;
+}
+
+.char-counter.char-warning {
+    color: #ef4444;
+    font-weight: 600;
+}
+
 /* --- Professional Responsiveness & Desktop Optimization --- */
 
 @media (max-width: 768px) {
@@ -1648,9 +1663,19 @@ body.auth-page {
     background: #0f172a;
     border-bottom: 1px solid rgba(255, 255, 255, 0.1);
     flex-shrink: 0;
+    gap: 1rem;
+}
+
+#galleryTitle {
+    flex: 1;
+    min-width: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
 }
 
 .lightbox-close {
+    flex-shrink: 0;
     color: #ffffff;
     font-size: 28px;
     font-weight: bold;
