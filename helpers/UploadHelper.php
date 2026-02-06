@@ -9,7 +9,7 @@ class UploadHelper
         'application/pdf' => 'pdf'
     ];
 
-    private static $maxSize = 5 * 1024 * 1024; // 5MB
+    private static $maxSize = 40 * 1024 * 1024; // 40MB
 
     /**
      * Validates and reads multiple file uploads
