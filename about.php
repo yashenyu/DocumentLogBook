@@ -126,7 +126,7 @@ session_start();
                     <div class="dev-avatar">
                         <i class="fa-solid fa-code"></i>
                     </div>
-                    <div class="dev-name">Mark Aaron B. Dayrit</div>
+                    <div class="dev-name">Mark Aaron B.   Dayrit</div>
                     <div class="dev-role">Web Developer</div>
                 </a>
 
@@ -135,7 +135,7 @@ session_start();
                     <div class="dev-avatar">
                         <i class="fa-solid fa-laptop-code"></i>
                     </div>
-                    <div class="dev-name">Jasper Andrew L. Chan</div>
+                    <div class="dev-name">Andrew L. Chan</div>
                     <div class="dev-role">Frontend Developer</div>
                 </a>
 
@@ -145,7 +145,7 @@ session_start();
                         <i class="fa-solid fa-palette"></i>
                     </div>
                     <div class="dev-name">Carlo T. Siron</div>
-                    <div class="dev-role">UI/UX Designer</div>
+                    <div class="dev-role">Frontend & UI/UX Develeoper</div>
                 </a>
 
                 <!-- Developer 4 -->
