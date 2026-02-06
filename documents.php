@@ -175,11 +175,12 @@ endif; ?>>
                         <span style="width: 6px; height: 6px; background-color: var(--accent-color); border-radius: 50%;"></span>
                         Admin
                     </span>
-                <?php
-else: ?>
-                    <span style="color: #94a3b8; font-size: 0.8rem; font-weight: 500;">Staff</span>
-                <?php
-endif; ?>
+                <?php else: ?>
+                    <span style="background-color: rgba(255, 255, 255, 0.15); color: #ffffff; padding: 2px 12px; border-radius: 99px; font-size: 0.7rem; font-weight: 700; border: 1px solid rgba(255, 255, 255, 0.5); letter-spacing: 0.5px; text-transform: uppercase; display: inline-flex; align-items: center; gap: 5px;">
+                        <span style="width: 6px; height: 6px; background-color: #ffffff; border-radius: 50%;"></span>
+                        Staff
+                    </span>
+                <?php endif; ?>
             </div>
         </div>
 
@@ -300,7 +301,6 @@ endif; ?>
                 &copy; <?php echo date('Y'); ?> Document LogBook System
             </div>
             <div class="footer-links">
-                <a href="#">Privacy Policy</a>
                 <a href="about.php" class="about-dev-link">About Developers</a>
             </div>
         </footer>

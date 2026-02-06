@@ -92,10 +92,6 @@ endif; ?>
                 <img src="assets/images/HAU.png" alt="Logo" class="auth-logo-img" style="width: 110%; height: 125%; object-fit: contain;">
             </div>
 
-            <!-- Footer Links (absolute bottom right inside card) -->
-            <div class="auth-footer" style="bottom: 1.5rem; right: 2.5rem; text-align: right;">
-                <a href="#">Privacy Policy</a>
-            </div>
         </div>
     </div>
     
