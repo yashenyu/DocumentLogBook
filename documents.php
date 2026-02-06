@@ -10,7 +10,7 @@ if (!isset($_SESSION['user_id'])) {
 // Params
 $search = $_GET['search'] ?? '';
 $page = isset($_GET['page']) ? (int)$_GET['page'] : 1;
-$limit = 10;
+$limit = isset($_GET['limit']) ? (int)$_GET['limit'] : 10;
 $offset = ($page - 1) * $limit;
 
 // Sorting Params
@@ -155,12 +155,12 @@ $filterParams = [
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
     <!-- Styles -->
-    <link rel="stylesheet" href="assets/css/style.css">
+    <link rel="stylesheet" href="assets/css/style.css?v=<?php echo time(); ?>">
 </head>
 <body>
     <!-- Navbar -->
-    <nav class="navbar" style="justify-content: space-between;">
-        <div style="display: flex; align-items: center;">
+    <nav class="navbar">
+        <div class="nav-left">
             <div class="logo-area" id="changeLogoTrigger" style="cursor: pointer;" title="Click to change logo">
                 <span class="logo-text">LogBook</span>
                 <div class="nav-iso-box-container" style="display: flex; align-items: center; justify-content: center;">
@@ -182,7 +182,7 @@ endif; ?>
             </div>
         </div>
 
-        <div style="display: flex; gap: 0.75rem; align-items: center;">
+        <div class="nav-right">
             <?php if (isset($_SESSION['role']) && $_SESSION['role'] === 'Admin'): ?>
                 <button id="openStaffModal" class="btn-outline btn-staff" style="text-decoration: none; font-size: 0.85rem; padding: 0.5rem 1.2rem; cursor: pointer;">
                     <i class="fa-solid fa-user-plus"></i> Add Staff
@@ -202,13 +202,13 @@ endif; ?>
 
         <!-- Toolbar -->
         <div class="doc-toolbar">
-            <form action="" method="GET" style="flex: 1; max-width: 400px;">
+            <form action="" method="GET" class="search-form">
                 <div class="search-container">
                     <i class="fa-solid fa-magnifying-glass search-icon"></i>
                     <input type="text" name="search" class="search-input" placeholder="Search..." value="<?php echo htmlspecialchars($search); ?>">
                     <?php
 // Preserve filters in search form
-foreach (['start_date', 'end_date', 'office', 'status', 'sort_by', 'sort_order'] as $key) {
+foreach (['start_date', 'end_date', 'office', 'status', 'sort_by', 'sort_order', 'limit'] as $key) {
     if (isset($_GET[$key]) && $_GET[$key] !== '') {
         echo '<input type="hidden" name="' . htmlspecialchars($key) . '" value="' . htmlspecialchars($_GET[$key]) . '">';
     }
@@ -218,9 +218,20 @@ foreach (['start_date', 'end_date', 'office', 'status', 'sort_by', 'sort_order']
             </form>
             
             <div class="toolbar-buttons">
+                <!-- Items Per Page Selector -->
+                <div class="limit-selector" style="display: flex; align-items: center; gap: 0.5rem; margin-right: 1rem; border: 1px solid #e2e8f0; padding: 0.2rem 0.8rem; border-radius: 99px; background: #fff;">
+                    <label style="font-size: 0.75rem; color: #64748b; font-weight: 600;">Show:</label>
+                    <select id="limitSelector" class="form-control-sm" style="border: none; background: transparent; font-size: 0.8rem; font-weight: 600; color: #1e293b; cursor: pointer; outline: none; padding: 4px 0;">
+                        <option value="10" <?php echo($limit == 10) ? 'selected' : ''; ?>>10</option>
+                        <option value="25" <?php echo($limit == 25) ? 'selected' : ''; ?>>25</option>
+                        <option value="50" <?php echo($limit == 50) ? 'selected' : ''; ?>>50</option>
+                        <option value="100" <?php echo($limit == 100) ? 'selected' : ''; ?>>100</option>
+                    </select>
+                </div>
+
                 <!-- Advanced Filters Button -->
                 <button id="openFilterModal" class="btn btn-dark">
-                    <img src="assets/images/filter-icon.svg" alt="Filter" style="width: 16px; height: 16px;"> Advanced Filters
+                    <img src="assets/images/filter-icon.svg" alt="Filter" style="width: 16px; height: 16px;"> Filters
                 </button>
                 
                 <button id="openAddModal" class="btn btn-dark" style="text-decoration: none;">
@@ -283,13 +294,13 @@ endif; ?>
         </div>
 
         <!-- Dashboard Footer -->
-        <footer style="margin-top: 3rem; padding: 2rem 0; border-top: 1px solid #e2e8f0; display: flex; justify-content: space-between; align-items: center; color: #64748b; font-size: 0.85rem;">
+        <footer class="dashboard-footer">
             <div>
                 &copy; <?php echo date('Y'); ?> Document LogBook System
             </div>
-            <div style="display: flex; gap: 1.5rem;">
-                <a href="#" style="color: inherit; text-decoration: none;">Privacy Policy</a>
-                <a href="about.php" style="color: inherit; text-decoration: none; font-weight: 600;">About Developers</a>
+            <div class="footer-links">
+                <a href="#">Privacy Policy</a>
+                <a href="about.php" class="about-dev-link">About Developers</a>
             </div>
         </footer>
     </div>
@@ -326,10 +337,8 @@ endif; ?>
                         <label>Status</label>
                         <select name="status" class="form-control">
                             <option value="">All Statuses</option>
-                            <option value="Pending" <?php echo($statusFilter == 'Pending') ? 'selected' : ''; ?>>Pending</option>
-                            <option value="Received" <?php echo($statusFilter == 'Received') ? 'selected' : ''; ?>>Received</option>
-                            <option value="Released" <?php echo($statusFilter == 'Released') ? 'selected' : ''; ?>>Released</option>
-                            <option value="Completed" <?php echo($statusFilter == 'Completed') ? 'selected' : ''; ?>>Completed</option>
+                            <option value="Incoming" <?php echo($statusFilter == 'Incoming') ? 'selected' : ''; ?>>Incoming</option>
+                            <option value="Outgoing" <?php echo($statusFilter == 'Outgoing') ? 'selected' : ''; ?>>Outgoing</option>
                         </select>
                     </div>
 
@@ -469,10 +478,6 @@ endif; ?>
                             <select id="edit_status" name="status" class="form-control">
                                 <option value="Incoming">Incoming</option>
                                 <option value="Outgoing">Outgoing</option>
-                                <option value="Pending">Pending</option>
-                                <option value="Received">Received</option>
-                                <option value="Released">Released</option>
-                                <option value="Completed">Completed</option>
                             </select>
                         </div>
 

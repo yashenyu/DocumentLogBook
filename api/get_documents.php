@@ -10,7 +10,7 @@ if (!isset($_SESSION['user_id'])) {
 // Params
 $search = $_GET['search'] ?? '';
 $page = isset($_GET['page']) ? (int)$_GET['page'] : 1;
-$limit = 10;
+$limit = isset($_GET['limit']) ? (int)$_GET['limit'] : 10;
 $offset = ($page - 1) * $limit;
 
 $sortBy = $_GET['sort_by'] ?? '';

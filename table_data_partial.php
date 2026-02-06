@@ -2,6 +2,7 @@
 // This partial is used by documents.php and an AJAX endpoint to render table rows and pagination
 ?>
 
+<div class="table-container shadow-sm">
 <table class="doc-table">
     <thead>
         <tr>
@@ -94,6 +95,7 @@ else: ?>
 endif; ?>
     </tbody>
 </table>
+</div>
 
 <!-- Pagination (Shared logic) -->
 <div class="pagination-area" id="paginationArea">
@@ -106,7 +108,8 @@ $paginationQueryParams = [
     'received_by' => $receivedFilter,
     'status' => $statusFilter,
     'sort_by' => $sortBy,
-    'sort_order' => $sortOrder
+    'sort_order' => $sortOrder,
+    'limit' => $limit
 ];
 
 $paginationQueryParams['page'] = $page - 1;

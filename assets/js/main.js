@@ -726,11 +726,25 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
+    // --- Limit Selector Logic ---
+    function initLimitSelector() {
+        const selector = document.getElementById('limitSelector');
+        if (!selector) return;
+
+        selector.addEventListener('change', () => {
+            const urlParams = new URLSearchParams(window.location.search);
+            urlParams.set('limit', selector.value);
+            urlParams.set('page', 1); // Reset to page 1
+            refreshTable(urlParams);
+        });
+    }
+
     // Initialize New Features
     initDynamicSearch();
     initSorting();
     initPagination();
     initMultiSelect();
     initFilterForm();
+    initLimitSelector();
 
 });
