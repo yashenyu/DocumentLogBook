@@ -1056,13 +1056,24 @@ body.auth-page {
     height: 100%;
     background-color: rgba(0, 0, 0, 0.5);
     z-index: 1000;
+    -webkit-box-pack: center;
+    -ms-flex-pack: center;
     justify-content: center;
+    -webkit-box-align: center;
+    -ms-flex-align: center;
     align-items: center;
     opacity: 0;
+    -webkit-transition: opacity 0.3s ease;
     transition: opacity 0.3s ease;
+    padding: 20px;
+    -webkit-box-sizing: border-box;
+    box-sizing: border-box;
+    overflow-y: auto;
 }
 
 .modal-overlay.active {
+    display: -webkit-box;
+    display: -ms-flexbox;
     display: flex;
     opacity: 1;
 }
@@ -1072,46 +1083,86 @@ body.auth-page {
     padding: 2rem;
     border-radius: 1rem;
     width: 90%;
-    /* Responsive default */
     max-width: 900px;
-    /* Cap for smaller screens */
+    max-height: 90vh;
+    -webkit-box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
     box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+    -webkit-transform: translateY(-20px);
+    -ms-transform: translateY(-20px);
     transform: translateY(-20px);
+    -webkit-transition: transform 0.3s ease;
     transition: transform 0.3s ease;
+    overflow-y: auto;
+    overflow-x: hidden;
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-box-orient: vertical;
+    -webkit-box-direction: normal;
+    -ms-flex-direction: column;
+    flex-direction: column;
 }
 
 /* Specific class for Wide Modals (80% screen width as requested) */
 .modal-lg {
     max-width: 80vw;
-    /* 80% of viewport width */
     width: 80vw;
     min-height: 400px;
-    /* Prevent being too thin/elongated */
+    max-height: 90vh;
+    display: -webkit-box;
+    display: -ms-flexbox;
     display: flex;
+    -webkit-box-orient: vertical;
+    -webkit-box-direction: normal;
+    -ms-flex-direction: column;
     flex-direction: column;
 }
 
 .modal-lg .modal-content {
     height: 100%;
+    display: -webkit-box;
+    display: -ms-flexbox;
     display: flex;
+    -webkit-box-orient: vertical;
+    -webkit-box-direction: normal;
+    -ms-flex-direction: column;
     flex-direction: column;
 }
 
 .modal-lg form {
+    -webkit-box-flex: 1;
+    -ms-flex: 1;
     flex: 1;
+    display: -webkit-box;
+    display: -ms-flexbox;
     display: flex;
+    -webkit-box-orient: vertical;
+    -webkit-box-direction: normal;
+    -ms-flex-direction: column;
     flex-direction: column;
+    overflow-y: auto;
 }
 
 .modal-lg .modal-actions {
     margin-top: auto;
-    /* Push actions to bottom */
+    -ms-flex-negative: 0;
+    flex-shrink: 0;
+    padding-top: 1rem;
+}
+
+.modal-body {
+    -webkit-box-flex: 1;
+    -ms-flex: 1 1 auto;
+    flex: 1 1 auto;
+    overflow-y: auto;
+    overflow-x: hidden;
+    padding-right: 5px;
 }
 
 @media (max-width: 1024px) {
     .modal-lg {
-        max-width: 80vw;
-        width: 80vw;
+        max-width: 90vw;
+        width: 90vw;
     }
 }
 
@@ -1120,11 +1171,19 @@ body.auth-page {
         max-width: 95vw;
         width: 95vw;
     }
+
+    .modal-content {
+        padding: 1rem;
+        max-height: 85vh;
+    }
 }
 
 .modal-overlay.active .modal-content {
+    -webkit-transform: translateY(0);
+    -ms-transform: translateY(0);
     transform: translateY(0);
 }
+
 
 /* Dark Header for Premium Feel */
 .modal-header {
