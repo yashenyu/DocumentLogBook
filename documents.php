@@ -161,7 +161,8 @@ $filterParams = [
     <!-- Navbar -->
     <nav class="navbar">
         <div class="nav-left">
-            <div class="logo-area" id="changeLogoTrigger" style="cursor: pointer;" title="Click to change logo">
+            <div class="logo-area" <?php if (($_SESSION['role'] ?? '') === 'Admin'): ?>id="changeLogoTrigger" style="cursor: pointer;" title="Click to change logo"<?php
+endif; ?>>
                 <span class="logo-text">LogBook</span>
                 <div class="nav-iso-box-container" style="display: flex; align-items: center; justify-content: center;">
                     <img id="navbarLogo" src="assets/images/HAU.png" alt="Logo" style="width: 150%; height: 150%; object-fit: contain;">

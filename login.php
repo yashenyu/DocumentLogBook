@@ -98,6 +98,9 @@ endif; ?>
             </div>
         </div>
     </div>
+    
+    <!-- Interactive Background Canvas -->
+    <canvas id="bgCanvas"></canvas>
 
     <!-- Background Blobs -->
     <div class="blob blob-1"></div>
@@ -105,6 +108,7 @@ endif; ?>
     <div class="blob blob-3"></div>
     <div class="blob blob-4"></div>
 
+    <script src="assets/js/interactive-bg.js"></script>
     <script src="assets/js/main.js"></script>
 </body>
 </html>

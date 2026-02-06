@@ -27,6 +27,9 @@ if (isset($_SESSION['user_id'])) {
     <div class="blob blob-2"></div>
     <div class="blob blob-3"></div>
 
+    <!-- Interactive Background Canvas -->
+    <canvas id="bgCanvas"></canvas>
+
     <div class="container" style="display: flex; justify-content: center; align-items: center; width: 100%; height: 100vh; position: relative; z-index: 10;">
         <div class="auth-card">
             
@@ -85,6 +88,7 @@ if (isset($_SESSION['user_id'])) {
         </div>
     </div>
 
+    <script src="assets/js/interactive-bg.js"></script>
     <script src="assets/js/main.js"></script>
 </body>
 </html>

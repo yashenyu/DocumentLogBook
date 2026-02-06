@@ -109,6 +109,18 @@ body.auth-page {
     position: relative;
 }
 
+#bgCanvas {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    width: 100vw;
+    height: 100vh;
+    z-index: 5; /* Above blobs, below content */
+    pointer-events: none;
+}
+
 .auth-wrapper {
     display: flex;
     justify-content: center;
@@ -122,7 +134,7 @@ body.auth-page {
 /* Precise 1:1 Background Copy */
 .blob {
     position: absolute;
-    z-index: 1;
+    z-index: 0;
     pointer-events: none;
 }
 
@@ -146,7 +158,6 @@ body.auth-page {
     left: -10vw;
     border-radius: 40% 60% 30% 70% / 50% 50% 50% 50%;
     opacity: 0.3;
-    z-index: 2;
 }
 
 .blob-3 {
@@ -158,7 +169,6 @@ body.auth-page {
     right: -10vw;
     border-radius: 60% 40% 30% 70% / 60% 50% 60% 50%;
     transform: rotate(15deg);
-    z-index: 3;
 }
 
 .blob-4 {
@@ -418,9 +428,17 @@ body.auth-page {
     margin-bottom: 0.75rem;
 }
 
+.search-form {
+    flex: 1;
+    display: flex;
+    max-width: 80%;
+}
+
 .search-container {
     position: relative;
+    flex: 1;
     width: 100%;
+    padding-right: 2rem;
 }
 
 .search-input {
@@ -477,6 +495,17 @@ body.auth-page {
 .btn-dark:hover {
     background-color: #4a0d0d;
     border-color: var(--accent-color);
+}
+
+.logo-area#changeLogoTrigger {
+    padding: 0.5rem 0.8rem;
+    margin-left: -0.8rem;
+    border-radius: 0.5rem;
+    transition: all 0.2s ease;
+}
+
+.logo-area#changeLogoTrigger:hover {
+    background-color: rgba(255, 255, 255, 0.2);
 }
 
 .search-input:focus {
