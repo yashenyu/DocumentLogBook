@@ -107,6 +107,44 @@ session_start();
             color: var(--accent-color);
             transform: translateX(-5px);
         }
+
+        /* Responsive Adjustments */
+        @media (max-width: 768px) {
+            .about-container {
+                margin: 2rem auto;
+                padding: 1rem;
+            }
+            .about-card {
+                padding: 2rem 1.5rem;
+            }
+            .about-header h1 {
+                font-size: 2rem;
+            }
+            .developers-grid {
+                grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+                gap: 1.5rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .about-header h1 {
+                font-size: 1.75rem;
+            }
+            .about-header p {
+                font-size: 0.95rem;
+            }
+            .dev-card {
+                padding: 1.5rem 1rem;
+            }
+            .dev-avatar {
+                width: 80px;
+                height: 80px;
+                font-size: 1.5rem;
+            }
+            .dev-name {
+                font-size: 1rem;
+            }
+        }
     </style>
 </head>
 <body style="background-color: #f8fafc;">

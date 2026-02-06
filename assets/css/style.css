@@ -197,6 +197,7 @@ body.auth-page {
     border-radius: 2rem;
     padding: 2.2rem;
     width: 40%;
+    min-width: 400px;
     max-width: 600px;
     box-shadow: 0 40px 100px -20px rgba(0, 0, 0, 0.6);
     position: relative;
@@ -1946,6 +1947,33 @@ textarea.form-control {
     .modal-actions button,
     .modal-actions a {
         width: 100%;
+    }
+
+    /* Auth Card Mobile */
+    .auth-card {
+        width: 95% !important;
+        min-width: 0 !important;
+        padding: 1.5rem !important;
+        margin: 1rem;
+    }
+
+    .auth-card h2 {
+        font-size: 1.5rem !important;
+    }
+
+    body.auth-page {
+        overflow-y: auto !important;
+        /* Allow scrolling if keyboard pops up or content is tall */
+        height: auto !important;
+        min-height: 100vh;
+    }
+
+    .auth-decoration {
+        width: 60px !important;
+        height: 60px !important;
+        bottom: 1rem !important;
+        right: 1rem !important;
+        opacity: 0.5;
     }
 }
 
