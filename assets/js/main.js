@@ -833,6 +833,66 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         });
 
+        let zoomScale = 1;
+        let isDragging = false;
+        let translateX = 0, translateY = 0;
+
+        function updateImageTransform() {
+            galleryImage.style.transform = `translate(${translateX}px, ${translateY}px) scale(${zoomScale})`;
+            // Toggle zoomed class for cursor state
+            galleryImage.classList.toggle('zoomed', zoomScale > 1);
+        }
+
+        function resetZoom() {
+            zoomScale = 1;
+            translateX = 0;
+            translateY = 0;
+            updateImageTransform();
+        }
+
+        // Scroll to Zoom
+        galleryImage.addEventListener('wheel', (e) => {
+            e.preventDefault();
+            const zoomSpeed = 0.15;
+            const delta = e.deltaY > 0 ? -zoomSpeed : zoomSpeed;
+            const newScale = Math.min(Math.max(1, zoomScale + delta), 5); // Min scale is 1 (fit)
+
+            if (newScale !== zoomScale) {
+                // When zooming out to fit, reset position
+                if (newScale === 1) {
+                    translateX = 0;
+                    translateY = 0;
+                }
+                zoomScale = newScale;
+                updateImageTransform();
+            }
+        }, { passive: false });
+
+        // Pan Logic - using movementX/Y for smoother panning
+        galleryImage.addEventListener('mousedown', (e) => {
+            if (zoomScale > 1) {
+                isDragging = true;
+                galleryImage.style.cursor = 'grabbing';
+                e.preventDefault(); // Prevent image drag behavior
+            }
+        });
+
+        document.addEventListener('mousemove', (e) => {
+            if (!isDragging) return;
+            translateX += e.movementX;
+            translateY += e.movementY;
+            updateImageTransform();
+        });
+
+        document.addEventListener('mouseup', () => {
+            if (isDragging) {
+                isDragging = false;
+                if (zoomScale > 1) {
+                    galleryImage.style.cursor = 'grab';
+                }
+            }
+        });
+
         function showAttachment(index) {
             const att = currentAttachments[index];
             const isImage = att.FileType && att.FileType.startsWith('image/');
@@ -842,6 +902,8 @@ document.addEventListener('DOMContentLoaded', () => {
             galleryLoading.style.display = 'block';
             galleryImage.style.display = 'none';
             galleryPdf.style.display = 'none';
+
+            resetZoom(); // Reset on every change
 
             if (isImage) {
                 galleryImage.onload = () => {

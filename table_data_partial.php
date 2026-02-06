@@ -57,16 +57,16 @@
                         <!-- Gallery trigger instead of direct link -->
                         <div class="gallery-trigger" data-docid="<?php echo $row['DocID']; ?>" title="View all attachments (<?php echo $attachmentCount; ?>)">
                             <?php if ($isImage): ?>
-                                <img src="<?php echo htmlspecialchars($attachmentUrl); ?>" alt="Preview" style="width: 50px; height: 50px; object-fit: cover; border-radius: 4px; border: 1px solid #e2e8f0;">
+                                <img src="<?php echo htmlspecialchars($attachmentUrl); ?>" alt="Preview">
                             <?php
             else: ?>
-                                <div style="width: 50px; height: 50px; display: flex; align-items: center; justify-content: center; background: #fef2f2; border-radius: 4px; border: 1px solid #e2e8f0;">
-                                    <i class="fa-regular fa-file-pdf" style="font-size: 1.5rem; color: #ef4444;"></i>
+                                <div class="attachment-placeholder">
+                                    <i class="fa-regular fa-file-pdf"></i>
                                 </div>
                             <?php
             endif; ?>
                             <?php if ($attachmentCount > 1): ?>
-                                <span style="position: absolute; top: -5px; right: -5px; background: var(--accent-color); color: var(--primary-color); font-size: 0.65rem; font-weight: 700; width: 18px; height: 18px; border-radius: 50%; display: flex; align-items: center; justify-content: center;">
+                                <span class="attachment-count">
                                     <?php echo $attachmentCount; ?>
                                 </span>
                             <?php
