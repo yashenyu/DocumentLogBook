@@ -74,6 +74,12 @@ try {
         if ($stmt->rowCount() > 0) {
             $pdo->exec("ALTER TABLE DocumentAttachments DROP COLUMN FilePath");
         }
+
+        // 4. Add UploadedAt if not exists
+        $stmt = $pdo->query("SHOW COLUMNS FROM DocumentAttachments LIKE 'UploadedAt'");
+        if ($stmt->rowCount() == 0) {
+            $pdo->exec("ALTER TABLE DocumentAttachments ADD COLUMN UploadedAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP AFTER FileType");
+        }
     }
 
     // Remove DocImage column from DocumentLog if it exists (since we use Attachments now)
