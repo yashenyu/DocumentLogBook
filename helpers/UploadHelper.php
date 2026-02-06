@@ -12,13 +12,13 @@ class UploadHelper
     private static $maxSize = 5 * 1024 * 1024; // 5MB
 
     /**
-     * Securely handles multiple file uploads
+     * Validates and reads multiple file uploads
      * @param array $fileArray The $_FILES['input_name'] array
-     * @return array Array of successful upload paths or throws exception
+     * @return array Array of ['data' => binary, 'type' => mime_type] for each valid file
      */
     public static function handleUploads($fileArray)
     {
-        $uploadedPaths = [];
+        $results = [];
         $fileCount = count($fileArray['name']);
 
         for ($i = 0; $i < $fileCount; $i++) {
@@ -43,27 +43,18 @@ class UploadHelper
                 throw new Exception("Invalid file type. Only JPG, PNG, GIF, and PDF are allowed.");
             }
 
-            // 3. Generate Secure Path (uploads/YYYY/MM/DD/hash.ext)
-            $ext = self::$allowedMimeTypes[$mimeType];
-            $subPath = date('Y/m/d');
-            $uploadBase = 'uploads/' . $subPath . '/';
-
-            if (!is_dir($uploadBase)) {
-                mkdir($uploadBase, 0755, true);
+            // 3. Read file content as binary
+            $fileData = file_get_contents($tmpPath);
+            if ($fileData === false) {
+                throw new Exception("Failed to read uploaded file.");
             }
 
-            $newName = bin2hex(random_bytes(16)) . '.' . $ext;
-            $targetPath = $uploadBase . $newName;
-
-            // 4. Move File
-            if (move_uploaded_file($tmpPath, $targetPath)) {
-                $uploadedPaths[] = $targetPath;
-            }
-            else {
-                throw new Exception("Failed to move uploaded file.");
-            }
+            $results[] = [
+                'data' => $fileData,
+                'type' => $mimeType
+            ];
         }
 
-        return $uploadedPaths;
+        return $results;
     }
 }

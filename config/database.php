@@ -42,6 +42,46 @@ try {
         }
     }
 
+    // Check for DocumentAttachments table and create if not exists
+    $stmt = $pdo->query("SHOW TABLES LIKE 'DocumentAttachments'");
+    if ($stmt->rowCount() == 0) {
+        $sql = "CREATE TABLE DocumentAttachments (
+            AttachmentID INT AUTO_INCREMENT PRIMARY KEY,
+            DocID INT NOT NULL,
+            DocImage LONGBLOB NOT NULL,
+            FileType VARCHAR(50) NOT NULL,
+            UploadedAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+            FOREIGN KEY (DocID) REFERENCES DocumentLog(DocID) ON DELETE CASCADE
+        )";
+        $pdo->exec($sql);
+    }
+    else {
+        // Schema Migration for BLOB
+        // 1. Add DocImage (BLOB) if not exists
+        $stmt = $pdo->query("SHOW COLUMNS FROM DocumentAttachments LIKE 'DocImage'");
+        if ($stmt->rowCount() == 0) {
+            $pdo->exec("ALTER TABLE DocumentAttachments ADD COLUMN DocImage LONGBLOB NOT NULL AFTER DocID");
+        }
+
+        // 2. Add FileType if not exists
+        $stmt = $pdo->query("SHOW COLUMNS FROM DocumentAttachments LIKE 'FileType'");
+        if ($stmt->rowCount() == 0) {
+            $pdo->exec("ALTER TABLE DocumentAttachments ADD COLUMN FileType VARCHAR(50) NOT NULL AFTER DocImage");
+        }
+
+        // 3. Drop FilePath if exists (CAUTION: This deletes old path data)
+        $stmt = $pdo->query("SHOW COLUMNS FROM DocumentAttachments LIKE 'FilePath'");
+        if ($stmt->rowCount() > 0) {
+            $pdo->exec("ALTER TABLE DocumentAttachments DROP COLUMN FilePath");
+        }
+    }
+
+    // Remove DocImage column from DocumentLog if it exists (since we use Attachments now)
+    $stmt = $pdo->query("SHOW COLUMNS FROM DocumentLog LIKE 'DocImage'");
+    if ($stmt->rowCount() > 0) {
+        $pdo->exec("ALTER TABLE DocumentLog DROP COLUMN DocImage");
+    }
+
 }
 catch (PDOException $e) {
     die("Connection failed: " . $e->getMessage());

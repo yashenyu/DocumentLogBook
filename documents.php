@@ -689,6 +689,50 @@ endif; ?>
         </div>
     </div>
 
+    <!-- Lightbox Gallery Modal -->
+    <div id="galleryModal">
+
+        <div class="lightbox-container">
+            <div class="lightbox-header">
+                <span id="galleryTitle" style="font-weight: 600; font-size: 1rem; color: #ffffff;">Document Attachments</span>
+                <span class="lightbox-close close-gallery">&times;</span>
+            </div>
+            <div class="lightbox-body">
+                <!-- Navigation Arrow Left -->
+                <button class="lightbox-nav lightbox-prev" id="galleryPrev">
+                    <i class="fa-solid fa-chevron-left"></i>
+                </button>
+                
+                <!-- Main Image Display -->
+                <div class="lightbox-main" id="galleryMain">
+                    <img id="galleryImage" src="" alt="Attachment" style="display: none;">
+                    <iframe id="galleryPdf" src="" style="display: none; width: 100%; height: 100%; border: none;"></iframe>
+                    <div id="galleryLoading" style="color: #ffffff; font-size: 1.5rem;">
+                        <i class="fa-solid fa-spinner fa-spin"></i> Loading...
+                    </div>
+                </div>
+                
+                <!-- Navigation Arrow Right -->
+                <button class="lightbox-nav lightbox-next" id="galleryNext">
+                    <i class="fa-solid fa-chevron-right"></i>
+                </button>
+            </div>
+            <div class="lightbox-footer">
+                <div class="lightbox-actions">
+                    <button class="lightbox-btn lightbox-btn-accent" id="galleryDownloadOne" title="Download current attachment">
+                        <i class="fa-solid fa-download"></i> Download
+                    </button>
+                </div>
+
+                <div class="lightbox-thumbnails" id="galleryThumbnails">
+                    <!-- Thumbnails injected via JS -->
+                </div>
+                <div class="lightbox-counter" id="galleryCounter">1 / 1</div>
+            </div>
+        </div>
+    </div>
+
+
     <script src="assets/js/main.js?v=<?php echo time(); ?>"></script>
     <script>
         // Inline logic for persistent logo

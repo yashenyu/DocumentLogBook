@@ -36,23 +36,42 @@
     </thead>
     <tbody id="documentsTableBody">
         <?php if (count($documents) > 0): ?>
-            <?php foreach ($documents as $row): ?>
+            <?php foreach ($documents as $row):
+        // Fetch first attachment for this document (for preview)
+        $stmtAttach = $pdo->prepare("SELECT AttachmentID, FileType FROM DocumentAttachments WHERE DocID = ? ORDER BY AttachmentID ASC LIMIT 1");
+        $stmtAttach->execute([$row['DocID']]);
+        $firstAttachment = $stmtAttach->fetch(PDO::FETCH_ASSOC);
+
+        // Count total attachments
+        $stmtCount = $pdo->prepare("SELECT COUNT(*) FROM DocumentAttachments WHERE DocID = ?");
+        $stmtCount->execute([$row['DocID']]);
+        $attachmentCount = $stmtCount->fetchColumn();
+?>
             <tr>
                 <td>#<?php echo $row['DocID']; ?></td>
                 <td>
-                    <?php if (!empty($row['DocImage']) && file_exists(__DIR__ . '/' . $row['DocImage'])):
-            $ext = strtolower(pathinfo($row['DocImage'], PATHINFO_EXTENSION));
-            $isImage = in_array($ext, ['jpg', 'jpeg', 'png', 'gif']);
+                    <?php if ($firstAttachment):
+            $isImage = strpos($firstAttachment['FileType'], 'image/') === 0;
+            $attachmentUrl = 'view_attachment.php?id=' . $firstAttachment['AttachmentID'];
 ?>
-                        <a href="<?php echo htmlspecialchars($row['DocImage']); ?>" target="_blank" class="action-btn" title="View Document">
+                        <!-- Gallery trigger instead of direct link -->
+                        <div class="gallery-trigger" data-docid="<?php echo $row['DocID']; ?>" title="View all attachments (<?php echo $attachmentCount; ?>)">
                             <?php if ($isImage): ?>
-                                <img src="<?php echo htmlspecialchars($row['DocImage']); ?>" alt="Preview" style="width: 50px; height: 50px; object-fit: cover; border-radius: 4px; border: 1px solid #e2e8f0;">
+                                <img src="<?php echo htmlspecialchars($attachmentUrl); ?>" alt="Preview" style="width: 50px; height: 50px; object-fit: cover; border-radius: 4px; border: 1px solid #e2e8f0;">
                             <?php
             else: ?>
-                                <i class="fa-regular fa-file-pdf" style="font-size: 1.5rem; color: #ef4444;"></i>
+                                <div style="width: 50px; height: 50px; display: flex; align-items: center; justify-content: center; background: #fef2f2; border-radius: 4px; border: 1px solid #e2e8f0;">
+                                    <i class="fa-regular fa-file-pdf" style="font-size: 1.5rem; color: #ef4444;"></i>
+                                </div>
                             <?php
             endif; ?>
-                        </a>
+                            <?php if ($attachmentCount > 1): ?>
+                                <span style="position: absolute; top: -5px; right: -5px; background: var(--accent-color); color: var(--primary-color); font-size: 0.65rem; font-weight: 700; width: 18px; height: 18px; border-radius: 50%; display: flex; align-items: center; justify-content: center;">
+                                    <?php echo $attachmentCount; ?>
+                                </span>
+                            <?php
+            endif; ?>
+                        </div>
                     <?php
         else: ?>
                         <span style="opacity: 0.3;">-</span>

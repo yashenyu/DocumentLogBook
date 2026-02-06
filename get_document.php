@@ -30,8 +30,8 @@ try {
         exit;
     }
 
-    // 2. Fetch Attachments
-    $stmtAttach = $pdo->prepare("SELECT * FROM DocumentAttachments WHERE DocID = ?");
+    // 2. Fetch Attachments (only metadata, not the BLOB data)
+    $stmtAttach = $pdo->prepare("SELECT AttachmentID, FileType, UploadedAt FROM DocumentAttachments WHERE DocID = ?");
     $stmtAttach->execute([$docId]);
     $attachments = $stmtAttach->fetchAll(PDO::FETCH_ASSOC);
 
