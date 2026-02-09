@@ -1,6 +1,6 @@
 services:
   web:
-    image: csiron21/documentlogger:latest
+    image: csiron21/document-logger:v1.0
     # build: .
     ports:
       - "8080:80"
