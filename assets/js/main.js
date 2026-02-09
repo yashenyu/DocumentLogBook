@@ -251,6 +251,8 @@ document.addEventListener('DOMContentLoaded', () => {
                 document.getElementById('edit_office').value = data.doc.Office;
                 document.getElementById('edit_description').value = data.doc.Description || '';
                 document.getElementById('edit_status').value = data.doc.Status;
+                // Trigger change event to update Received By state
+                document.getElementById('edit_status').dispatchEvent(new Event('change'));
                 document.getElementById('edit_received_by').value = data.doc.ReceivedBy || '';
 
                 // Render Existing Attachments

@@ -1,6 +1,7 @@
 services:
   web:
-    build: .
+    image: csiron21/documentlogger:latest
+    # build: .
     ports:
       - "8080:80"
     environment:
@@ -8,8 +9,8 @@ services:
       - DB_NAME=document_logger
       - DB_USER=root
       - DB_PASS=rootpassword
-    volumes:
-      - .:/var/www/html
+    # volumes:
+    #   - .:/var/www/html
     depends_on:
       - db
     networks:

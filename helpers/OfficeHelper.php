@@ -12,16 +12,7 @@ final class OfficeHelper
      */
     public static function getOffices(): array
     {
-        $default = [
-            'SOC',
-            'SEA',
-            'SBA',
-            'SAS',
-            'SHTM',
-            'SNAMS',
-            'CCJEF',
-            'Basic Education',
-        ];
+        $default = [];
 
         $path = self::officesPath();
         if (!file_exists($path)) {

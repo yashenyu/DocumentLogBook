@@ -418,7 +418,13 @@ endif; ?>
 
                                 <div class="form-group">
                                     <label for="office">Office / Department</label>
-                                    <input type="text" id="office" name="office" class="form-control" required placeholder="e.g. Finance, HR" maxlength="100">
+                                    <select id="office" name="office" class="form-control" required>
+                                        <option value="" disabled selected>Select Office</option>
+                                        <?php foreach ($officeOptions as $opt): ?>
+                                            <option value="<?php echo htmlspecialchars($opt); ?>"><?php echo htmlspecialchars($opt); ?></option>
+                                        <?php
+endforeach; ?>
+                                    </select>
                                 </div>
 
                                 <div class="form-group modal-flex-group">
@@ -439,7 +445,7 @@ endif; ?>
 
                                 <div class="form-group">
                                     <label for="received_by">Received By <span id="received_req" style="color: red; display: none;">*</span></label>
-                                    <input type="text" id="received_by" name="received_by" class="form-control" placeholder="Name of receiver" maxlength="100">
+                                    <input type="text" id="received_by" name="received_by" class="form-control" placeholder="Name of receiver" maxlength="100" disabled>
                                 </div>
 
                                 <div class="form-group modal-flex-group">
@@ -643,7 +649,13 @@ endif; ?>
 
                             <div class="form-group">
                                 <label for="edit_office">Office / Department</label>
-                                <input type="text" id="edit_office" name="office" class="form-control" required maxlength="100">
+                                <select id="edit_office" name="office" class="form-control" required>
+                                    <option value="" disabled selected>Select Office</option>
+                                    <?php foreach ($officeOptions as $opt): ?>
+                                        <option value="<?php echo htmlspecialchars($opt); ?>"><?php echo htmlspecialchars($opt); ?></option>
+                                    <?php
+endforeach; ?>
+                                </select>
                             </div>
 
                             <div class="form-group" style="flex: 1; display: flex; flex-direction: column; min-height: 0;">
@@ -656,7 +668,7 @@ endif; ?>
                         <div style="display: flex; flex-direction: column; gap: 0.5rem; flex: 1; min-height: 0;">
                             <div class="form-group">
                                 <label for="edit_status">Status</label>
-                                <select id="edit_status" name="status" class="form-control">
+                                <select id="edit_status" name="status" class="form-control" onchange="toggleEditReceivedBy()">
                                     <option value="Incoming">Incoming</option>
                                     <option value="Outgoing">Outgoing</option>
                                 </select>
@@ -984,12 +996,41 @@ endif; ?>
             
             if (status === 'Outgoing') {
                 receivedInput.required = true;
+                receivedInput.disabled = false;
+                receivedInput.classList.remove('input-disabled');
                 receivedReq.style.display = 'inline';
             } else {
                 receivedInput.required = false;
+                receivedInput.disabled = true;
+                receivedInput.value = ''; // Clear value if disabled
+                receivedInput.classList.add('input-disabled');
                 receivedReq.style.display = 'none';
             }
         }
+
+        function toggleEditReceivedBy() {
+            const status = document.getElementById('edit_status').value;
+            const receivedInput = document.getElementById('edit_received_by');
+            
+            // Note: Edit modal doesn't have a visible asterisk ID like 'received_req' in this snippet, 
+            // but we should still handle the input state.
+            
+            if (status === 'Outgoing') {
+                receivedInput.required = true;
+                receivedInput.disabled = false;
+                receivedInput.classList.remove('input-disabled');
+            } else {
+                receivedInput.required = false;
+                receivedInput.disabled = true;
+                receivedInput.value = '';
+                receivedInput.classList.add('input-disabled');
+            }
+        }
+
+        // Initialize state on load/modal open if needed
+        document.addEventListener('DOMContentLoaded', () => {
+             toggleReceivedBy();
+        });
     </script>
 </body>
 </html>

@@ -4,6 +4,8 @@ if (!isset($_SESSION['user_id'])) {
     header('Location: login.php');
     exit;
 }
+require_once __DIR__ . '/helpers/OfficeHelper.php';
+$officeOptions = OfficeHelper::getOffices();
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -48,7 +50,13 @@ endif; ?>
                 <form action="process_add_document.php" method="POST" enctype="multipart/form-data">
                     <div style="margin-bottom: 1.2rem;">
                         <label for="office">Office / Department</label>
-                        <input type="text" id="office" name="office" required placeholder="e.g. SOC, Marketing">
+                        <select id="office" name="office" required style="width: 100%; padding: 0.75rem 1rem; border: none; border-radius: 0.375rem; background-color: #ffffff; color: #334155; font-size: 0.9rem; font-family: 'Poppins', sans-serif;">
+                            <option value="" disabled selected>Select Office</option>
+                            <?php foreach ($officeOptions as $opt): ?>
+                                <option value="<?php echo htmlspecialchars($opt); ?>"><?php echo htmlspecialchars($opt); ?></option>
+                            <?php
+endforeach; ?>
+                        </select>
                     </div>
 
                     <div style="margin-bottom: 1.2rem;">
@@ -71,7 +79,7 @@ endif; ?>
                         </div>
                         <div>
                             <label for="received_by">Received By <span id="received_req" style="color: #ff6b6b; display: none;">*</span></label>
-                            <input type="text" id="received_by" name="received_by" placeholder="Name">
+                            <input type="text" id="received_by" name="received_by" placeholder="Name" disabled style="width: 100%; padding: 0.75rem 1rem; border: none; border-radius: 0.375rem; background-color: #ffffff; color: #334155; font-size: 0.9rem; font-family: 'Poppins', sans-serif;">
                         </div>
                     </div>
 
@@ -98,11 +106,16 @@ endif; ?>
             if (status === 'Outgoing') {
                 receivedLabel.style.display = 'inline';
                 receivedInput.required = true;
+                receivedInput.disabled = false;
             } else {
                 receivedLabel.style.display = 'none';
                 receivedInput.required = false;
+                receivedInput.disabled = true;
+                receivedInput.value = '';
             }
         }
+        // Initialize
+        toggleReceivedBy();
     </script>
     <script src="assets/js/main.js"></script>
 </body>
