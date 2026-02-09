@@ -97,8 +97,76 @@ final class OfficeHelper
         if ($ok === false) {
             throw new RuntimeException('Failed to save offices list (file not writable).');
         }
+        return $list;
+    }
+
+    public static function updateOffice(string $oldName, string $newName): array
+    {
+        $oldName = trim($oldName);
+        $newName = trim(preg_replace('/\s+/', ' ', $newName));
+        $newName = strip_tags($newName);
+
+        if ($newName === '') {
+            throw new RuntimeException('Office name cannot be empty.');
+        }
+        if (strlen($newName) > 60) {
+            throw new RuntimeException('Office name is too long (max 60 characters).');
+        }
+
+        $list = self::getOffices();
+        $found = false;
+        $updatedList = [];
+        $want = strtolower($newName);
+
+        foreach ($list as $office) {
+            if ($office === $oldName) {
+                $updatedList[] = $newName;
+                $found = true;
+            }
+            else {
+                // Check if new name already exists elsewhere
+                if (strtolower($office) === $want) {
+                    throw new RuntimeException('Office name already exists.');
+                }
+                $updatedList[] = $office;
+            }
+        }
+
+        if (!$found) {
+            throw new RuntimeException('Original office not found.');
+        }
+
+        return self::saveList($updatedList);
+    }
+
+    public static function deleteOffice(string $name): array
+    {
+        $name = trim($name);
+        $list = self::getOffices();
+        $newList = array_filter($list, function ($item) use ($name) {
+            return $item !== $name;
+        });
+
+        if (count($newList) === count($list)) {
+            throw new RuntimeException('Office not found.');
+        }
+
+        return self::saveList(array_values($newList));
+    }
+
+    private static function saveList(array $list): array
+    {
+        $path = self::officesPath();
+        $json = json_encode($list, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES);
+        if ($json === false) {
+            throw new RuntimeException('Failed to encode offices list.');
+        }
+
+        $ok = @file_put_contents($path, $json . PHP_EOL, LOCK_EX);
+        if ($ok === false) {
+            throw new RuntimeException('Failed to save offices list (file not writable).');
+        }
 
         return $list;
     }
 }
-

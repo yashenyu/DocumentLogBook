@@ -1248,6 +1248,129 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
+    // --- Add Modal Tabs Logic ---
+    function initAddModalTabs() {
+        const addModal = document.getElementById('addModal');
+        if (!addModal) return;
+
+        const tabBtns = addModal.querySelectorAll('.tab-btn');
+        const tabContents = addModal.querySelectorAll('.tab-content');
+        const modalTitle = document.getElementById('addModalTitle');
+
+        tabBtns.forEach(btn => {
+            btn.addEventListener('click', () => {
+                const targetTab = btn.dataset.tab;
+
+                // Toggle Buttons
+                tabBtns.forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+
+                // Toggle Content
+                tabContents.forEach(content => {
+                    content.classList.remove('active');
+                    if (content.id === targetTab) content.classList.add('active');
+                });
+
+                // Update Title optionally
+                if (modalTitle) {
+                    modalTitle.textContent = targetTab === 'tab-add-doc' ? 'Add New Document' : 'Add New Office';
+                }
+            });
+        });
+
+        // Optional: Reset to first tab when modal opens
+        const openAddModalBtn = document.getElementById('openAddModal');
+        if (openAddModalBtn) {
+            openAddModalBtn.addEventListener('click', () => {
+                // Reset tabs
+                tabBtns.forEach((btn, idx) => {
+                    if (idx === 0) btn.classList.add('active');
+                    else btn.classList.remove('active');
+                });
+                tabContents.forEach((content, idx) => {
+                    if (idx === 0) content.classList.add('active');
+                    else content.classList.remove('active');
+                });
+                if (modalTitle) modalTitle.textContent = 'Add New Document';
+            });
+        }
+    }
+
+    // --- Office Management Logic ---
+    function initOfficeManagement() {
+        const editBtns = document.querySelectorAll('.edit-office-btn');
+        const deleteBtns = document.querySelectorAll('.delete-office-btn');
+
+        const editModal = document.getElementById('editOfficeModal');
+        const deleteModal = document.getElementById('deleteOfficeModal');
+
+        const closeEditBtns = document.querySelectorAll('.close-edit-office');
+        const closeDeleteBtns = document.querySelectorAll('.close-delete-office');
+
+        // Close functions
+        const closeModals = () => {
+            if (editModal) editModal.classList.remove('active');
+            if (deleteModal) deleteModal.classList.remove('active');
+        };
+
+        closeEditBtns.forEach(btn => btn.addEventListener('click', closeModals));
+        closeDeleteBtns.forEach(btn => btn.addEventListener('click', closeModals));
+
+        // Edit Button
+        editBtns.forEach(btn => {
+            btn.addEventListener('click', async () => {
+                const name = btn.dataset.name;
+                document.getElementById('edit_office_old_name').value = name;
+                document.getElementById('edit_office_new_name').value = name;
+
+                // Fetch stats
+                try {
+                    const response = await fetch(`ajax/get_office_stats.php?office=${encodeURIComponent(name)}`);
+                    const data = await response.json();
+                    const warning = document.getElementById('edit_office_warning');
+                    if (data.count > 0) {
+                        document.getElementById('edit_office_affected_count').textContent = data.count;
+                        warning.style.display = 'block';
+                    } else {
+                        warning.style.display = 'none';
+                    }
+                } catch (err) {
+                    console.error('Failed to fetch stats', err);
+                }
+
+                editModal.classList.add('active');
+            });
+        });
+
+        // Delete Button
+        deleteBtns.forEach(btn => {
+            btn.addEventListener('click', async () => {
+                const name = btn.dataset.name;
+                document.getElementById('delete_office_name_input').value = name;
+                document.getElementById('delete_office_display_name').textContent = name;
+
+                // Fetch stats
+                try {
+                    const response = await fetch(`ajax/get_office_stats.php?office=${encodeURIComponent(name)}`);
+                    const data = await response.json();
+                    const warning = document.getElementById('delete_office_warning');
+                    if (data.count > 0) {
+                        document.getElementById('delete_office_affected_count').textContent = data.count;
+                        warning.style.display = 'block';
+                    } else {
+                        warning.style.display = 'none';
+                    }
+                } catch (err) {
+                    console.error('Failed to fetch stats', err);
+                }
+
+                deleteModal.classList.add('active');
+            });
+        });
+    }
+
     initStaffManagement();
     initGalleryLightbox();
+    initAddModalTabs();
+    initOfficeManagement();
 });

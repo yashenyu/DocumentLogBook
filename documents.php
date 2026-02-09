@@ -358,10 +358,11 @@ endif; ?>
                         <select name="office" class="form-control" id="officeFilterSelect">
                             <option value="">All Offices</option>
                             <?php foreach ($officeOptions as $officeOpt): ?>
-                                <option value="<?php echo htmlspecialchars($officeOpt); ?>" <?php echo ($selectedOfficeForDropdown === $officeOpt) ? 'selected' : ''; ?>>
+                                <option value="<?php echo htmlspecialchars($officeOpt); ?>" <?php echo($selectedOfficeForDropdown === $officeOpt) ? 'selected' : ''; ?>>
                                     <?php echo htmlspecialchars($officeOpt); ?>
                                 </option>
-                            <?php endforeach; ?>
+                            <?php
+endforeach; ?>
                         </select>
                     </div>
 
@@ -382,29 +383,7 @@ endif; ?>
                 </div>
             </form>
 
-            <?php if (($_SESSION['role'] ?? '') === 'Admin'): ?>
-                <div style="margin-top: 1.25rem; padding-top: 1.25rem; border-top: 1px solid #f1f5f9;">
-                    <form action="process_add_office.php" method="POST">
-                        <div class="form-grid-2" style="align-items: end; grid-template-columns: 1fr auto;">
-                            <div class="form-group" style="margin-bottom: 0;">
-                                <label for="new_office_name">Add Office</label>
-                                <input
-                                    type="text"
-                                    id="new_office_name"
-                                    name="office_name"
-                                    class="form-control"
-                                    placeholder="e.g. Graduate School"
-                                    maxlength="60"
-                                    required
-                                >
-                            </div>
-                            <div class="modal-actions" style="margin-top: 0; padding-top: 0; border-top: 0;">
-                                <button type="submit" class="btn-primary">Add Office</button>
-                            </div>
-                        </div>
-                    </form>
-                </div>
-            <?php endif; ?>
+
         </div>
     </div>
 
@@ -412,66 +391,235 @@ endif; ?>
     <div id="addModal" class="modal-overlay">
         <div class="modal-content modal-fixed-90">
             <div class="modal-header">
-                <h3>Add New Document</h3>
+                <h3 id="addModalTitle">Add New Document</h3>
                 <span class="close-modal close-add">&times;</span>
             </div>
-            <form action="process_add_document.php" method="POST" enctype="multipart/form-data">
-                <div class="modal-body">
-                    <div class="form-grid-2">
-                        <!-- Left Column -->
-                        <div style="display: flex; flex-direction: column; gap: 0.5rem; flex: 1; min-height: 0;">
-                            <div class="form-group">
-                                <label for="doc_name">Document Name</label>
-                                <input type="text" id="doc_name" name="doc_name" class="form-control" required placeholder="e.g. Invoice #12345" maxlength="255">
-                            </div>
 
-                            <div class="form-group">
-                                <label for="office">Office / Department</label>
-                                <input type="text" id="office" name="office" class="form-control" required placeholder="e.g. Finance, HR" maxlength="100">
-                            </div>
+            <!-- Modal Tabs -->
+            <?php if (($_SESSION['role'] ?? '') === 'Admin'): ?>
+                <div class="modal-tabs">
+                    <button type="button" class="tab-btn active" data-tab="tab-add-doc">Add Document</button>
+                    <button type="button" class="tab-btn" data-tab="tab-add-office">Add Office</button>
+                </div>
+            <?php
+endif; ?>
 
-                            <div class="form-group" style="flex: 1; display: flex; flex-direction: column; min-height: 0;">
-                                <label for="description">Description (Up to 255 chars)</label>
-                                <textarea id="description" name="description" class="form-control" required style="flex: 1; resize: none;" placeholder="Brief details about the document..." maxlength="255"></textarea>
-                            </div>
-                        </div>
-
-                        <!-- Right Column -->
-                        <div style="display: flex; flex-direction: column; gap: 0.5rem; flex: 1; min-height: 0;">
-                            <div class="form-group">
-                                <label for="status">Status</label>
-                                <select id="status" name="status" class="form-control" onchange="toggleReceivedBy()">
-                                    <option value="Incoming" selected>Incoming</option>
-                                    <option value="Outgoing">Outgoing</option>
-                                </select>
-                            </div>
-
-                            <div class="form-group">
-                                <label for="received_by">Received By <span id="received_req" style="color: red; display: none;">*</span></label>
-                                <input type="text" id="received_by" name="received_by" class="form-control" placeholder="Name of receiver" maxlength="100">
-                            </div>
-
-                            <div class="form-group" style="flex: 1; display: flex; flex-direction: column; min-height: 0;">
-                                <label>Upload Files (Image/PDF)</label>
-                                <!-- Custom Upload UI -->
-                                <div class="custom-upload-container">
-                                    <div class="upload-trigger" id="uploadTrigger">
-                                        <i class="fa-solid fa-arrow-up-from-bracket" style="font-size: 2rem; color: #64748b; margin-bottom: 0.5rem;"></i>
-                                        <span style="color: #64748b; font-size: 0.9rem;">Click to Upload</span>
-                                    </div>
-                                    <div class="preview-sidebar" id="previewSidebar"></div>
+            <!-- Tab content: Add Document -->
+            <div id="tab-add-doc" class="tab-content active">
+                <form action="process_add_document.php" method="POST" enctype="multipart/form-data">
+                    <div class="modal-body">
+                        <div class="form-grid-2">
+                            <!-- Left Column -->
+                            <div class="modal-column">
+                                <div class="form-group">
+                                    <label for="doc_name">Document Name</label>
+                                    <input type="text" id="doc_name" name="doc_name" class="form-control" required placeholder="e.g. Invoice #12345" maxlength="255">
                                 </div>
-                                <input type="file" id="doc_image" name="doc_image[]" style="display: none;" accept=".jpg,.jpeg,.png,.gif,.pdf" multiple>
+
+                                <div class="form-group">
+                                    <label for="office">Office / Department</label>
+                                    <input type="text" id="office" name="office" class="form-control" required placeholder="e.g. Finance, HR" maxlength="100">
+                                </div>
+
+                                <div class="form-group modal-flex-group">
+                                    <label for="description">Description (Up to 255 chars)</label>
+                                    <textarea id="description" name="description" class="form-control flex-textarea" required placeholder="Brief details about the document..." maxlength="255"></textarea>
+                                </div>
+                            </div>
+
+                            <!-- Right Column -->
+                            <div class="modal-column">
+                                <div class="form-group">
+                                    <label for="status">Status</label>
+                                    <select id="status" name="status" class="form-control" onchange="toggleReceivedBy()">
+                                        <option value="Incoming" selected>Incoming</option>
+                                        <option value="Outgoing">Outgoing</option>
+                                    </select>
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="received_by">Received By <span id="received_req" style="color: red; display: none;">*</span></label>
+                                    <input type="text" id="received_by" name="received_by" class="form-control" placeholder="Name of receiver" maxlength="100">
+                                </div>
+
+                                <div class="form-group modal-flex-group">
+                                    <label>Upload Files (Image/PDF)</label>
+                                    <!-- Custom Upload UI -->
+                                    <div class="custom-upload-container">
+                                        <div class="upload-trigger" id="uploadTrigger">
+                                            <i class="fa-solid fa-arrow-up-from-bracket" style="font-size: 2rem; color: #64748b; margin-bottom: 0.5rem;"></i>
+                                            <span style="color: #64748b; font-size: 0.9rem;">Click to Upload</span>
+                                        </div>
+                                        <div class="preview-sidebar" id="previewSidebar"></div>
+                                    </div>
+                                    <input type="file" id="doc_image" name="doc_image[]" style="display: none;" accept=".jpg,.jpeg,.png,.gif,.pdf" multiple>
+                                </div>
                             </div>
                         </div>
                     </div>
+
+                    <div class="modal-actions">
+                        <button type="button" class="btn btn-secondary close-add-btn">Cancel</button>
+                        <button type="submit" class="btn btn-primary">Submit Document</button>
+                    </div>
+                </form>
+            </div>
+
+            <!-- Tab content: Add Office -->
+            <?php if (($_SESSION['role'] ?? '') === 'Admin'): ?>
+                <div id="tab-add-office" class="tab-content">
+                    <div class="modal-body" style="padding: 1.5rem; display: flex; flex-direction: column; min-height: 0;">
+                        <div class="form-grid-2" style="flex: 1; min-height: 0;">
+                            
+                            <!-- Left Column: Add New Office -->
+                            <div class="modal-column">
+                                <div class="office-card">
+                                    <h4 class="office-card-header">
+                                        <i class="fa-solid fa-plus-circle"></i>
+                                        Add New Office
+                                    </h4>
+                                    <form action="process_add_office.php" method="POST" class="office-card-body">
+                                        <div class="form-group">
+                                            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.5rem;">
+                                                <label for="new_office_name" style="margin-bottom: 0;">Office Name</label>
+                                            </div>
+                                            <input 
+                                                type="text" 
+                                                id="new_office_name" 
+                                                name="office_name" 
+                                                class="form-control" 
+                                                placeholder="e.g. Graduate School" 
+                                                maxlength="60" 
+                                                required
+                                            >
+                                        </div>
+                                        <div style="margin-top: 1.5rem; display: flex; justify-content: center;">
+                                            <button type="submit" class="btn btn-primary btn-md" style="width: 100%;">
+                                                <i class="fa-solid fa-plus-circle"></i>
+                                                Add Office
+                                            </button>
+                                        </div>
+                                    </form>
+                                    <div class="office-card-footer">
+                                        <p><i class="fa-solid fa-circle-info"></i> Added offices will immediately appear in all office dropdowns and filters.</p>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Right Column: Manage Offices -->
+                            <div class="modal-column">
+                                <div class="office-card scrollable-card">
+                                    <h4 class="office-card-header">
+                                        <i class="fa-solid fa-list-check"></i>
+                                        Manage Existing Offices
+                                    </h4>
+                                    <div class="office-card-body p-0">
+                                        <div class="office-list-fixed-header">
+                                            <table class="office-table">
+                                                <thead>
+                                                    <tr>
+                                                        <th>Office Name</th>
+                                                        <th style="width: 100px; text-align: center;">Actions</th>
+                                                    </tr>
+                                                </thead>
+                                            </table>
+                                        </div>
+                                        <div class="office-list-body">
+                                            <table class="office-table">
+                                                <tbody>
+                                                    <?php if (empty($officeOptions)): ?>
+                                                        <tr>
+                                                            <td colspan="2" style="padding: 3rem; text-align: center; color: #64748b;">
+                                                                <i class="fa-solid fa-folder-open" style="display: block; font-size: 2rem; margin-bottom: 1rem; opacity: 0.3;"></i>
+                                                                No offices added yet.
+                                                            </td>
+                                                        </tr>
+                                                    <?php
+    else: ?>
+                                                        <?php foreach ($officeOptions as $officeName): ?>
+                                                            <tr>
+                                                                <td class="office-name-cell"><?php echo htmlspecialchars($officeName); ?></td>
+                                                                <td style="width: 100px;">
+                                                                    <div class="office-actions">
+                                                                        <button type="button" class="btn-icon edit-office-btn" data-name="<?php echo htmlspecialchars($officeName); ?>" title="Edit">
+                                                                            <i class="fa-solid fa-pen-to-square" style="color: #6366f1;"></i>
+                                                                        </button>
+                                                                        <button type="button" class="btn-icon delete-office-btn" data-name="<?php echo htmlspecialchars($officeName); ?>" title="Remove">
+                                                                            <i class="fa-solid fa-trash-can" style="color: #ef4444;"></i>
+                                                                        </button>
+                                                                    </div>
+                                                                </td>
+                                                            </tr>
+                                                        <?php
+        endforeach; ?>
+                                                    <?php
+    endif; ?>
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                    <div class="modal-actions">
+                        <button type="button" class="btn btn-secondary close-add-btn">Close</button>
+                    </div>
                 </div>
 
-                <div class="modal-actions">
-                    <button type="button" class="btn-secondary close-add-btn">Cancel</button>
-                    <button type="submit" class="btn-primary">Submit Document</button>
+                <!-- Sub-Modal for Editing Office -->
+                <div id="editOfficeModal" class="modal-overlay" style="z-index: 1001;">
+                    <div class="modal-content" style="max-width: 450px; height: auto;">
+                        <div class="modal-header">
+                            <h3>Edit Office Name</h3>
+                            <span class="close-modal close-edit-office">&times;</span>
+                        </div>
+                        <form action="process_edit_office.php" method="POST">
+                            <div class="modal-body" style="padding: 1.5rem;">
+                                <input type="hidden" name="old_name" id="edit_office_old_name">
+                                <div class="form-group">
+                                    <label for="edit_office_new_name">New Office Name</label>
+                                    <input type="text" name="new_name" id="edit_office_new_name" class="form-control" required maxlength="60">
+                                </div>
+                                <div id="edit_office_warning" style="margin-top: 1rem; padding: 0.75rem; background: #fffbeb; border-radius: 0.5rem; border: 1px solid #fef3c7; color: #92400e; font-size: 0.85rem; display: none;">
+                                    <i class="fa-solid fa-triangle-exclamation"></i>
+                                    <strong>Warning:</strong> <span id="edit_office_affected_count">0</span> documents are currently using this office name. They will all be updated to the new name.
+                                </div>
+                            </div>
+                            <div class="modal-actions">
+                                <button type="button" class="btn btn-secondary close-edit-office">Cancel</button>
+                                <button type="submit" class="btn btn-primary">Update Office</button>
+                            </div>
+                        </form>
+                    </div>
                 </div>
-            </form>
+
+                <!-- Delete Office Confirmation Modal -->
+                <div id="deleteOfficeModal" class="modal-overlay" style="z-index: 1001;">
+                    <div class="modal-content" style="max-width: 450px; height: auto;">
+                        <div class="modal-header" style="background: #ef4444;">
+                            <h3>Remove Office</h3>
+                            <span class="close-modal close-delete-office">&times;</span>
+                        </div>
+                        <form action="process_delete_office.php" method="POST">
+                            <div class="modal-body" style="padding: 1.5rem;">
+                                <input type="hidden" name="office_name" id="delete_office_name_input">
+                                <p style="color: #475569; margin-bottom: 1rem;">Are you sure you want to remove <strong id="delete_office_display_name"></strong> from the list?</p>
+                                <div id="delete_office_warning" style="padding: 0.75rem; background: #fef2f2; border-radius: 0.5rem; border: 1px solid #fee2e2; color: #991b1b; font-size: 0.85rem; display: none;">
+                                    <i class="fa-solid fa-triangle-exclamation"></i>
+                                    <strong>Warning:</strong> <span id="delete_office_affected_count">0</span> documents are currently using this office. They will remain in the database but won't be easily filtered via the dropdown.
+                                </div>
+                            </div>
+                            <div class="modal-actions">
+                                <button type="button" class="btn btn-secondary close-delete-office">Cancel</button>
+                                <button type="submit" class="btn btn-primary" style="background: #ef4444; border-color: #ef4444;">Confirm Removal</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            <?php
+endif; ?>
         </div>
     </div>
 
