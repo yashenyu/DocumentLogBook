@@ -23,6 +23,7 @@ services:
       - MYSQL_DATABASE=document_logger
     volumes:
       - db_data:/var/lib/mysql
+      - ./database/schema.sql:/docker-entrypoint-initdb.d/schema.sql
     networks:
       - app-network
 
