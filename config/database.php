@@ -7,9 +7,26 @@ define('DB_USER', getenv('DB_USER') ?: 'root');
 define('DB_PASS', getenv('DB_PASS') !== false ? getenv('DB_PASS') : '');
 
 try {
-    // 1. Connect to MySQL Server (no DB selected yet)
-    $pdo = new PDO("mysql:host=" . DB_HOST, DB_USER, DB_PASS);
-    $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+    // 1. Connect to MySQL Server (retry logic included)
+    $maxRetries = 5;
+    $retryDelay = 2; // seconds
+    $attempt = 0;
+
+    do {
+        try {
+            $attempt++;
+            $pdo = new PDO("mysql:host=" . DB_HOST, DB_USER, DB_PASS);
+            $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+            break; // Success!
+        }
+        catch (PDOException $e) {
+            if ($attempt >= $maxRetries) {
+                http_response_code(503); // Service Unavailable
+                die("Database connection failed after $maxRetries attempts: " . $e->getMessage());
+            }
+            sleep($retryDelay);
+        }
+    } while ($attempt < $maxRetries);
 
     // Auto-configure max_allowed_packet for large uploads (4K images)
     try {
