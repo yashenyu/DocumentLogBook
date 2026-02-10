@@ -196,6 +196,9 @@ endif; ?>
 
         <div class="nav-right">
             <?php if (isset($_SESSION['role']) && $_SESSION['role'] === 'Admin'): ?>
+                <button id="openDatabaseModal" class="btn-outline btn-staff" style="text-decoration: none; font-size: 0.85rem; padding: 0.5rem 1.2rem; cursor: pointer;">
+                    <i class="fa-solid fa-database"></i> Database
+                </button>
                 <button id="openStaffModal" class="btn-outline btn-staff" style="text-decoration: none; font-size: 0.85rem; padding: 0.5rem 1.2rem; cursor: pointer;">
                     <i class="fa-solid fa-users-gear"></i> Manage Staff
                 </button>
@@ -918,6 +921,70 @@ endforeach; ?>
         </div>
     </div>
 
+    <!-- Database Modal -->
+    <div id="databaseModal" class="modal-overlay">
+        <div class="modal-content" style="max-width: 500px;">
+            <div class="modal-header">
+                <h3>Database Management</h3>
+                <span class="close-modal close-database">&times;</span>
+            </div>
+            <div class="modal-body" style="padding: 2rem;">
+                <div style="display: flex; flex-direction: column; gap: 2rem;">
+                    
+                    <!-- Backup Section -->
+                    <div style="text-align: center; padding-bottom: 2rem; border-bottom: 1px solid #e2e8f0;">
+                        <div style="font-size: 3rem; color: #10b981; margin-bottom: 1rem;">
+                            <i class="fa-solid fa-cloud-arrow-down"></i>
+                        </div>
+                        <h4 style="margin-bottom: 0.5rem;">Backup Database</h4>
+                        <p style="color: #64748b; margin-bottom: 1.5rem; font-size: 0.9rem;">
+                            Download a full backup of all documents, attachments, and user data.
+                        </p>
+                        
+                        <div class="form-group" style="text-align: left; margin-bottom: 1rem; max-width: 100%;">
+                            <label style="font-size: 0.85rem; font-weight: 600; color: #334155; display: block; margin-bottom: 0.5rem;">Backup Name</label>
+                            <input type="text" id="backup_filename_input" class="form-control" value="document_logbook_backup" placeholder="Enter filename prefix" maxlength="50">
+                            <div style="font-size: 0.75rem; color: #64748b; margin-top: 0.25rem;">
+                                Will be saved as: <span style="font-weight: 600; color: #334155;"><span id="backup_filename_preview_prefix">document_logbook_backup</span><span id="backup_filename_preview_suffix">_<?php echo date('Y-m-d_H-i-s'); ?>.sql</span></span>
+                            </div>
+                        </div>
+
+                        <button type="button" id="triggerBackupDownload" class="btn btn-primary" style="display: inline-flex; align-items: center; gap: 0.5rem; padding: 0.8rem 2rem; margin: 0 auto;">
+                            <i class="fa-solid fa-download"></i> Download Backup
+                        </button>
+                    </div>
+
+                    <!-- Restore Section -->
+                    <div style="text-align: center;">
+                        <div style="font-size: 3rem; color: #6366f1; margin-bottom: 1rem;">
+                            <i class="fa-solid fa-cloud-arrow-up"></i>
+                        </div>
+                        <h4 style="margin-bottom: 0.5rem;">Restore Database</h4>
+                        <p style="color: #64748b; margin-bottom: 1.5rem; font-size: 0.9rem;">
+                            Restore from a previously downloaded .sql backup file.<br>
+                            <span style="color: #ef4444; font-weight: 600;">Warning: This will replace all current data!</span>
+                        </p>
+                        
+                        <form id="restoreForm" enctype="multipart/form-data">
+                            <input type="file" id="backup_file" name="backup_file" accept=".sql" style="display: none;" onchange="handleFileSelect(this)">
+                            
+                            <div style="display: flex; gap: 1rem; justify-content: center;">
+                                <button type="button" class="btn btn-outline" onclick="document.getElementById('backup_file').click()">
+                                    Select File
+                                </button>
+                                <button type="submit" class="btn btn-primary" id="restoreBtn" disabled>
+                                    <i class="fa-solid fa-upload"></i> Restore
+                                </button>
+                            </div>
+                            <div id="selectedFileName" style="margin-top: 1rem; font-size: 0.85rem; color: #334155; font-weight: 500;"></div>
+                        </form>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+
     <!-- Lightbox Gallery Modal -->
     <div id="galleryModal">
 
@@ -1028,6 +1095,120 @@ endforeach; ?>
         document.addEventListener('DOMContentLoaded', () => {
              toggleReceivedBy();
         });
+
+        // Database Modal Logic
+        const dbModal = document.getElementById('databaseModal');
+        const openDbBtn = document.getElementById('openDatabaseModal');
+        const closeDbBtn = document.querySelector('.close-database');
+
+        if (openDbBtn) {
+            openDbBtn.addEventListener('click', () => {
+                dbModal.classList.add('active');
+            });
+        }
+
+        if (closeDbBtn) {
+            closeDbBtn.addEventListener('click', () => {
+                dbModal.classList.remove('active');
+            });
+        }
+
+        // Backup Filename Logic
+        const backupInput = document.getElementById('backup_filename_input');
+        const backupPrefixSpan = document.getElementById('backup_filename_preview_prefix');
+        const backupBtn = document.getElementById('triggerBackupDownload');
+
+        if (backupInput && backupPrefixSpan) {
+            backupInput.addEventListener('input', () => {
+                let val = backupInput.value;
+                // regex match PHP sanitization: alphanumeric, underscore, hyphen
+                val = val.replace(/[^a-zA-Z0-9_-]/g, '');
+                if (!val) val = 'db_backup';
+                backupPrefixSpan.innerText = val;
+            });
+        }
+
+        if (backupBtn && backupInput) {
+            backupBtn.addEventListener('click', () => {
+                let filename = backupInput.value;
+                // Sanitize
+                filename = filename.replace(/[^a-zA-Z0-9_-]/g, '');
+                if (!filename) filename = 'db_backup';
+                
+                // Trigger download with param
+                window.location.href = 'api/backup_db.php?filename=' + encodeURIComponent(filename);
+            });
+        }
+
+        function handleFileSelect(input) {
+            const fileNameDiv = document.getElementById('selectedFileName');
+            const restoreBtn = document.getElementById('restoreBtn');
+            if (input.files && input.files[0]) {
+                fileNameDiv.textContent = 'Selected: ' + input.files[0].name;
+                restoreBtn.disabled = false;
+            } else {
+                fileNameDiv.textContent = '';
+                restoreBtn.disabled = true;
+            }
+        }
+
+        const restoreForm = document.getElementById('restoreForm');
+        if (restoreForm) {
+            restoreForm.addEventListener('submit', function(e) {
+                e.preventDefault();
+                
+                if (!confirm('Are you sure you want to restore? This will overwrite all current data!')) {
+                    return;
+                }
+
+                const formData = new FormData(this);
+                const btn = document.getElementById('restoreBtn');
+                const originalText = btn.innerHTML;
+                
+                btn.disabled = true;
+                btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Restoring...';
+
+                fetch('api/restore_db.php', {
+                    method: 'POST',
+                    body: formData
+                })
+                .then(response => {
+                    // Check if response is OK (200-299)
+                    if (!response.ok) {
+                        return response.text().then(text => {
+                            throw new Error(`Server Error (${response.status}): ${text}`);
+                        });
+                    }
+                    // Try to parse JSON, if fails, get text
+                    return response.text().then(text => {
+                        try {
+                            return JSON.parse(text);
+                        } catch (e) {
+                            throw new Error(`Invalid JSON Response: ${text.substring(0, 100)}...`);
+                        }
+                    });
+                })
+                .then(data => {
+                    if (data.success) {
+                        showToast(data.message, 'success');
+                        setTimeout(() => {
+                            window.location.reload();
+                        }, 2000);
+                    } else {
+                        showToast(data.message || 'Restore failed (check console)', 'error');
+                        console.error('Restore Error:', data);
+                        btn.disabled = false;
+                        btn.innerHTML = originalText;
+                    }
+                })
+                .catch(error => {
+                    console.error('Fetch Error:', error);
+                    showToast(error.message || 'An error occurred during restore.', 'error');
+                    btn.disabled = false;
+                    btn.innerHTML = originalText;
+                });
+            });
+        }
     </script>
 </body>
 </html>

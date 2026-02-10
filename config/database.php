@@ -1,5 +1,6 @@
 <?php
 // Database configuration
+date_default_timezone_set('Asia/Manila');
 define('DB_HOST', getenv('DB_HOST') ?: 'localhost');
 define('DB_NAME', getenv('DB_NAME') ?: 'document_logger');
 define('DB_USER', getenv('DB_USER') ?: 'root');
