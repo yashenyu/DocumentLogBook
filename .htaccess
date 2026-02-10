@@ -1,0 +1,11 @@
+# Increase upload limits for large backups and multiple documents
+php_value upload_max_filesize 256M
+php_value post_max_size 256M
+php_value max_execution_time 300
+php_value max_input_time 300
+php_value memory_limit 512M
+
+# Disable warnings being printed to output (which breaks JSON)
+php_flag display_errors off
+# Log errors instead
+php_flag log_errors on
