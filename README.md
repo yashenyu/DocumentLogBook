@@ -14,28 +14,28 @@ A comprehensive web-based application designed for efficient document tracking a
 ## Gallery
 
 ### Login Page
-![Login Page](app/assets/images/LogBook%20Snapshots/Login%20Page.png)
+![Login Page](DocumentLogBook/assets/images/LogBook%20Snapshots/Login%20Page.png)
 
 ### Dashboard / Table View
-![Table View](app/assets/images/LogBook%20Snapshots/Table.png)
+![Table View](DocumentLogBook/assets/images/LogBook%20Snapshots/Table.png)
 
 ### Add New Document
-![Add New Document](app/assets/images/LogBook%20Snapshots/Add%20New%20Document.png)
+![Add New Document](DocumentLogBook/assets/images/LogBook%20Snapshots/Add%20New%20Document.png)
 
 ### View Document
-![View Document](app/assets/images/LogBook%20Snapshots/View%20Document.png)
+![View Document](DocumentLogBook/assets/images/LogBook%20Snapshots/View%20Document.png)
 
 ### Advanced Filter
-![Advanced Filter](app/assets/images/LogBook%20Snapshots/Advanced%20Filter.png)
+![Advanced Filter](DocumentLogBook/assets/images/LogBook%20Snapshots/Advanced%20Filter.png)
 
 ### Image Gallery
-![Image Gallery](app/assets/images/LogBook%20Snapshots/Image%20Gallery%20View.png)
+![Image Gallery](DocumentLogBook/assets/images/LogBook%20Snapshots/Image%20Gallery%20View.png)
 
 ### Staff Management
-![Staff Management](app/assets/images/LogBook%20Snapshots/Add%20User%20(Staff%20Management).png)
+![Staff Management](DocumentLogBook/assets/images/LogBook%20Snapshots/Add%20User%20(Staff%20Management).png)
 
 ### Initial Setup
-![Initial Setup](app/assets/images/LogBook%20Snapshots/Initial%20Setup%20Page.png)
+![Initial Setup](DocumentLogBook/assets/images/LogBook%20Snapshots/Initial%20Setup%20Page.png)
 
 ## Installation
 
