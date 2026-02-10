@@ -355,15 +355,12 @@ endif; ?>
 
                     <div class="form-group">
                         <label>Office</label>
-                        <select name="office" class="form-control" id="officeFilterSelect">
-                            <option value="">All Offices</option>
-                            <?php foreach ($officeOptions as $officeOpt): ?>
-                                <option value="<?php echo htmlspecialchars($officeOpt); ?>" <?php echo($selectedOfficeForDropdown === $officeOpt) ? 'selected' : ''; ?>>
-                                    <?php echo htmlspecialchars($officeOpt); ?>
-                                </option>
-                            <?php
-endforeach; ?>
-                        </select>
+                        <div class="multi-select-container" data-type="office" id="officeContainer">
+                            <div class="tag-container" id="officeTags"></div>
+                            <input type="text" class="autocomplete-input" placeholder="Type to add office...">
+                            <div class="autocomplete-dropdown shadow-sm"></div>
+                            <input type="hidden" name="office" value="<?php echo htmlspecialchars($officeFilter); ?>">
+                        </div>
                     </div>
 
                     <div class="form-group">

@@ -12,6 +12,7 @@ document.addEventListener('DOMContentLoaded', () => {
             openBtn.addEventListener('click', (e) => {
                 e.preventDefault();
                 console.log(`Opening modal: ${modalId}`);
+                modal.style.display = ''; // Clear inline styles preventing display
                 modal.classList.add('active');
             });
         } else {
@@ -730,7 +731,7 @@ document.addEventListener('DOMContentLoaded', () => {
             const modal = document.getElementById('filterModal');
             if (modal) {
                 modal.classList.remove('active');
-                setTimeout(() => modal.style.display = 'none', 300);
+                // setTimeout(() => modal.style.display = 'none', 300); // Clean up: This causes issues with reopening
             }
         });
     }
