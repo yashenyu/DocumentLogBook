@@ -1,25 +1,50 @@
-# Document Logger
+# Document LogBook
 
-Outgoing document tracking system for office use.
-
-## Team
-- **Carlo**: UI/UX Design
-- **Clark**: Database & Backend
-- **Doi**: Frontend Development
-- **Mark**: Integration & Development Support
-
-## Setup
-1. Install XAMPP
-2. Create database using `database/schema.sql`
-3. Configure `config/database.php`
-4. Access via `http://localhost/document-logger`
+A comprehensive web-based application designed for efficient document tracking and management.
 
 ## Features
-- Document logging (email, doc name, description, date/time, received by)
-- Search and filter
-- User authentication
-- Admin panel
 
-## Tech Stack
-- PHP, MySQL, HTML, CSS, JavaScript
-- XAMPP (Apache, MySQL)
+- **Document Management**: Easily add, edit, and view documents.
+- **Advanced Filtering**: Powerful search and filtering capabilities to find documents quickly.
+- **Image Gallery**: View document attachments in a detailed gallery view.
+- **Staff Management**: Manage user roles and permissions.
+- **Customization**: Option to change the application logo.
+- **Secure Access**: Secure login and authentication system.
+
+## Gallery
+
+### Login Page
+![Login Page](app/assets/images/LogBook%20Snapshots/Login%20Page.png)
+
+### Dashboard / Table View
+![Table View](app/assets/images/LogBook%20Snapshots/Table.png)
+
+### Add New Document
+![Add New Document](app/assets/images/LogBook%20Snapshots/Add%20New%20Document.png)
+
+### View Document
+![View Document](app/assets/images/LogBook%20Snapshots/View%20Document.png)
+
+### Advanced Filter
+![Advanced Filter](app/assets/images/LogBook%20Snapshots/Advanced%20Filter.png)
+
+### Image Gallery
+![Image Gallery](app/assets/images/LogBook%20Snapshots/Image%20Gallery%20View.png)
+
+### Staff Management
+![Staff Management](app/assets/images/LogBook%20Snapshots/Add%20User%20(Staff%20Management).png)
+
+### Initial Setup
+![Initial Setup](app/assets/images/LogBook%20Snapshots/Initial%20Setup%20Page.png)
+
+## Installation
+
+1. Right-click `install.bat` and select **Run as administrator**.
+2. Follow the on-screen installation instructions.
+
+## Developers
+
+- **Mark Aaron B. Dayrit** - Web Developer
+- **Andrew L. Chan** - Frontend Developer
+- **Carlo T. Siron** - Frontend & UI/UX Developer
+- **Clark T. Siron** - Backend Specialist
